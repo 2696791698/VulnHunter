@@ -1,0 +1,727 @@
+vulnerable
+----------------------------------------------------------------------------------------------------
+{
+│   'messages': [
+│   │   HumanMessage(
+│   │   │   content='审计目录：/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={},
+│   │   │   id='ceb036d6-6145-49d0-ab41-11638c94f5b5'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5d06-7ab0-76a1-82a9-32afe73dd683',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'write_todos',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'todos': [
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '枚举审计目录结构并识别项目语言与关键源码位置',
+│   │   │   │   │   │   │   │   'status': 'in_progress'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '使用静态审计工具和源码阅读定位潜在安全漏洞',
+│   │   │   │   │   │   │   │   'status': 'pending'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '基于证据输出唯一审计结论标签',
+│   │   │   │   │   │   │   │   'status': 'pending'
+│   │   │   │   │   │   │   }
+│   │   │   │   │   │   ]
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_ANEpwJjlBMZ30B3Z0sLJbUkf',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 16590,
+│   │   │   │   'output_tokens': 122,
+│   │   │   │   'total_tokens': 16712,
+│   │   │   │   'input_token_details': {'cache_read': 16384},
+│   │   │   │   'output_token_details': {'reasoning': 39}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content="Updated todo list to [{'content': '枚举审计目录结构并识别项目语言与关键源码位置', 'status': 'in_progress'}, {'content': '使用静态审计工具和源码阅读定位潜在安全漏洞', 'status': 'pending'}, {'content': '基于证据输出唯一审计结论标签', 'status': 'pending'}]",
+│   │   │   name='write_todos',
+│   │   │   id='b09ba86b-47b8-4865-ac05-1976568270da',
+│   │   │   tool_call_id='call_ANEpwJjlBMZ30B3Z0sLJbUkf'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5d06-8acb-7f32-8ca3-68238708b57e',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'ls',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_nGoMLIDSqouFYuDs6WyZw2pa',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'glob',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': '**/*'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_hcJJzpktLWRf1nqKqNN5dY1r',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 16762,
+│   │   │   │   'output_tokens': 86,
+│   │   │   │   'total_tokens': 16848,
+│   │   │   │   'input_token_details': {'cache_read': 16512},
+│   │   │   │   'output_token_details': {'reasoning': 0}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content="['/home/houning/Projects/dataset/VUL4J-85-S/Alpha/.gitignore', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/Jenkinsfile', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/LICENSE', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/README.md', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/pom.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/']",
+│   │   │   name='ls',
+│   │   │   id='f2768e56-7a86-4296-b498-b24ce60b660d',
+│   │   │   tool_call_id='call_nGoMLIDSqouFYuDs6WyZw2pa'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content="['/home/houning/Projects/dataset/VUL4J-85-S/Alpha/.gitignore', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/Jenkinsfile', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/LICENSE', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/README.md', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/pom.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/ActionableFlakyTestObject.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakyCaseResult.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakyClassResult.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakyPackageResult.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakySuiteResult.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakyTestResult.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/FlakyTestResultAction.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/FlakyTestResultCollector.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/HistoryAggregatedFlakyTestResultAction.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/JUnitFlakyAggregatedTestDataAction.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/JUnitFlakyResultArchiver.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/JUnitFlakyTestData.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/JUnitFlakyTestDataAction.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/JUnitFlakyTestDataPublisher.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/TestFlakyStatsOverRevision.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeAction.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeCause.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeGitBuildChooser.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeListener.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/resources/com/google/jenkins/flakyTestHandler/plugin/HistoryAggregatedFlakyTestResultAction/jobMain.jelly', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/resources/com/google/jenkins/flakyTestHandler/plugin/JUnitFlakyAggregatedTestDataAction/badge.jelly', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/resources/com/google/jenkins/flakyTestHandler/plugin/JUnitFlakyTestDataAction/badge.jelly', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/resources/com/google/jenkins/flakyTestHandler/plugin/JUnitFlakyTestDataAction/summary.jelly', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/resources/com/google/jenkins/flakyTestHandler/plugin/TestFlakyStatsOverRevision/index.jelly', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/resources/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeAction/deflakeConfig.jelly', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/resources/index.jelly', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/webapp/help-only-fail.html', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/webapp/help-rerun.html', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/junit/FlakyCaseResultTest.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/junit/FlakyClassResultTest.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/junit/FlakySuiteResultTest.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/junit/FlakyTestResultTest.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/plugin/HistoryAggregatedFlakyTestResultActionTest.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeActionIntegrationTest.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeActionTest.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeGitBuildChooserTest.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeListenerTest.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/hudson/plugins/git/AbstractGitTestCase.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/hudson/plugins/git/TestGitRepo.java', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/JENKINS-12457/TestSuite_a1.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/JENKINS-12457/TestSuite_a2.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/JENKINS-12457/TestSuite_b.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/JENKINS-12457/TestSuite_b_duplicate.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/JENKINS-13214/27449.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/JENKINS-13214/27540.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/JENKINS-13214/29734.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/eclipse-plugin-test-report.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/flaky-reports/flaky-report-1.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/junit-report-1233.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/junit-report-1463.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/junit-report-1472.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/junit-report-2874.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/junit-report-6700.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/junit-report-errror-details.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/junit-report-nested-testsuites.xml', '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/resources/com/google/jenkins/flakyTestHandler/junit/junitResult.xml']",
+│   │   │   name='glob',
+│   │   │   id='b4c5c069-07da-4a8d-bd56-01ba5d7f5a2c',
+│   │   │   tool_call_id='call_hcJJzpktLWRf1nqKqNN5dY1r'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5d06-9d83-7421-a8d9-bc47f1be37a7',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/pom.xml',
+│   │   │   │   │   │   'limit': 220,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_pFDPcihPOyxPnqjzKhlhsA4Q',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/README.md',
+│   │   │   │   │   │   'limit': 220,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_dQwtuYFXXzhgB0ee1xGShKWD',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': 'StaplerRequest'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_eHM03A2IE1ZcAZmOzMOshxx7',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': 'do'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_VrmP0FZDhkLCpw8Jo0WibrSU',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': '@RequirePOST'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_DfCiTKpmpUE0DIBo3Wp9NT0c',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': 'FilePath'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_JKC42hkAfDeqiJnRq4d5ffdp',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': 'Secret'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_BjG49E58RANkvOv38fkRNd1H',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': 'Runtime.getRuntime'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_2pQRDS2DAJDxap4MhB3UfMRT',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': 'ProcessBuilder'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_2V4QdxFDTkQIgIFRni4uypcs',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 19352,
+│   │   │   │   'output_tokens': 436,
+│   │   │   │   'total_tokens': 19788,
+│   │   │   │   'input_token_details': {'cache_read': 16768},
+│   │   │   │   'output_token_details': {'reasoning': 0}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\t<?xml version="1.0" encoding="UTF-8"?>\n     2\t<!--\n     3\tCopyright 2014 Google Inc. All rights reserved.\n     4\t\n     5\tLicensed under the Apache License, Version 2.0 (the "License");\n     6\tyou may not use this file except in compliance with the License.\n     7\tYou may obtain a copy of the License at\n     8\t\n     9\t    http://www.apache.org/licenses/LICENSE-2.0\n    10\t\n    11\tUnless required by applicable law or agreed to in writing, software\n    12\tdistributed under the License is distributed on an "AS IS" BASIS,\n    13\tWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n    14\tSee the License for the specific language governing permissions and\n    15\tlimitations under the License.\n    16\t-->\n    17\t\n    18\t<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">\n    19\t  <modelVersion>4.0.0</modelVersion>\n    20\t\n    21\t  <parent>\n    22\t    <groupId>org.jenkins-ci.plugins</groupId>\n    23\t    <artifactId>plugin</artifactId>\n    24\t    <version>3.4</version>\n    25\t  </parent>\n    26\t\n    27\t  <artifactId>flaky-test-handler</artifactId>\n    28\t  <name>Flaky Test Handler plugin</name>\n    29\t  <description>Display rerun flaky tests</description>\n    30\t  <version>1.0.5-SNAPSHOT</version>\n    31\t  <packaging>hpi</packaging>\n    32\t  <url>https://wiki.jenkins-ci.org/display/JENKINS/Flaky+Test+Handler+Plugin</url>\n    33\t\n    34\t  <build>\n    35\t    <finalName>${project.artifactId}-${project.version}</finalName>\n    36\t  </build>\n    37\t\n    38\t  <properties>\n    39\t    <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->\n    40\t    <jenkins.version>2.121.1</jenkins.version>\n    41\t    <!-- Java Level to use. Java 7 required when using core >= 1.612 -->\n    42\t    <java.level>8</java.level>\n    43\t    <!-- <jenkins-test-harness.version>2.13</jenkins-test-harness.version> -->\n    44\t    <workflow.version>2.17</workflow.version>\n    45\t  </properties>\n    46\t\n    47\t  <developers>\n    48\t    <developer>\n    49\t      <id>seriousamlqz</id>\n    50\t      <name>Qingzhou Luo</name>\n    51\t      <email>qingzhouluo@gmail.com</email>\n    52\t    </developer>\n    53\t    <developer>\n    54\t      <id>jmicco</id>\n    55\t      <name>John Micco</name>\n    56\t      <email>jmicco@google.com</email>\n    57\t    </developer>\n    58\t  </developers>\n    59\t\n    60\t  <licenses>\n    61\t    <license>\n    62\t      <name>Apache 2</name>\n    63\t      <url>http://www.apache.org/licenses/LICENSE-2.0</url>\n    64\t      <distribution>repo</distribution>\n    65\t    </license>\n    66\t  </licenses>\n    67\t\n    68\t  <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->\n    69\t  <repositories>\n    70\t    <repository>\n    71\t      <id>repo.jenkins-ci.org</id>\n    72\t      <url>https://repo.jenkins-ci.org/public/</url>\n    73\t    </repository>\n    74\t  </repositories>\n    75\t\n    76\t  <pluginRepositories>\n    77\t    <pluginRepository>\n    78\t      <id>repo.jenkins-ci.org</id>\n    79\t      <url>https://repo.jenkins-ci.org/public/</url>\n    80\t    </pluginRepository>\n    81\t  </pluginRepositories>\n    82\t\n    83\t  <dependencies>\n    84\t    <dependency>\n    85\t       <groupId>jfree</groupId>\n    86\t       <artifactId>jfreechart</artifactId>\n    87\t       <version>1.0.13</version>\n    88\t    </dependency>\n    89\t    <dependency>\n    90\t      <groupId>org.mockito</groupId>\n    91\t      <artifactId>mockito-all</artifactId>\n    92\t      <version>1.9.5</version>\n    93\t    </dependency>\n    94\t    <dependency>\n    95\t      <groupId>org.mortbay.jetty</groupId>\n    96\t      <artifactId>jetty-util</artifactId>\n    97\t      <version>6.1.26</version>\n    98\t      <scope>test</scope>\n    99\t    </dependency>\n   100\t    <dependency>\n   101\t      <groupId>org.jenkins-ci.plugins</groupId>\n   102\t      <artifactId>junit</artifactId>\n   103\t      <version>1.24</version>\n   104\t      <exclusions>\n   105\t        <exclusion>\n   106\t          <groupId>org.jenkins-ci.plugins</groupId>\n   107\t          <artifactId>structs</artifactId>\n   108\t        </exclusion>\n   109\t      </exclusions>\n   110\t    </dependency>\n   111\t    <dependency>\n   112\t      <groupId>org.jenkins-ci</groupId>\n   113\t      <artifactId>annotation-indexer</artifactId>\n   114\t      <version>1.12</version>\n   115\t    </dependency>\n   116\t    <dependency>\n   117\t      <groupId>org.jenkins-ci.plugins</groupId>\n   118\t      <artifactId>git</artifactId>\n   119\t      <version>3.9.0</version>\n   120\t    </dependency>\n   121\t    <!-- for workflow support -->\n   122\t    <dependency>\n   123\t      <groupId>org.jenkins-ci.plugins.workflow</groupId>\n   124\t      <artifactId>workflow-job</artifactId>\n   125\t      <version>2.0</version>\n   126\t      <scope>test</scope>\n   127\t    </dependency>\n   128\t  </dependencies>\n   129\t\n   130\t  <distributionManagement>\n   131\t    <repository>\n   132\t      <id>maven.jenkins-ci.org</id>\n   133\t      <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>\n   134\t    </repository>\n   135\t  </distributionManagement>\n   136\t\n   137\t  <scm>\n   138\t    <connection>scm:git:ssh://github.com/jenkinsci/flaky-test-handler-plugin.git</connection>\n   139\t    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/flaky-test-handler-plugin.git</developerConnection>\n   140\t    <url>https://github.com/jenkinsci/flaky-test-handler-plugin</url>\n   141\t    <tag>flaky-test-handler-1.0.1</tag>\n   142\t  </scm>\n   143\t\n   144\t</project>',
+│   │   │   name='read_file',
+│   │   │   id='5c113afe-905e-41a0-aaa4-ad9fa595571f',
+│   │   │   tool_call_id='call_pFDPcihPOyxPnqjzKhlhsA4Q'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tflaky-test-handler-plugin\n     2\t=========================\n     3\tThis plugin is used to provide various support for handling flaky tests. It currently supports for Git and Maven.\n     4\tIt includes support for the latest version of the Maven surefire plug-in which produces additional data about test \n     5\tflakiness using the new "rerunFailingTestsCount" option. It also supports re-running  only failed tests for a \n     6\tfailed build at the exact failed Git revision. \n     7\t\n     8\tFinally it aggregates statistics of tests (passes, fails and flakes) over Git revisions.',
+│   │   │   name='read_file',
+│   │   │   id='d2fdec7c-2f09-4674-970a-e41bc873cdc2',
+│   │   │   tool_call_id='call_dQwtuYFXXzhgB0ee1xGShKWD'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakyClassResult.java:\n  19: import org.kohsuke.stapler.StaplerRequest;\n  144:   public Object getDynamic(String name, StaplerRequest req, StaplerResponse rsp) {\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakyPackageResult.java:\n  17: import org.kohsuke.stapler.StaplerRequest;\n  160:   public Object getDynamic(String name, StaplerRequest req, StaplerResponse rsp) {\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakyTestResult.java:\n  22: import org.kohsuke.stapler.StaplerRequest;\n  475:   public Object getDynamic(String token, StaplerRequest req, StaplerResponse rsp) {\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/HistoryAggregatedFlakyTestResultAction.java:\n  24: import org.kohsuke.stapler.StaplerRequest;\n  195:   public void doShowAll(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/JUnitFlakyResultArchiver.java:\n  20: import org.kohsuke.stapler.StaplerRequest;\n  108:     newInstance(StaplerRequest req, JSONObject formData)\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeAction.java:\n  26: import org.kohsuke.stapler.StaplerRequest;\n  103:    * @param request StaplerRequest the request.\n  109:   public void doIndex(StaplerRequest request, StaplerResponse response) throws\n  126:   public void doSubmitDeflakeRequest(StaplerRequest request, StaplerResponse response) throws',
+│   │   │   name='grep',
+│   │   │   id='ab90de7d-6c31-4695-8ffb-820e322e2287',
+│   │   │   tool_call_id='call_eHM03A2IE1ZcAZmOzMOshxx7'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakyCaseResult.java:\n  23: import org.dom4j.Element;\n  76:    * Some tools report stdout and stderr at testcase level (such as Maven surefire plugin), others do so at\n  80:    * otherwise null, in which case {@link FlakySuiteResult#stdout}.\n  82:   private final String stdout,stderr;\n  96:           // hmm, don\'t know what this format is.\n  121:     stdout = possiblyTrimStdio(_this, keepLongStdio, testCase.elementText("system-out"));\n  146:    * Flavor of {@link #possiblyTrimStdio(Collection, boolean, String)} that doesn\'t try to read the whole thing into memory.\n  178:       // if there\'s a failure, do not trim and keep the whole thing\n  209:       String flakyStdout = flakyElement.elementText("system-out");\n  213:           .add(new FlakyRunInformation(errorDetails, errorStackTrace, flakyStdout, flakyStderr));\n  232:     this.stdout = null;\n  394:    * The stdout of this test.\n  399:    * the stdout from this test case. With some other tools (such as the JUnit task in Ant), this\n  400:    * method returns the stdout produced by the entire test suite.\n  403:    * If you need to know which is the case, compare this output from {@link FlakySuiteResult#getStdout()}.\n  407:   public String getStdout() {\n  408:     if(stdout!=null)    return stdout;\n  411:     return getSuiteResult().getStdout();\n  417:    * @see #getStdout()\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakySuiteResult.java:\n  17: import org.dom4j.Document;\n  18: import org.dom4j.DocumentException;\n  19: import org.dom4j.Element;\n  20: import org.dom4j.io.SAXReader;\n  52:   private final String stdout;\n  70:   FlakySuiteResult(String name, String stdout, String stderr) {\n  73:     this.stdout = stdout;\n  127:     // FIXME: do this also if no testcases!\n  184:     String stdout = FlakyCaseResult.possiblyTrimStdio(cases, keepLongStdio, suite.elementText("system-out"));\n  186:     if (stdout==null && stderr==null) {\n  187:       // Surefire never puts stdout/stderr in the XML. Instead, it goes to a separate file (when ${maven.test.redirectTestOutputToFile}).\n  194:             stdout = FlakyCaseResult.possiblyTrimStdio(cases, keepLongStdio, mavenOutputFile);\n  202:     this.stdout = stdout;\n  223:    * The stdout of this test.\n  226:    * @see CaseResult#getStdout()\n  227:    * @return String with stdout\n  230:   public String getStdout() {\n  231:     return stdout;\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakyTestResult.java:\n  21: import org.dom4j.DocumentException;\n  380:    * Returns <tt>true</tt> if this doesn\'t have any any test results.\n  417:   public String getStdout() {\n  418:     return testResultInstance.getStdout();\n  523:       s.setParent(this); // kluge to prevent double-counting the results\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/HistoryAggregatedFlakyTestResultAction.java:\n  127:       // Skip old build which doesn\'t have the map\n  195:   public void doShowAll(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/JUnitFlakyTestDataAction.java:\n  27:  * Action to display rerun information (message, stackTrace, stdout/stderr)\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/TestFlakyStatsOverRevision.java:\n  97:     CategoryAxis domainAxis = new ShiftedCategoryAxis(null);\n  98:     plot.setDomainAxis(domainAxis);\n  99:     domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);\n  100:     domainAxis.setLowerMargin(0.0);\n  101:     domainAxis.setUpperMargin(0.0);\n  102:     domainAxis.setCategoryMargin(0.0);\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeAction.java:\n  109:   public void doIndex(StaplerRequest request, StaplerResponse response) throws\n  126:   public void doSubmitDeflakeRequest(StaplerRequest request, StaplerResponse response) throws\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/junit/FlakySuiteResultTest.java:\n  109:     assertTrue(!sr0.getStdout().equals(sr1.getStdout()));\n  146:       assertEquals(source.getStdout(), result.getStdout());\n  218:         assertEquals(sr.getStdout(), 1030, sr.getStdout().length());\n  304:         cases.get(1).getStdout());\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/junit/FlakyTestResultTest.java:\n  47:    * Verifies that all suites of an Eclipse Plug-in Test Suite are collected. These suites don\'t\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/hudson/plugins/git/AbstractGitTestCase.java:\n  171:     scm.getExtensions().add(new DisableRemotePoll()); // don\'t work on a file:// repository\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/hudson/plugins/git/TestGitRepo.java:\n  51:   public final PersonIdent johnDoe = new PersonIdent("John Doe", "john@doe.com");\n  52:   public final PersonIdent janeDoe = new PersonIdent("Jane Doe", "jane@doe.com");',
+│   │   │   name='grep',
+│   │   │   id='9dd99a39-cd2f-4275-b6e2-b2f7875eec0e',
+│   │   │   tool_call_id='call_VrmP0FZDhkLCpw8Jo0WibrSU'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='ec0dfea1-8c0e-4227-b48c-f20b456d3aa3',
+│   │   │   tool_call_id='call_DfCiTKpmpUE0DIBo3Wp9NT0c'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/JUnitFlakyTestDataPublisher.java:\n  25: import hudson.FilePath;\n  50:   public TestResultAction.Data contributeTestData(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener, TestResult testResult)\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/hudson/plugins/git/AbstractGitTestCase.java:\n  30: import hudson.FilePath;\n  70:   protected FilePath workspace; // aliases "gitDirPath"\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/hudson/plugins/git/TestGitRepo.java:\n  28: import hudson.FilePath;\n  46:   public FilePath gitDirPath; // was "workspace"\n  75:     gitDirPath = new FilePath(gitDir);\n  101:     FilePath file = gitDirPath.child(fileName);',
+│   │   │   name='grep',
+│   │   │   id='58969f68-df54-4c63-8f65-f079c6a24e81',
+│   │   │   tool_call_id='call_JKC42hkAfDeqiJnRq4d5ffdp'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='44d288a7-5c7c-4a6e-9f20-a616d1db0742',
+│   │   │   tool_call_id='call_BjG49E58RANkvOv38fkRNd1H'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='ced351fb-ca22-4e45-a4fa-681a97c903c7',
+│   │   │   tool_call_id='call_2pQRDS2DAJDxap4MhB3UfMRT'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='ad19f522-e1c0-45ca-803c-3ed69721ddf0',
+│   │   │   tool_call_id='call_2V4QdxFDTkQIgIFRni4uypcs'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5d06-c969-7fd3-bab5-3f880dfe1711',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'write_todos',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'todos': [
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '枚举审计目录结构并识别项目语言与关键源码位置',
+│   │   │   │   │   │   │   │   'status': 'completed'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '使用静态审计工具和源码阅读定位潜在安全漏洞',
+│   │   │   │   │   │   │   │   'status': 'in_progress'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '基于证据输出唯一审计结论标签',
+│   │   │   │   │   │   │   │   'status': 'pending'
+│   │   │   │   │   │   │   }
+│   │   │   │   │   │   ]
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_B2of2mGi6cLDo5Dn6n8Z8b2W',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 24043,
+│   │   │   │   'output_tokens': 81,
+│   │   │   │   'total_tokens': 24124,
+│   │   │   │   'input_token_details': {'cache_read': 16384},
+│   │   │   │   'output_token_details': {'reasoning': 0}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content="Updated todo list to [{'content': '枚举审计目录结构并识别项目语言与关键源码位置', 'status': 'completed'}, {'content': '使用静态审计工具和源码阅读定位潜在安全漏洞', 'status': 'in_progress'}, {'content': '基于证据输出唯一审计结论标签', 'status': 'pending'}]",
+│   │   │   name='write_todos',
+│   │   │   id='5464e1a0-741d-4f0d-9850-3c9745636d84',
+│   │   │   tool_call_id='call_B2of2mGi6cLDo5Dn6n8Z8b2W'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='检查到这是 Jenkins 插件，重点审计 Stapler 入口、权限校验、潜在 XSS/CSRF 与敏感动作处理。',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5d07-0419-7401-95d5-bcec4abe13ec',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeAction.java',
+│   │   │   │   │   │   'limit': 260,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_R9m80izeLOtBrUswjwzW6S6E',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/HistoryAggregatedFlakyTestResultAction.java',
+│   │   │   │   │   │   'limit': 260,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_mhJlISQHmYtnkIh4lVHJism0',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakyTestResult.java',
+│   │   │   │   │   │   'limit': 260,
+│   │   │   │   │   │   'offset': 430
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_F8XFTwsY8kuMmatN3VmNvAsA',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakyPackageResult.java',
+│   │   │   │   │   │   'limit': 230,
+│   │   │   │   │   │   'offset': 130
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_aLH1AChwpnxqAbPeZnKX0R26',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/junit/FlakyClassResult.java',
+│   │   │   │   │   │   'limit': 220,
+│   │   │   │   │   │   'offset': 120
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_sWSpdvIVs9YGLrnSv8s289lX',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 24215,
+│   │   │   │   'output_tokens': 363,
+│   │   │   │   'total_tokens': 24578,
+│   │   │   │   'input_token_details': {'cache_read': 23936},
+│   │   │   │   'output_token_details': {'reasoning': 0}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\t/* Copyright 2014 Google Inc. All rights reserved.\n     2\t *\n     3\t *  Licensed under the Apache License, Version 2.0 (the "License");\n     4\t *  you may not use this file except in compliance with the License.\n     5\t *  You may obtain a copy of the License at\n     6\t *\n     7\t *  http://www.apache.org/licenses/LICENSE-2.0\n     8\t *\n     9\t *  Unless required by applicable law or agreed to in writing, software\n    10\t *  distributed under the License is distributed on an "AS IS" BASIS,\n    11\t *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n    12\t *  See the License for the specific language governing permissions and\n    13\t *  limitations under the License.\n    14\t */\n    15\tpackage com.google.jenkins.flakyTestHandler.plugin.deflake;\n    16\t\n    17\timport com.google.common.base.Function;\n    18\timport com.google.common.base.Joiner;\n    19\timport com.google.common.collect.Iterables;\n    20\timport com.google.jenkins.flakyTestHandler.plugin.FlakyTestResultAction;\n    21\t\n    22\timport hudson.model.Job;\n    23\timport hudson.model.Run;\n    24\timport net.sf.json.JSONObject;\n    25\t\n    26\timport org.kohsuke.stapler.StaplerRequest;\n    27\timport org.kohsuke.stapler.StaplerResponse;\n    28\t\n    29\timport java.io.IOException;\n    30\timport java.util.ArrayList;\n    31\timport java.util.List;\n    32\timport java.util.Map;\n    33\timport java.util.Map.Entry;\n    34\timport java.util.Set;\n    35\timport java.util.logging.Level;\n    36\t\n    37\timport javax.servlet.ServletException;\n    38\t\n    39\timport hudson.model.AbstractProject;\n    40\timport hudson.model.Action;\n    41\timport hudson.model.BooleanParameterValue;\n    42\timport hudson.model.CauseAction;\n    43\timport hudson.model.ParameterValue;\n    44\timport hudson.model.ParametersAction;\n    45\timport hudson.model.Queue;\n    46\timport hudson.model.StringParameterValue;\n    47\timport jenkins.model.Jenkins;\n    48\t\n    49\t/**\n    50\t * Deflake action used to configure and trigger deflake build\n    51\t *\n    52\t * @author Qingzhou Luo\n    53\t */\n    54\tpublic class DeflakeAction implements Action {\n    55\t\n    56\t  private static final String DEFLAKE_CONFIG_URL = "deflakeConfig";\n    57\t\n    58\t  private static final String RERUN_FAILING_TESTS_COUNT_PARAM = "rerunFailingTestsCountParam";\n    59\t\n    60\t  private static final String MAVEN_TEST_PARAM = "testParam";\n    61\t\n    62\t  private static final String MAVEN_TEST = "test";\n    63\t\n    64\t  private static final String COMMA = ",";\n    65\t\n    66\t  private static final String SHARP = "#";\n    67\t\n    68\t  private static final String PLUS = "+";\n    69\t\n    70\t  private static final Function<Map.Entry<String, Set<String>>, String>\n    71\t      CLASS_METHOD_MAP_TO_MAVEN_TESTS_LIST = new Function<Entry<String, Set<String>>, String>() {\n    72\t\n    73\t    @Override\n    74\t    public String apply(Entry<String, Set<String>> entry) {\n    75\t      return entry.getKey() + SHARP + Joiner.on(PLUS).join(entry.getValue());\n    76\t    }\n    77\t  };\n    78\t\n    79\t  private final Map<String, Set<String>> failingClassMethodMap;\n    80\t\n    81\t  public DeflakeAction(Map<String, Set<String>> failingClassMethodMap) {\n    82\t    this.failingClassMethodMap = failingClassMethodMap;\n    83\t  }\n    84\t\n    85\t  @Override\n    86\t  public String getIconFileName() {\n    87\t    return "clock.gif";\n    88\t  }\n    89\t\n    90\t  @Override\n    91\t  public String getDisplayName() {\n    92\t    return "Deflake this build";\n    93\t  }\n    94\t\n    95\t  @Override\n    96\t  public String getUrlName() {\n    97\t    return "deflake";\n    98\t  }\n    99\t\n   100\t  /**\n   101\t   * Handles the rebuild request and redirects to deflake config page\n   102\t   *\n   103\t   * @param request StaplerRequest the request.\n   104\t   * @param response StaplerResponse the response handler.\n   105\t   * @throws java.io.IOException in case of Stapler issues\n   106\t   * @throws javax.servlet.ServletException if something unfortunate happens.\n   107\t   * @throws InterruptedException if something unfortunate happens.\n   108\t   */\n   109\t  public void doIndex(StaplerRequest request, StaplerResponse response) throws\n   110\t      IOException, ServletException, InterruptedException {\n   111\t    Run currentBuild = request.findAncestorObject(Run.class);\n   112\t    if (currentBuild != null) {\n   113\t\n   114\t      Job job = currentBuild.getParent();\n   115\t      if (job == null) {\n   116\t        return;\n   117\t      }\n   118\t      job.checkPermission(AbstractProject.BUILD);\n   119\t      response.sendRedirect(DEFLAKE_CONFIG_URL);\n   120\t    }\n   121\t  }\n   122\t\n   123\t  /**\n   124\t   * Get parameters from submitted form and submit deflake request\n   125\t   */\n   126\t  public void doSubmitDeflakeRequest(StaplerRequest request, StaplerResponse response) throws\n   127\t      IOException, ServletException, InterruptedException {\n   128\t\n   129\t    Run run = request.findAncestorObject(Run.class);\n   130\t    if (run != null) {\n   131\t      Job job = run.getParent();\n   132\t      if (job == null) {\n   133\t        response.sendRedirect("../../");\n   134\t        return;\n   135\t      }\n   136\t      job.checkPermission(AbstractProject.BUILD);\n   137\t      List<Action> actions = constructDeflakeCause(run);\n   138\t\n   139\t      JSONObject formData = request.getSubmittedForm();\n   140\t      List<ParameterValue> parameterValues = new ArrayList<ParameterValue>();\n   141\t      parameterValues.add(getStringParam(formData, RERUN_FAILING_TESTS_COUNT_PARAM));\n   142\t\n   143\t      JSONObject paramObj = JSONObject.fromObject(formData.get(MAVEN_TEST_PARAM));\n   144\t      boolean onlyRunFailingTests = paramObj.getBoolean("value");\n   145\t      if (onlyRunFailingTests) {\n   146\t        String testParameter = generateMavenTestParams();\n   147\t        if (testParameter != null) {\n   148\t          parameterValues.add(new StringParameterValue(MAVEN_TEST, testParameter));\n   149\t        }\n   150\t      }\n   151\t\n   152\t      ParametersAction originalParamAction = run.getAction(ParametersAction.class);\n   153\t      if (originalParamAction == null) {\n   154\t        originalParamAction = new ParametersAction();\n   155\t      }\n   156\t\n   157\t      actions.add(originalParamAction.createUpdated(parameterValues));\n   158\t\n   159\t      Jenkins.getInstance().getQueue().schedule((Queue.Task) run.getParent(), 0, actions);\n   160\t    }\n   161\t\n   162\t    response.sendRedirect("../../");\n   163\t  }\n   164\t\n   165\t  /**\n   166\t   * Generate maven test parameters to run all the failed tests\n   167\t   *\n   168\t   * @return  a string in the format of testClass1#testMethod1+testMethod2,testClass2#testMethod3,\n   169\t   * ...\n   170\t   */\n   171\t  String generateMavenTestParams() {\n   172\t    return Joiner.on(COMMA).join(Iterables.transform(failingClassMethodMap.entrySet(),\n   173\t        CLASS_METHOD_MAP_TO_MAVEN_TESTS_LIST));\n   174\t  }\n   175\t\n   176\t  /**\n   177\t   * Construct a list of actions which contain deflake cause and the original failed build\n   178\t   *\n   179\t   * @param up upstream build\n   180\t   * @return list with all original causes and a {@link hudson.model.Cause.UserIdCause} and a {@link\n   181\t   * com.google.jenkins.flakyTestHandler.plugin.deflake.DeflakeCause}.\n   182\t   */\n   183\t  private static List<Action> constructDeflakeCause(Run up) {\n   184\t    List<Action> actions = new ArrayList<Action>();\n   185\t    actions.add(new CauseAction(new DeflakeCause(up)));\n   186\t    return actions;\n   187\t  }\n   188\t\n   189\t  private static ParameterValue getBooleanParam(JSONObject formData, String paramName) {\n   190\t    JSONObject paramObj = JSONObject.fromObject(formData.get(paramName));\n   191\t    String name = paramObj.getString("name");\n   192\t    FlakyTestResultAction.logger.log(Level.FINE,\n   193\t        "Param: " + name + " with value: " + paramObj.getBoolean("value"));\n   194\t    return new BooleanParameterValue(name, paramObj.getBoolean("value"));\n   195\t  }\n   196\t\n   197\t  private static ParameterValue getStringParam(JSONObject formData, String paramName) {\n   198\t    JSONObject paramObj = JSONObject.fromObject(formData.get(paramName));\n   199\t    String name = paramObj.getString("name");\n   200\t    FlakyTestResultAction.logger.log(Level.FINE,\n   201\t        "Param: " + name + " with value: " + paramObj.getString("value"));\n   202\t    return new StringParameterValue(name, paramObj.getString("value"));\n   203\t  }\n   204\t}',
+│   │   │   name='read_file',
+│   │   │   id='9ee2e9fc-2150-44d2-8b3c-8e18f821edb1',
+│   │   │   tool_call_id='call_R9m80izeLOtBrUswjwzW6S6E'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\t/* Copyright 2014 Google Inc. All rights reserved.\n     2\t *\n     3\t *  Licensed under the Apache License, Version 2.0 (the "License");\n     4\t *  you may not use this file except in compliance with the License.\n     5\t *  You may obtain a copy of the License at\n     6\t *\n     7\t *  http://www.apache.org/licenses/LICENSE-2.0\n     8\t *\n     9\t *  Unless required by applicable law or agreed to in writing, software\n    10\t *  distributed under the License is distributed on an "AS IS" BASIS,\n    11\t *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n    12\t *  See the License for the specific language governing permissions and\n    13\t *  limitations under the License.\n    14\t */\n    15\tpackage com.google.jenkins.flakyTestHandler.plugin;\n    16\t\n    17\timport com.google.common.base.Function;\n    18\timport com.google.common.base.Predicate;\n    19\timport com.google.common.base.Predicates;\n    20\timport com.google.common.collect.Maps;\n    21\timport com.google.jenkins.flakyTestHandler.plugin.FlakyTestResultAction.FlakyRunStats;\n    22\timport com.google.jenkins.flakyTestHandler.plugin.deflake.DeflakeCause;\n    23\t\n    24\timport org.kohsuke.stapler.StaplerRequest;\n    25\timport org.kohsuke.stapler.StaplerResponse;\n    26\t\n    27\timport java.io.IOException;\n    28\timport java.util.ArrayList;\n    29\timport java.util.HashSet;\n    30\timport java.util.LinkedHashMap;\n    31\timport java.util.Map;\n    32\timport java.util.Map.Entry;\n    33\timport java.util.Set;\n    34\timport java.util.Stack;\n    35\timport java.util.TreeMap;\n    36\t\n    37\timport javax.servlet.ServletException;\n    38\timport jenkins.triggers.SCMTriggerItem;\n    39\timport hudson.model.AbstractBuild;\n    40\timport hudson.model.AbstractProject;\n    41\timport hudson.model.Action;\n    42\timport hudson.model.Job;\n    43\timport hudson.model.Run;\n    44\timport hudson.plugins.git.GitSCM;\n    45\timport hudson.plugins.git.Revision;\n    46\timport hudson.plugins.git.util.BuildData;\n    47\timport hudson.scm.SCM;\n    48\t\n    49\t/**\n    50\t * Action for aggregate and display information for flaky history for all the tests\n    51\t *\n    52\t * @author Qingzhou Luo\n    53\t */\n    54\tpublic class HistoryAggregatedFlakyTestResultAction implements Action {\n    55\t\n    56\t  /**\n    57\t   * The project which is running\n    58\t   */\n    59\t  AbstractProject<?, ?> project;\n    60\t\n    61\t  /**\n    62\t   * Map between test name and flaky stats for a single test\n    63\t   */\n    64\t  Map<String, SingleTestFlakyStats> aggregatedFlakyStats;\n    65\t\n    66\t  /**\n    67\t   * Map between test name and the map between each scm revision and its running stats (# passes + #\n    68\t   * fails)\n    69\t   */\n    70\t  Map<String, Map<String, SingleTestFlakyStats>> aggregatedTestFlakyStatsWithRevision;\n    71\t\n    72\t  /**\n    73\t   * The set of all tests being run in last non-deflake build\n    74\t   */\n    75\t  Set<String> allTests;\n    76\t\n    77\t  /**\n    78\t   * Whether to only show flaky tests or all tests\n    79\t   */\n    80\t  boolean onlyShowFlakyTests;\n    81\t\n    82\t  public HistoryAggregatedFlakyTestResultAction(AbstractProject<?, ?> project) {\n    83\t    this.project = project;\n    84\t    this.aggregatedTestFlakyStatsWithRevision = new TreeMap<String, Map<String, SingleTestFlakyStats>>();\n    85\t    this.aggregatedFlakyStats = new TreeMap<String, SingleTestFlakyStats>();\n    86\t    this.allTests = new HashSet<String>();\n    87\t    this.onlyShowFlakyTests = true;\n    88\t  }\n    89\t\n    90\t  /**\n    91\t   * Aggregate all the previous builds to get flaky stats information for all the tests\n    92\t   */\n    93\t  void aggregate() {\n    94\t\n    95\t    // set of all the previous builds\n    96\t    Stack<AbstractBuild> builds = new Stack<AbstractBuild>();\n    97\t    for (AbstractBuild<?, ?> build : project._getRuns().values()) {\n    98\t      builds.push(build);\n    99\t    }\n   100\t\n   101\t    while (!builds.empty()) {\n   102\t      aggregateOneBuild(builds.pop());\n   103\t    }\n   104\t  }\n   105\t\n   106\t  /**\n   107\t   * Aggregate flaky runs one previous build and put results into a map between test name and\n   108\t   * its map between scm revisions and aggregated flaky stats for that revision\n   109\t   *\n   110\t   * @param build the build to be aggregated\n   111\t   */\n   112\t  public void aggregateOneBuild(Run<?, ?> build) {\n   113\t    FlakyTestResultAction action = build.getAction(FlakyTestResultAction.class);\n   114\t    if (action == null) {\n   115\t      return;\n   116\t    }\n   117\t\n   118\t    FlakyRunStats runStats = action.getFlakyRunStats();\n   119\t\n   120\t    if (runStats == null) {\n   121\t      return;\n   122\t    }\n   123\t\n   124\t    Map<String, SingleTestFlakyStatsWithRevision> testFlakyStatsMap = runStats.getTestFlakyStatsWithRevisionMap();\n   125\t\n   126\t    if (testFlakyStatsMap == null) {\n   127\t      // Skip old build which doesn\'t have the map\n   128\t      return;\n   129\t    }\n   130\t\n   131\t    if (build.getCause(DeflakeCause.class) == null) {\n   132\t      // This is a non-deflake build, update allTests\n   133\t      allTests = testFlakyStatsMap.keySet();\n   134\t    }\n   135\t\n   136\t    for (Map.Entry<String, SingleTestFlakyStatsWithRevision> testFlakyStat : testFlakyStatsMap.entrySet()) {\n   137\t      String testName = testFlakyStat.getKey();\n   138\t      String revision = testFlakyStat.getValue().getRevision();\n   139\t      SingleTestFlakyStats stats = testFlakyStat.getValue().getStats();\n   140\t\n   141\t      if (aggregatedTestFlakyStatsWithRevision.containsKey(testName)) {\n   142\t        Map<String, SingleTestFlakyStats> testFlakyStatMap = aggregatedTestFlakyStatsWithRevision.get(testName);\n   143\t\n   144\t        if (testFlakyStatMap.containsKey(revision)) {\n   145\t          // Merge flaky stats with the same test and the same revision\n   146\t          testFlakyStatMap.get(revision).merge(stats);\n   147\t        } else {\n   148\t          // First specific revision flaky stat for a given test\n   149\t          testFlakyStatMap.put(revision, new SingleTestFlakyStats(stats));\n   150\t        }\n   151\t      } else {\n   152\t        // The first test entry\n   153\t        Map<String, SingleTestFlakyStats> testFlakyStatMap = new LinkedHashMap<String, SingleTestFlakyStats>();\n   154\t        testFlakyStatMap.put(revision, new SingleTestFlakyStats(stats));\n   155\t        aggregatedTestFlakyStatsWithRevision.put(testName, testFlakyStatMap);\n   156\t\n   157\t      }\n   158\t    }\n   159\t\n   160\t    aggregatedFlakyStats = Maps.filterKeys(\n   161\t        Maps.transformValues(aggregatedTestFlakyStatsWithRevision, REVISION_STATS_MAP_TO_AGGREGATED_STATS),\n   162\t        Predicates.in(allTests));\n   163\t  }\n   164\t\n   165\t  public Map<String, Map<String, SingleTestFlakyStats>> getAggregatedTestFlakyStatsWithRevision() {\n   166\t    return aggregatedTestFlakyStatsWithRevision;\n   167\t  }\n   168\t\n   169\t  public boolean getOnlyShowFlakyTests() {\n   170\t    return onlyShowFlakyTests;\n   171\t  }\n   172\t\n   173\t  /**\n   174\t   * Function to aggregate flaky stats over revisions\n   175\t   */\n   176\t  public static final Function<Map<String, SingleTestFlakyStats>, SingleTestFlakyStats> REVISION_STATS_MAP_TO_AGGREGATED_STATS = new Function<Map<String, SingleTestFlakyStats>, SingleTestFlakyStats>() {\n   177\t    @Override\n   178\t    public SingleTestFlakyStats apply(Map<String, SingleTestFlakyStats> revisionStatsMap) {\n   179\t      SingleTestFlakyStats aggregatedStatsOverRevision = new SingleTestFlakyStats(0, 0, 0);\n   180\t\n   181\t      for (SingleTestFlakyStats singleTestFlakyStats : revisionStatsMap.values()) {\n   182\t        if (singleTestFlakyStats.isPassed()) {\n   183\t          aggregatedStatsOverRevision.increasePass();\n   184\t        } else if (singleTestFlakyStats.isFlaked()) {\n   185\t          aggregatedStatsOverRevision.increaseFlake();\n   186\t        } else if (singleTestFlakyStats.isFailed()) {\n   187\t          aggregatedStatsOverRevision.increaseFail();\n   188\t        }\n   189\t      }\n   190\t\n   191\t      return aggregatedStatsOverRevision;\n   192\t    }\n   193\t  };\n   194\t\n   195\t  public void doShowAll(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {\n   196\t    onlyShowFlakyTests = !onlyShowFlakyTests;\n   197\t    rsp.sendRedirect("..");\n   198\t  }\n   199\t\n   200\t  public Map<String, SingleTestFlakyStats> getAggregatedFlakyStats() {\n   201\t    return aggregatedFlakyStats;\n   202\t  }\n   203\t\n   204\t  /**\n   205\t   * Get filtered tests to display on the project page. Users can decide whether to show all tests\n   206\t   * or just flaky tests\n   207\t   *\n   208\t   * @return the filtered tests\n   209\t   */\n   210\t  public Map<String, SingleTestFlakyStats> getFilteredAggregatedFlakyStats() {\n   211\t    Predicate<Entry<String, SingleTestFlakyStats>> flakyTestsFilter;\n   212\t    if (onlyShowFlakyTests) {\n   213\t      flakyTestsFilter = new Predicate<Entry<String, SingleTestFlakyStats>>() {\n   214\t        @Override\n   215\t        public boolean apply(Entry<String, SingleTestFlakyStats> singleTestFlakyStatsEntry) {\n   216\t          return singleTestFlakyStatsEntry.getValue().getFlake() > 0;\n   217\t        }\n   218\t      };\n   219\t    } else {\n   220\t      flakyTestsFilter = Predicates.alwaysTrue();\n   221\t    }\n   222\t    return Maps.filterEntries(aggregatedFlakyStats, flakyTestsFilter);\n   223\t  }\n   224\t\n   225\t  public String getIconFileName() {\n   226\t    return null;\n   227\t  }\n   228\t\n   229\t  public String getDisplayName() {\n   230\t    return null;\n   231\t  }\n   232\t\n   233\t  public String getUrlName() {\n   234\t    return "historyAggregate";\n   235\t  }\n   236\t\n   237\t  /**\n   238\t   * Class for flaky information for one single test\n   239\t   */\n   240\t  public static class SingleTestFlakyStats {\n   241\t\n   242\t    int flake;\n   243\t\n   244\t    int pass;\n   245\t\n   246\t    int fail;\n   247\t\n   248\t    public int getFlake() {\n   249\t      return flake;\n   250\t    }\n   251\t\n   252\t    public int getPass() {\n   253\t      return pass;\n   254\t    }\n   255\t\n   256\t    public int getFail() {\n   257\t      return fail;\n   258\t    }\n   259\t\n   260\t    public void increasePass() {',
+│   │   │   name='read_file',
+│   │   │   id='51b064c1-930e-4a7a-8dde-b17c4b661715',
+│   │   │   tool_call_id='call_mhJlISQHmYtnkIh4lVHJism0'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='   431\t    return testResultInstance.getErrorStackTrace();\n   432\t  }\n   433\t\n   434\t  /**\n   435\t   * If there was an error or a failure, this is the text from the message.\n   436\t   */\n   437\t  @Override\n   438\t  public String getErrorDetails() {\n   439\t    return testResultInstance.getErrorDetails();\n   440\t  }\n   441\t\n   442\t  /**\n   443\t   * @return true if the test was not skipped and did not fail, false otherwise.\n   444\t   */\n   445\t  @Override\n   446\t  public boolean isPassed() {\n   447\t    return (getFailCount() == 0);\n   448\t  }\n   449\t\n   450\t  @Override\n   451\t  public Collection<FlakyPackageResult> getChildren() {\n   452\t    return byPackages.values();\n   453\t  }\n   454\t\n   455\t  /**\n   456\t   * Whether this test result has children.\n   457\t   */\n   458\t  @Override\n   459\t  public boolean hasChildren() {\n   460\t    return !suites.isEmpty();\n   461\t  }\n   462\t\n   463\t  @Exported(inline=true,visibility=9)\n   464\t  public Collection<FlakySuiteResult> getSuites() {\n   465\t    return suites;\n   466\t  }\n   467\t\n   468\t\n   469\t  @Override\n   470\t  public String getName() {\n   471\t    return "junit";\n   472\t  }\n   473\t\n   474\t  @Override\n   475\t  public Object getDynamic(String token, StaplerRequest req, StaplerResponse rsp) {\n   476\t    if (token.equals(getId())) {\n   477\t      return this;\n   478\t    }\n   479\t\n   480\t    FlakyPackageResult result = byPackage(token);\n   481\t    if (result != null) {\n   482\t      return result;\n   483\t    } else {\n   484\t      return super.getDynamic(token, req, rsp);\n   485\t    }\n   486\t  }\n   487\t\n   488\t  public FlakyPackageResult byPackage(String packageName) {\n   489\t    return byPackages.get(packageName);\n   490\t  }\n   491\t\n   492\t  public FlakySuiteResult getSuite(String name) {\n   493\t    return suitesByName.get(name);\n   494\t  }\n   495\t\n   496\t  @Override\n   497\t  public void setParentAction(AbstractTestResultAction action) {\n   498\t    this.parentAction = action;\n   499\t    tally(); // I want to be sure to inform our children when we get an action.\n   500\t  }\n   501\t\n   502\t  @Override\n   503\t  public AbstractTestResultAction getParentAction() {\n   504\t    return this.parentAction;\n   505\t  }\n   506\t\n   507\t  /**\n   508\t   * Recount my children.\n   509\t   */\n   510\t  @Override\n   511\t  public void tally() {\n   512\t    suitesByName = new HashMap<String, FlakySuiteResult>();\n   513\t    failedTests = new ArrayList<FlakyCaseResult>();\n   514\t    flakyTests = new ArrayList<FlakyCaseResult>();\n   515\t    passedTests = new ArrayList<FlakyCaseResult>();\n   516\t    byPackages = new TreeMap<String, FlakyPackageResult>();\n   517\t\n   518\t    totalTests = 0;\n   519\t    skippedTests = 0;\n   520\t\n   521\t    // Ask all of our children to tally themselves\n   522\t    for (FlakySuiteResult s : suites) {\n   523\t      s.setParent(this); // kluge to prevent double-counting the results\n   524\t      suitesByName.put(s.getName(), s);\n   525\t      List<FlakyCaseResult> cases = s.getCases();\n   526\t\n   527\t      for (FlakyCaseResult cr : cases) {\n   528\t        cr.setParentAction(this.parentAction);\n   529\t        cr.setParentSuiteResult(s);\n   530\t        cr.tally();\n   531\t        String pkg = cr.getPackageName(), spkg = safe(pkg);\n   532\t        FlakyPackageResult pr = byPackage(spkg);\n   533\t        if (pr == null) {\n   534\t          byPackages.put(spkg, pr = new FlakyPackageResult(this, pkg));\n   535\t        }\n   536\t        pr.add(cr);\n   537\t      }\n   538\t    }\n   539\t\n   540\t    for (FlakyPackageResult pr : byPackages.values()) {\n   541\t      pr.tally();\n   542\t      skippedTests += pr.getSkipCount();\n   543\t      failedTests.addAll(pr.getFailedTests());\n   544\t      flakyTests.addAll(pr.getFlakyTests());\n   545\t      passedTests.addAll((Collection<? extends FlakyCaseResult>) pr.getPassedTests());\n   546\t      totalTests += pr.getTotalCount();\n   547\t    }\n   548\t  }\n   549\t\n   550\t  /**\n   551\t   * Builds up the transient part of the data structure\n   552\t   * from results {@link #parse(File) parsed} so far.\n   553\t   *\n   554\t   * <p>\n   555\t   * After the data is frozen, more files can be parsed\n   556\t   * and then freeze can be called again.\n   557\t   */\n   558\t  public void freeze(AbstractTestResultAction parent, Run build) {\n   559\t    this.parentAction = parent;\n   560\t    this.owner = build;\n   561\t    if(suitesByName==null) {\n   562\t      // freeze for the first time\n   563\t      suitesByName = new HashMap<String,FlakySuiteResult>();\n   564\t      totalTests = 0;\n   565\t      failedTests = new ArrayList<FlakyCaseResult>();\n   566\t      flakyTests = new ArrayList<FlakyCaseResult>();\n   567\t      passedTests = new ArrayList<FlakyCaseResult>();\n   568\t      byPackages = new TreeMap<String,FlakyPackageResult>();\n   569\t    }\n   570\t\n   571\t    for (FlakySuiteResult s : suites) {\n   572\t      if (!s.freeze(this))      // this is disturbing: has-a-parent is conflated with has-been-counted\n   573\t      {\n   574\t        continue;\n   575\t      }\n   576\t\n   577\t      suitesByName.put(s.getName(), s);\n   578\t\n   579\t      totalTests += s.getCases().size();\n   580\t      for (FlakyCaseResult cr : s.getCases()) {\n   581\t        if (cr.isSkipped()) {\n   582\t          skippedTests++;\n   583\t        } else if (!cr.isPassed()) {\n   584\t          failedTests.add(cr);\n   585\t        } else if (cr.isFlaked()) {\n   586\t          flakyTests.add(cr);\n   587\t        } else {\n   588\t          // if a test passed without a flake\n   589\t          passedTests.add(cr);\n   590\t        }\n   591\t\n   592\t        String pkg = cr.getPackageName(), spkg = safe(pkg);\n   593\t        FlakyPackageResult pr = byPackage(spkg);\n   594\t        if (pr == null) {\n   595\t          byPackages.put(spkg, pr = new FlakyPackageResult(this, pkg));\n   596\t        }\n   597\t        pr.add(cr);\n   598\t      }\n   599\t    }\n   600\t\n   601\t    for (FlakyPackageResult pr : byPackages.values())\n   602\t      pr.freeze();\n   603\t  }\n   604\t\n   605\t  /**\n   606\t   *\n   607\t   * Get the map between test name and a {@link SingleTestFlakyStatsWithRevision},\n   608\t   * which counts all its passing runs and failing runs. No flake will be included, because a flake\n   609\t   * will be decomposed into a passing run with several failing runs.\n   610\t   *\n   611\t   * @return the map between test name and a {@link SingleTestFlakyStatsWithRevision},\n   612\t   */\n   613\t  public Map<String, SingleTestFlakyStatsWithRevision> getTestFlakyStatsMap() {\n   614\t\n   615\t    Map<String, SingleTestFlakyStatsWithRevision> testFlakyStatsWithRevisionMap =\n   616\t        new HashMap<String, SingleTestFlakyStatsWithRevision>();\n   617\t\n   618\t    for (FlakyCaseResult passedTest : passedTests) {\n   619\t      testFlakyStatsWithRevisionMap.put(passedTest.getFullDisplayName(),\n   620\t          new SingleTestFlakyStatsWithRevision(new SingleTestFlakyStats(1, 0, 0), owner));\n   621\t    }\n   622\t\n   623\t    for (FlakyCaseResult failedTest : failedTests) {\n   624\t      int flakyRetry = failedTest.getFlakyRuns() == null ? 0 : failedTest.getFlakyRuns().size();\n   625\t      testFlakyStatsWithRevisionMap.put(failedTest.getFullDisplayName(),\n   626\t          new SingleTestFlakyStatsWithRevision(new SingleTestFlakyStats(0, 1 + flakyRetry, 0),\n   627\t              owner));\n   628\t    }\n   629\t\n   630\t    for (FlakyCaseResult flakyTest : flakyTests) {\n   631\t      int flakyRetry = flakyTest.getFlakyRuns() == null ? 0 : flakyTest.getFlakyRuns().size();\n   632\t      testFlakyStatsWithRevisionMap.put(flakyTest.getFullDisplayName(),\n   633\t          new SingleTestFlakyStatsWithRevision(new SingleTestFlakyStats(1, flakyRetry, 0),\n   634\t              owner));\n   635\t    }\n   636\t\n   637\t    return testFlakyStatsWithRevisionMap;\n   638\t  }\n   639\t\n   640\t  private static final long serialVersionUID = 1L;\n   641\t\n   642\t}',
+│   │   │   name='read_file',
+│   │   │   id='6907503b-0109-44bc-9291-85e4a78c6590',
+│   │   │   tool_call_id='call_F8XFTwsY8kuMmatN3VmNvAsA'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='   131\t  @Override\n   132\t  public int getPassCount() {\n   133\t    return passCount;\n   134\t  }\n   135\t\n   136\t  @Exported\n   137\t  @Override\n   138\t  public int getFailCount() {\n   139\t    return failCount;\n   140\t  }\n   141\t\n   142\t  @Exported\n   143\t  @Override\n   144\t  public int getSkipCount() {\n   145\t    return skipCount;\n   146\t  }\n   147\t\n   148\t  @Exported\n   149\t  public int getFlakeCount() {\n   150\t    return flakeCount;\n   151\t  }\n   152\t\n   153\t  @Override\n   154\t  public int getTotalCount() {\n   155\t    return passCount + failCount + skipCount + flakeCount;\n   156\t  }\n   157\t\n   158\t\n   159\t  @Override\n   160\t  public Object getDynamic(String name, StaplerRequest req, StaplerResponse rsp) {\n   161\t    FlakyClassResult result = getClassResult(name);\n   162\t    if (result != null) {\n   163\t      return result;\n   164\t    } else {\n   165\t      return super.getDynamic(name, req, rsp);\n   166\t    }\n   167\t  }\n   168\t\n   169\t  public FlakyClassResult getClassResult(String name) {\n   170\t    return classes.get(name);\n   171\t  }\n   172\t\n   173\t  @Exported(name="child")\n   174\t  public Collection<FlakyClassResult> getChildren() {\n   175\t    return classes.values();\n   176\t  }\n   177\t\n   178\t  /**\n   179\t   * Whether this test result has children.\n   180\t   */\n   181\t  @Override\n   182\t  public boolean hasChildren() {\n   183\t    int totalTests = passCount + failCount + skipCount + flakeCount;\n   184\t    return (totalTests != 0);\n   185\t  }\n   186\t\n   187\t  /**\n   188\t   * Returns a list of the failed cases, in no particular\n   189\t   * sort order\n   190\t   */\n   191\t  public List<FlakyCaseResult> getFailedTests() {\n   192\t    List<FlakyCaseResult> r = new ArrayList<FlakyCaseResult>();\n   193\t    for (FlakyClassResult clr : classes.values()) {\n   194\t      for (FlakyCaseResult cr : clr.getChildren()) {\n   195\t        if (cr.isFailed()) {\n   196\t          r.add(cr);\n   197\t        }\n   198\t      }\n   199\t    }\n   200\t    return r;\n   201\t  }\n   202\t\n   203\t  /**\n   204\t   * Gets the "children" of this test result that passed without a flake\n   205\t   *\n   206\t   * @return the children of this test result, if any, or an empty collection\n   207\t   */\n   208\t  @Override\n   209\t  public Collection<? extends hudson.tasks.test.TestResult> getPassedTests() {\n   210\t    List<FlakyCaseResult> r = new ArrayList<FlakyCaseResult>();\n   211\t    for (FlakyClassResult clr : classes.values()) {\n   212\t      for (FlakyCaseResult cr : clr.getChildren()) {\n   213\t        if (cr.isPassed() && !cr.isFlaked()) {\n   214\t          r.add(cr);\n   215\t        }\n   216\t      }\n   217\t    }\n   218\t    return r;\n   219\t  }\n   220\t\n   221\t  /**\n   222\t   * Gets the "children" of this test result that were skipped\n   223\t   *\n   224\t   * @return the children of this test result, if any, or an empty list\n   225\t   */\n   226\t  @Override\n   227\t  public Collection<? extends TestResult> getSkippedTests() {\n   228\t    List<FlakyCaseResult> r = new ArrayList<FlakyCaseResult>();\n   229\t    for (FlakyClassResult clr : classes.values()) {\n   230\t      for (FlakyCaseResult cr : clr.getChildren()) {\n   231\t        if (cr.isSkipped()) {\n   232\t          r.add(cr);\n   233\t        }\n   234\t      }\n   235\t    }\n   236\t    return r;\n   237\t  }\n   238\t\n   239\t  /**\n   240\t   * Gets the "children" of this test result that were flaky\n   241\t   *\n   242\t   * @return the children of this test result, if any, or an empty list\n   243\t   */\n   244\t  public List<FlakyCaseResult> getFlakyTests() {\n   245\t    List<FlakyCaseResult> r = new ArrayList<FlakyCaseResult>();\n   246\t    for (FlakyClassResult clr : classes.values()) {\n   247\t      for (FlakyCaseResult cr : clr.getChildren()) {\n   248\t        if (cr.isFlaked()) {\n   249\t          r.add(cr);\n   250\t        }\n   251\t      }\n   252\t    }\n   253\t    return r;\n   254\t  }\n   255\t\n   256\t  /**\n   257\t   * @return true if every test was not skipped and every test did not fail, false otherwise.\n   258\t   */\n   259\t  @Override\n   260\t  public boolean isPassed() {\n   261\t    return (failCount == 0 && skipCount == 0);\n   262\t  }\n   263\t\n   264\t  void add(FlakyCaseResult r) {\n   265\t    String n = r.getSimpleName(), sn = safe(n);\n   266\t    FlakyClassResult c = getClassResult(sn);\n   267\t    if (c == null) {\n   268\t      classes.put(sn, c = new FlakyClassResult(this, n));\n   269\t    }\n   270\t    c.add(r);\n   271\t    duration += r.getDuration();\n   272\t  }\n   273\t\n   274\t  /**\n   275\t   * Recount my children\n   276\t   */\n   277\t  @Override\n   278\t  public void tally() {\n   279\t    passCount = 0;\n   280\t    failCount = 0;\n   281\t    skipCount = 0;\n   282\t    flakeCount = 0;\n   283\t    duration = 0;\n   284\t\n   285\t    for (FlakyClassResult cr : classes.values()) {\n   286\t      cr.tally();\n   287\t      passCount += cr.getPassCount();\n   288\t      failCount += cr.getFailCount();\n   289\t      skipCount += cr.getSkipCount();\n   290\t      flakeCount += cr.getFlakeCount();\n   291\t      duration += cr.getDuration();\n   292\t    }\n   293\t  }\n   294\t\n   295\t  void freeze() {\n   296\t    passCount = failCount = skipCount = flakeCount = 0;\n   297\t    for (FlakyClassResult cr : classes.values()) {\n   298\t      cr.freeze();\n   299\t      passCount += cr.getPassCount();\n   300\t      failCount += cr.getFailCount();\n   301\t      flakeCount += cr.getFlakeCount();\n   302\t      skipCount += cr.getSkipCount();\n   303\t    }\n   304\t  }\n   305\t\n   306\t  public int compareTo(FlakyPackageResult that) {\n   307\t    return this.packageName.compareTo(that.packageName);\n   308\t  }\n   309\t\n   310\t  public String getDisplayName() {\n   311\t    return TestNameTransformer.getTransformedName(packageName);\n   312\t  }\n   313\t}',
+│   │   │   name='read_file',
+│   │   │   id='19f433f4-0a2f-4f35-96d3-cda5c82089c1',
+│   │   │   tool_call_id='call_aLH1AChwpnxqAbPeZnKX0R26'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='   121\t      return className.substring(idx + 1);\n   122\t    }\n   123\t  }\n   124\t\n   125\t  public\n   126\t  @Override\n   127\t  synchronized String getSafeName() {\n   128\t    if (safeName != null) {\n   129\t      return safeName;\n   130\t    }\n   131\t    return safeName = uniquifyName(parent.getChildren(), safe(getName()));\n   132\t  }\n   133\t\n   134\t  public FlakyCaseResult getCaseResult(String name) {\n   135\t    for (FlakyCaseResult c : cases) {\n   136\t      if (c.getSafeName().equals(name)) {\n   137\t        return c;\n   138\t      }\n   139\t    }\n   140\t    return null;\n   141\t  }\n   142\t\n   143\t  @Override\n   144\t  public Object getDynamic(String name, StaplerRequest req, StaplerResponse rsp) {\n   145\t    FlakyCaseResult c = getCaseResult(name);\n   146\t    if (c != null) {\n   147\t      return c;\n   148\t    } else {\n   149\t      return super.getDynamic(name, req, rsp);\n   150\t    }\n   151\t  }\n   152\t\n   153\t\n   154\t  @Exported(name = "child")\n   155\t  public List<FlakyCaseResult> getChildren() {\n   156\t    return cases;\n   157\t  }\n   158\t\n   159\t  public boolean hasChildren() {\n   160\t    return ((cases != null) && (cases.size() > 0));\n   161\t  }\n   162\t\n   163\t  @Exported\n   164\t  public float getDuration() {\n   165\t    return duration;\n   166\t  }\n   167\t\n   168\t  @Exported\n   169\t  public int getPassCount() {\n   170\t    return passCount;\n   171\t  }\n   172\t\n   173\t  @Exported\n   174\t  public int getFailCount() {\n   175\t    return failCount;\n   176\t  }\n   177\t\n   178\t  @Exported\n   179\t  public int getSkipCount() {\n   180\t    return skipCount;\n   181\t  }\n   182\t\n   183\t  @Exported\n   184\t  public int getFlakeCount() {\n   185\t    return flakeCount;\n   186\t  }\n   187\t\n   188\t  public void add(FlakyCaseResult r) {\n   189\t    cases.add(r);\n   190\t  }\n   191\t\n   192\t  /**\n   193\t   * Recount my children.\n   194\t   */\n   195\t  @Override\n   196\t  public void tally() {\n   197\t    passCount = failCount = skipCount = flakeCount = 0;\n   198\t    duration = 0;\n   199\t    for (FlakyCaseResult r : cases) {\n   200\t      r.setClass(this);\n   201\t      if (r.isSkipped()) {\n   202\t        skipCount++;\n   203\t      } else if (r.isFlaked()) {\n   204\t        flakeCount++;\n   205\t      } else if (r.isPassed()) {\n   206\t        passCount++;\n   207\t      } else {\n   208\t        failCount++;\n   209\t      }\n   210\t      duration += r.getDuration();\n   211\t    }\n   212\t  }\n   213\t\n   214\t\n   215\t  void freeze() {\n   216\t    passCount = failCount = skipCount = flakeCount = 0;\n   217\t    duration = 0;\n   218\t    for (FlakyCaseResult r : cases) {\n   219\t      r.setClass(this);\n   220\t      if (r.isSkipped()) {\n   221\t        skipCount++;\n   222\t      } else if (r.isFlaked()) {\n   223\t        flakeCount++;\n   224\t      } else if (r.isPassed()) {\n   225\t        passCount++;\n   226\t      } else {\n   227\t        failCount++;\n   228\t      }\n   229\t      duration += r.getDuration();\n   230\t    }\n   231\t    Collections.sort(cases);\n   232\t  }\n   233\t\n   234\t  public String getClassName() {\n   235\t    return className;\n   236\t  }\n   237\t\n   238\t  public int compareTo(FlakyClassResult that) {\n   239\t    return this.className.compareTo(that.className);\n   240\t  }\n   241\t\n   242\t  public String getDisplayName() {\n   243\t    return TestNameTransformer.getTransformedName(getName());\n   244\t  }\n   245\t\n   246\t  /**\n   247\t   * @since 1.515\n   248\t   */\n   249\t  public String getFullName() {\n   250\t    return getParent().getName() + "." + className;\n   251\t  }\n   252\t\n   253\t  public String getFullDisplayName() {\n   254\t    return getParent().getDisplayName() + "." + TestNameTransformer.getTransformedName(className);\n   255\t  }\n   256\t\n   257\t  /**\n   258\t   * Gets the relative path to this test case from the given object.\n   259\t   */\n   260\t  @Override\n   261\t  public String getRelativePathFrom(TestObject it) {\n   262\t    if (it instanceof FlakyCaseResult) {\n   263\t      return "..";\n   264\t    } else {\n   265\t      return super.getRelativePathFrom(it);\n   266\t    }\n   267\t  }\n   268\t\n   269\t  @Override\n   270\t  public TestAction getTestAction() {\n   271\t    return new JUnitFlakyAggregatedTestDataAction(getPassCount(),\n   272\t        getFailCount(), getFlakeCount());\n   273\t  }\n   274\t}',
+│   │   │   name='read_file',
+│   │   │   id='98d0512a-b177-4e1d-86dc-e697b966e2cb',
+│   │   │   tool_call_id='call_sWSpdvIVs9YGLrnSv8s289lX'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5d07-1f9d-7e80-8dc3-6dc8b47a7158',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': 'src/main/java/**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': 'checkPermission'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_mcbW2WevmHpgxO7LVZ3hONST',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': 'src/main/java/**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': 'doShowAll'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_VehZwRxWJipYUP6JyDv3HkDd',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': 'src/test/java/**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': 'showAll'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_nHjnz3ZpmjWG3VO7RobzCfYJ',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/resources/com/google/jenkins/flakyTestHandler/plugin/HistoryAggregatedFlakyTestResultAction/jobMain.jelly',
+│   │   │   │   │   │   'limit': 220,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_FsSruJNscFbUyVjSJRr8mr4f',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/resources/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeAction/deflakeConfig.jelly',
+│   │   │   │   │   │   'limit': 220,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_EaZO85viylgKsKuTcKA6mVN9',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 34971,
+│   │   │   │   'output_tokens': 345,
+│   │   │   │   'total_tokens': 35316,
+│   │   │   │   'input_token_details': {'cache_read': 24448},
+│   │   │   │   'output_token_details': {'reasoning': 43}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeAction.java:\n  118:       job.checkPermission(AbstractProject.BUILD);\n  136:       job.checkPermission(AbstractProject.BUILD);',
+│   │   │   name='grep',
+│   │   │   id='b0b0a6a4-9a55-4e58-8e9d-0dcd04a62d4f',
+│   │   │   tool_call_id='call_mcbW2WevmHpgxO7LVZ3hONST'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/HistoryAggregatedFlakyTestResultAction.java:\n  195:   public void doShowAll(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {',
+│   │   │   name='grep',
+│   │   │   id='d1d72ee0-b4da-4284-b054-5ab40ee8ba60',
+│   │   │   tool_call_id='call_VehZwRxWJipYUP6JyDv3HkDd'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='28bb1bd3-1b62-42e8-b34f-023a12332aa0',
+│   │   │   tool_call_id='call_nHjnz3ZpmjWG3VO7RobzCfYJ'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\t<!--\n     2\tCopyright 2014 Google Inc. All rights reserved.\n     3\t\n     4\tLicensed under the Apache License, Version 2.0 (the "License");\n     5\tyou may not use this file except in compliance with the License.\n     6\tYou may obtain a copy of the License at\n     7\t\n     8\t    http://www.apache.org/licenses/LICENSE-2.0\n     9\t\n    10\tUnless required by applicable law or agreed to in writing, software\n    11\tdistributed under the License is distributed on an "AS IS" BASIS,\n    12\tWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n    13\tSee the License for the specific language governing permissions and\n    14\tlimitations under the License.\n    15\t-->\n    16\t<?jelly escape-by-default=\'true\'?>\n    17\t<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"\n    18\t         xmlns:t="/lib/hudson" xmlns:f="/lib/form">\n    19\t     <h2> Flaky History </h2>\n    20\t     <a href="historyAggregate/showAll">\n    21\t       <j:choose>\n    22\t         <j:when test="${it.onlyShowFlakyTests}">(${%Show all the tests})</j:when>\n    23\t         <j:otherwise>(${%Only show flaky tests})</j:otherwise>\n    24\t       </j:choose>\n    25\t     </a>\n    26\t     <table class="pane sortable bigtable" id="flakyStats">\n    27\t       <tr>\n    28\t         <td class="pane-header" style="width:15em">${%Test Name}</td>\n    29\t         <td class="pane-header" style="width:5em">${%Passes}</td>\n    30\t         <td class="pane-header" style="width:5em">${%Fails}</td>\n    31\t         <td class="pane-header" style="width:5em">${%Flakes}</td>\n    32\t       </tr>\n    33\t       <tbody>\n    34\t         <j:forEach var="entry" items="${it.filteredAggregatedFlakyStats.entrySet()}">\n    35\t           <j:set var="test" value="${entry.getKey()}"/>\n    36\t           <j:set var="stat" value="${entry.getValue()}"/>\n    37\t           <tr>\n    38\t             <td class="pane" style="text-align:left">\n    39\t             <j:invokeStatic var="safeName" className="com.google.jenkins.flakyTestHandler.plugin.TestFlakyStatsOverRevision"\n    40\t                method="getSafeTestName">\n    41\t                <j:arg value="${test}" type="java.lang.String" />\n    42\t             </j:invokeStatic>\n    43\t             <a href="flakyStatsRevision?test=${safeName}">\n    44\t                <j:out value="${test}"/>\n    45\t             </a>\n    46\t             </td>\n    47\t             <td class="pane" style="text-align:left" data="${stat.pass}">${stat.pass}</td>\n    48\t             <td class="pane" style="text-align:left" data="${stat.fail}">${stat.fail}</td>\n    49\t             <td class="pane" style="text-align:left" data="${stat.flake}">${stat.flake}</td>\n    50\t           </tr>\n    51\t         </j:forEach>\n    52\t       </tbody>\n    53\t     </table>\n    54\t</j:jelly>',
+│   │   │   name='read_file',
+│   │   │   id='e69d79df-15c6-4ed4-aa96-26d379830eb4',
+│   │   │   tool_call_id='call_FsSruJNscFbUyVjSJRr8mr4f'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\t<!--\n     2\tCopyright 2014 Google Inc. All rights reserved.\n     3\t\n     4\tLicensed under the Apache License, Version 2.0 (the "License");\n     5\tyou may not use this file except in compliance with the License.\n     6\tYou may obtain a copy of the License at\n     7\t\n     8\t    http://www.apache.org/licenses/LICENSE-2.0\n     9\t\n    10\tUnless required by applicable law or agreed to in writing, software\n    11\tdistributed under the License is distributed on an "AS IS" BASIS,\n    12\tWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n    13\tSee the License for the specific language governing permissions and\n    14\tlimitations under the License.\n    15\t-->\n    16\t\n    17\t <?jelly escape-by-default=\'true\'?>\n    18\t <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"\n    19\t          xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">\n    20\t     <l:layout title="${%Deflake failed build}" norefresh="true" permission="${it.requiredPermission}">\n    21\t         <l:side-panel>\n    22\t             <l:tasks>\n    23\t                 <l:task icon="images/24x24/up.gif" href="${rootURL}/" title="${%Back to Dashboard}"/>\n    24\t             </l:tasks>\n    25\t         </l:side-panel>\n    26\t         <l:main-panel>\n    27\t             <f:form method="post" action="submitDeflakeRequest" name="config" tableClass="parameters">\n    28\t                 <f:entry title="rerunFailingTestsCount" description="How many times to re-run" help="/plugin/flaky-test-handler/help-rerun.html">\n    29\t                 <div name="rerunFailingTestsCountParam" description="How many times to re-run">\n    30\t                     <input type="hidden" name="name" value="surefire.rerunFailingTestsCount" />\n    31\t                     <f:textbox name="value" value="0" />\n    32\t                 </div>\n    33\t                 </f:entry>\n    34\t\n    35\t                 <f:entry title="only run failing tests" field="only-failing" description="Whether to run only failing tests" help="/plugin/flaky-test-handler/help-only-fail.html">\n    36\t                 <div name="testParam" description="Whether only run failing tests">\n    37\t                     <input type="hidden" name="name" value="onlyRunFailingTests" />\n    38\t                     <f:checkbox name="value" checked="false" />\n    39\t                 </div>\n    40\t                 </f:entry>\n    41\t\n    42\t                 <br/>\n    43\t                 <br/>\n    44\t                 <f:block>\n    45\t                     <f:submit value="${%Deflake}"/>\n    46\t                 </f:block>\n    47\t             </f:form>\n    48\t         </l:main-panel>\n    49\t     </l:layout>\n    50\t </j:jelly>',
+│   │   │   name='read_file',
+│   │   │   id='f3f7164c-1fc2-41c8-baa4-0fb2d59661b7',
+│   │   │   tool_call_id='call_EaZO85viylgKsKuTcKA6mVN9'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='继续核查是否存在可被未授权或跨站请求触发的状态变更入口。',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5d07-49c5-7720-8763-70c2ec0a64b9',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': 'src/main/java/**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': 'requiredPermission'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_tIPKsqZDNerZ7zyNXrBBbI4M',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': 'src/main/java/**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': 'Permission'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_1lSk6uwxRbz3IcFQkx1vhdZA',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': 'src/test/java/**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': 'DeflakeAction'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_Ty0rQNwunVn63Kb2FUYhKV7H',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': 'src/test/java/**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha',
+│   │   │   │   │   │   'pattern': 'HistoryAggregatedFlakyTestResultAction'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_psXdoMr7OQxNSl4UklxHs3tP',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeActionTest.java',
+│   │   │   │   │   │   'limit': 260,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_ciq6cQJhvOMDJzQMXzjslHtC',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/plugin/HistoryAggregatedFlakyTestResultActionTest.java',
+│   │   │   │   │   │   'limit': 260,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_pnC2ITzsNPKkrlDAXWJz3Kbh',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 37014,
+│   │   │   │   'output_tokens': 440,
+│   │   │   │   'total_tokens': 37454,
+│   │   │   │   'input_token_details': {'cache_read': 34816},
+│   │   │   │   'output_token_details': {'reasoning': 62}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='8b191297-cb6e-4e1c-a43f-2e1574a247cd',
+│   │   │   tool_call_id='call_tIPKsqZDNerZ7zyNXrBBbI4M'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/main/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeAction.java:\n  118:       job.checkPermission(AbstractProject.BUILD);\n  136:       job.checkPermission(AbstractProject.BUILD);',
+│   │   │   name='grep',
+│   │   │   id='985b8159-cd2b-48db-9e94-4c77dc5fcb5d',
+│   │   │   tool_call_id='call_1lSk6uwxRbz3IcFQkx1vhdZA'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeActionIntegrationTest.java:\n  46: public class DeflakeActionIntegrationTest {\n  52:   public void testDeflakeAction() throws Exception {\n  58:     DeflakeAction action = build.getAction(DeflakeAction.class);\n  75:     assertNull(build.getAction(DeflakeAction.class));\n  78:     assertNull(build.getAction(DeflakeAction.class));\n  82:   public void testDeflakeActionForPipeline() throws Exception {\n  87:     DeflakeAction action = run.getAction(DeflakeAction.class);\n  104:     assertNull(run.getAction(DeflakeAction.class));\n  107:     assertNull(run.getAction(DeflakeAction.class));\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeActionTest.java:\n  28: public class DeflakeActionTest {\n  57:     DeflakeAction action = new DeflakeAction(classMethodMap);\n/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/plugin/deflake/DeflakeGitBuildChooserTest.java:\n  17: import com.google.jenkins.flakyTestHandler.plugin.deflake.DeflakeActionIntegrationTest.FailingTestResultAction;',
+│   │   │   name='grep',
+│   │   │   id='193e5d51-cf7e-4ed2-be52-acd9889e3ddd',
+│   │   │   tool_call_id='call_Ty0rQNwunVn63Kb2FUYhKV7H'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-85-S/Alpha/src/test/java/com/google/jenkins/flakyTestHandler/plugin/HistoryAggregatedFlakyTestResultActionTest.java:\n  28: import com.google.jenkins.flakyTestHandler.plugin.HistoryAggregatedFlakyTestResultAction.SingleTestFlakyStats;\n  29: import com.google.jenkins.flakyTestHandler.plugin.HistoryAggregatedFlakyTestResultAction.SingleTestFlakyStatsWithRevision;\n  46: public class HistoryAggregatedFlakyTestResultActionTest {\n  78:     HistoryAggregatedFlakyTestResultAction action = new HistoryAggregatedFlakyTestResultAction(\n  164:     // Third deflake build with HistoryAggregatedFlakyTestResultAction\n  167:             new HistoryAggregatedFlakyTestResultAction(project)).get();\n  172:     HistoryAggregatedFlakyTestResultAction action = thirdBuild\n  173:         .getAction(HistoryAggregatedFlakyTestResultAction.class);',
+│   │   │   name='grep',
+│   │   │   id='36bb18db-17a0-4dd9-b257-3d5272703227',
+│   │   │   tool_call_id='call_psXdoMr7OQxNSl4UklxHs3tP'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\t/* Copyright 2014 Google Inc. All rights reserved.\n     2\t *\n     3\t *  Licensed under the Apache License, Version 2.0 (the "License");\n     4\t *  you may not use this file except in compliance with the License.\n     5\t *  You may obtain a copy of the License at\n     6\t *\n     7\t *  http://www.apache.org/licenses/LICENSE-2.0\n     8\t *\n     9\t *  Unless required by applicable law or agreed to in writing, software\n    10\t *  distributed under the License is distributed on an "AS IS" BASIS,\n    11\t *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n    12\t *  See the License for the specific language governing permissions and\n    13\t *  limitations under the License.\n    14\t */\n    15\tpackage com.google.jenkins.flakyTestHandler.plugin.deflake;\n    16\t\n    17\timport static org.junit.Assert.assertEquals;\n    18\t\n    19\timport com.google.common.collect.Sets;\n    20\t\n    21\timport org.junit.Test;\n    22\t\n    23\timport java.util.Arrays;\n    24\timport java.util.LinkedHashMap;\n    25\timport java.util.Map;\n    26\timport java.util.Set;\n    27\t\n    28\tpublic class DeflakeActionTest {\n    29\t\n    30\t  private final static String TEST_CLASS_ONE = "classOne";\n    31\t  private final static String TEST_CLASS_TWO = "classTwo";\n    32\t\n    33\t  private final static String TEST_METHOD_ONE = "methodOne";\n    34\t  private final static String TEST_METHOD_TWO = "methodTwo";\n    35\t  private final static String TEST_METHOD_THREE = "methodThree";\n    36\t\n    37\t  @Test\n    38\t  public void testGenerateMavenTestParamsForSingleTest() {\n    39\t    Map<String, Set<String>> classMethodMap = new LinkedHashMap<String, Set<String>>();\n    40\t    classMethodMap.put(TEST_CLASS_TWO, Sets.newHashSet(TEST_METHOD_THREE));\n    41\t    testGenerateMavenTestParams(classMethodMap, "classTwo#methodThree",\n    42\t        "Wrong test parameters for single test class");\n    43\t  }\n    44\t\n    45\t  @Test\n    46\t  public void testGenerateMavenTestParamsForMultipleTests() {\n    47\t    Map<String, Set<String>> classMethodMap = new LinkedHashMap<String, Set<String>>();\n    48\t    classMethodMap.put(TEST_CLASS_ONE,\n    49\t        Sets.newLinkedHashSet(Arrays.asList(TEST_METHOD_ONE, TEST_METHOD_TWO)));\n    50\t    classMethodMap.put(TEST_CLASS_TWO, Sets.newHashSet(TEST_METHOD_THREE));\n    51\t    testGenerateMavenTestParams(classMethodMap, "classOne#methodOne+methodTwo,classTwo#methodThree",\n    52\t        "Wrong test parameters for multiple test classes");\n    53\t  }\n    54\t\n    55\t  private void testGenerateMavenTestParams(Map<String, Set<String>> classMethodMap,\n    56\t      String expectedTestParam, String errorMsg) {\n    57\t    DeflakeAction action = new DeflakeAction(classMethodMap);\n    58\t    assertEquals(errorMsg, expectedTestParam,\n    59\t        action.generateMavenTestParams());\n    60\t  }\n    61\t}',
+│   │   │   name='read_file',
+│   │   │   id='5e2bf177-16a3-4099-8fb3-1d97a96cc0a3',
+│   │   │   tool_call_id='call_ciq6cQJhvOMDJzQMXzjslHtC'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\t/* Copyright 2014 Google Inc. All rights reserved.\n     2\t *\n     3\t *  Licensed under the Apache License, Version 2.0 (the "License");\n     4\t *  you may not use this file except in compliance with the License.\n     5\t *  You may obtain a copy of the License at\n     6\t *\n     7\t *  http://www.apache.org/licenses/LICENSE-2.0\n     8\t *\n     9\t *  Unless required by applicable law or agreed to in writing, software\n    10\t *  distributed under the License is distributed on an "AS IS" BASIS,\n    11\t *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n    12\t *  See the License for the specific language governing permissions and\n    13\t *  limitations under the License.\n    14\t */\n    15\tpackage com.google.jenkins.flakyTestHandler.plugin;\n    16\t\n    17\t/**\n    18\t *\n    19\t * Test aggregation logic\n    20\t *\n    21\t * @author Qingzhou Luo\n    22\t */\n    23\t\n    24\timport static org.junit.Assert.assertArrayEquals;\n    25\timport static org.junit.Assert.assertEquals;\n    26\t\n    27\timport com.google.jenkins.flakyTestHandler.plugin.FlakyTestResultAction.FlakyRunStats;\n    28\timport com.google.jenkins.flakyTestHandler.plugin.HistoryAggregatedFlakyTestResultAction.SingleTestFlakyStats;\n    29\timport com.google.jenkins.flakyTestHandler.plugin.HistoryAggregatedFlakyTestResultAction.SingleTestFlakyStatsWithRevision;\n    30\timport com.google.jenkins.flakyTestHandler.plugin.deflake.DeflakeCause;\n    31\t\n    32\timport org.junit.Rule;\n    33\timport org.junit.Test;\n    34\timport org.jvnet.hudson.test.JenkinsRule;\n    35\t\n    36\timport java.util.ArrayList;\n    37\timport java.util.HashMap;\n    38\timport java.util.List;\n    39\timport java.util.Map;\n    40\t\n    41\timport hudson.model.AbstractBuild;\n    42\timport hudson.model.CauseAction;\n    43\timport hudson.model.FreeStyleBuild;\n    44\timport hudson.model.FreeStyleProject;\n    45\t\n    46\tpublic class HistoryAggregatedFlakyTestResultActionTest {\n    47\t\n    48\t  private final static String TEST_ONE = "testOne";\n    49\t\n    50\t  private final static String TEST_TWO = "testTwo";\n    51\t\n    52\t  private final static String TEST_THREE = "testThree";\n    53\t\n    54\t  private final static String TEST_FOUR = "testFour";\n    55\t\n    56\t  private final static String REVISION_ONE = "revision_one";\n    57\t\n    58\t  private final static String REVISION_TWO = "revision_two";\n    59\t\n    60\t  private final static int TOTAL_RUNS = 2;\n    61\t\n    62\t  @Rule\n    63\t  public JenkinsRule jenkins = new JenkinsRule();\n    64\t\n    65\t  @Test\n    66\t  public void testAggregateFlakyRunsWithRevisions() throws Exception {\n    67\t\n    68\t    FreeStyleProject project = jenkins.createFreeStyleProject("project");\n    69\t\n    70\t    List<AbstractBuild> buildList = new ArrayList<AbstractBuild>();\n    71\t\n    72\t    for (FlakyTestResultAction action : setUpFlakyTestResultAction()) {\n    73\t      FreeStyleBuild build = new FreeStyleBuild(project);\n    74\t      build.addAction(action);\n    75\t      buildList.add(build);\n    76\t    }\n    77\t\n    78\t    HistoryAggregatedFlakyTestResultAction action = new HistoryAggregatedFlakyTestResultAction(\n    79\t        null);\n    80\t\n    81\t    for (AbstractBuild build : buildList) {\n    82\t      action.aggregateOneBuild(build);\n    83\t    }\n    84\t\n    85\t    Map<String, Map<String, SingleTestFlakyStats>> statsMapOverRevision =\n    86\t        action.getAggregatedTestFlakyStatsWithRevision();\n    87\t\n    88\t    // TEST_ONE\n    89\t    SingleTestFlakyStats testOneRevisionOneStats = statsMapOverRevision.get(TEST_ONE)\n    90\t        .get(REVISION_ONE);\n    91\t    assertEquals("wrong number passes", 2, testOneRevisionOneStats.getPass());\n    92\t    assertEquals("wrong number fails", 0, testOneRevisionOneStats.getFail());\n    93\t    assertEquals("wrong number flakes", 0, testOneRevisionOneStats.getFlake());\n    94\t\n    95\t    SingleTestFlakyStats testOneRevisionTwoStats = statsMapOverRevision.get(TEST_ONE)\n    96\t        .get(REVISION_TWO);\n    97\t    assertEquals("wrong number passes", 1, testOneRevisionTwoStats.getPass());\n    98\t    assertEquals("wrong number fails", 1, testOneRevisionTwoStats.getFail());\n    99\t    assertEquals("wrong number flakes", 0, testOneRevisionTwoStats.getFlake());\n   100\t\n   101\t    // TEST_TWO\n   102\t    SingleTestFlakyStats testTwoRevisionOneStats = statsMapOverRevision.get(TEST_TWO)\n   103\t        .get(REVISION_ONE);\n   104\t    assertEquals("wrong number passes", 1, testTwoRevisionOneStats.getPass());\n   105\t    assertEquals("wrong number fails", 3, testTwoRevisionOneStats.getFail());\n   106\t    assertEquals("wrong number flakes", 0, testTwoRevisionOneStats.getFlake());\n   107\t\n   108\t    SingleTestFlakyStats testTwoRevisionTwoStats = statsMapOverRevision.get(TEST_TWO)\n   109\t        .get(REVISION_TWO);\n   110\t    assertEquals("wrong number passes", 1, testTwoRevisionTwoStats.getPass());\n   111\t    assertEquals("wrong number fails", 0, testTwoRevisionTwoStats.getFail());\n   112\t    assertEquals("wrong number flakes", 0, testTwoRevisionTwoStats.getFlake());\n   113\t\n   114\t    // TEST_THREE\n   115\t    SingleTestFlakyStats testThreeRevisionOneStats = statsMapOverRevision.get(TEST_THREE)\n   116\t        .get(REVISION_ONE);\n   117\t    assertEquals("wrong number passes", 1, testThreeRevisionOneStats.getPass());\n   118\t    assertEquals("wrong number fails", 2, testThreeRevisionOneStats.getFail());\n   119\t    assertEquals("wrong number flakes", 0, testThreeRevisionOneStats.getFlake());\n   120\t\n   121\t    SingleTestFlakyStats testThreeRevisionTwoStats = statsMapOverRevision.get(TEST_THREE)\n   122\t        .get(REVISION_TWO);\n   123\t    assertEquals("wrong number passes", 0, testThreeRevisionTwoStats.getPass());\n   124\t    assertEquals("wrong number fails", 2, testThreeRevisionTwoStats.getFail());\n   125\t    assertEquals("wrong number flakes", 0, testThreeRevisionTwoStats.getFlake());\n   126\t\n   127\t    // TEST_FOUR\n   128\t    SingleTestFlakyStats testFourRevisionOneStats = statsMapOverRevision.get(TEST_FOUR)\n   129\t        .get(REVISION_ONE);\n   130\t    assertEquals("wrong number passes", 1, testFourRevisionOneStats.getPass());\n   131\t    assertEquals("wrong number fails", 3, testFourRevisionOneStats.getFail());\n   132\t    assertEquals("wrong number flakes", 0, testFourRevisionOneStats.getFlake());\n   133\t\n   134\t    SingleTestFlakyStats testFourRevisionTwoStats = statsMapOverRevision.get(TEST_FOUR)\n   135\t        .get(REVISION_TWO);\n   136\t    assertEquals("wrong number passes", 1, testFourRevisionTwoStats.getPass());\n   137\t    assertEquals("wrong number fails", 0, testFourRevisionTwoStats.getFail());\n   138\t    assertEquals("wrong number flakes", 0, testFourRevisionTwoStats.getFlake());\n   139\t  }\n   140\t\n   141\t  @Test\n   142\t  public void testAggregate() throws Exception {\n   143\t    FreeStyleProject project = jenkins.createFreeStyleProject("project");\n   144\t    List<FlakyTestResultAction> flakyTestResultActions = setUpFlakyTestResultAction();\n   145\t\n   146\t    List<FlakyTestResultAction> flakyTestResultActionList = new ArrayList<FlakyTestResultAction>(\n   147\t        flakyTestResultActions);\n   148\t\n   149\t    // First non-deflake build\n   150\t    AbstractBuild firstBuild = (AbstractBuild) project\n   151\t        .scheduleBuild2(0, flakyTestResultActionList.get(0)).get();\n   152\t    while (firstBuild.isBuilding()) {\n   153\t      Thread.sleep(100);\n   154\t    }\n   155\t\n   156\t    // Second deflake build\n   157\t    AbstractBuild secondBuild = (AbstractBuild) project\n   158\t        .scheduleBuild2(0, flakyTestResultActionList.get(1),\n   159\t            new CauseAction(new DeflakeCause(firstBuild))).get();\n   160\t    while (secondBuild.isBuilding()) {\n   161\t      Thread.sleep(100);\n   162\t    }\n   163\t\n   164\t    // Third deflake build with HistoryAggregatedFlakyTestResultAction\n   165\t    AbstractBuild thirdBuild = (AbstractBuild) project\n   166\t        .scheduleBuild2(0, flakyTestResultActionList.get(2),\n   167\t            new HistoryAggregatedFlakyTestResultAction(project)).get();\n   168\t    while (thirdBuild.isBuilding()) {\n   169\t      Thread.sleep(100);\n   170\t    }\n   171\t\n   172\t    HistoryAggregatedFlakyTestResultAction action = thirdBuild\n   173\t        .getAction(HistoryAggregatedFlakyTestResultAction.class);\n   174\t    action.aggregate();\n   175\t\n   176\t    Map<String, SingleTestFlakyStats> aggregatedFlakyStatsMap = action.getAggregatedFlakyStats();\n   177\t\n   178\t    // Make sure revisions are inserted in the order of their appearance\n   179\t    Map<String, SingleTestFlakyStats> revisionMap = action.getAggregatedTestFlakyStatsWithRevision()\n   180\t        .get(TEST_ONE);\n   181\t    assertArrayEquals("Incorrect revision history", new String[]{REVISION_ONE, REVISION_TWO},\n   182\t        revisionMap.keySet().toArray(new String[revisionMap.size()]));\n   183\t\n   184\t    assertEquals("wrong number of entries for flaky stats", 4, aggregatedFlakyStatsMap.size());\n   185\t\n   186\t    SingleTestFlakyStats testOneStats = aggregatedFlakyStatsMap.get(TEST_ONE);\n   187\t    SingleTestFlakyStats testTwoStats = aggregatedFlakyStatsMap.get(TEST_TWO);\n   188\t    SingleTestFlakyStats testThreeStats = aggregatedFlakyStatsMap.get(TEST_THREE);\n   189\t    SingleTestFlakyStats testFourStats = aggregatedFlakyStatsMap.get(TEST_FOUR);\n   190\t\n   191\t    assertEquals("wrong number passes", 1, testOneStats.getPass());\n   192\t    assertEquals("wrong number fails", 0, testOneStats.getFail());\n   193\t    assertEquals("wrong number flakes", 1, testOneStats.getFlake());\n   194\t\n   195\t    assertEquals("wrong number passes", 1, testTwoStats.getPass());\n   196\t    assertEquals("wrong number fails", 0, testTwoStats.getFail());\n   197\t    assertEquals("wrong number flakes", 1, testTwoStats.getFlake());\n   198\t\n   199\t    assertEquals("wrong number passes", 0, testThreeStats.getPass());\n   200\t    assertEquals("wrong number fails", 1, testThreeStats.getFail());\n   201\t    assertEquals("wrong number flakes", 1, testThreeStats.getFlake());\n   202\t\n   203\t    assertEquals("wrong number passes", 1, testFourStats.getPass());\n   204\t    assertEquals("wrong number fails", 0, testFourStats.getFail());\n   205\t    assertEquals("wrong number flakes", 1, testFourStats.getFlake());\n   206\t  }\n   207\t\n   208\t\n   209\t  public static List<FlakyTestResultAction> setUpFlakyTestResultAction() {\n   210\t    FlakyTestResultAction actionOne = new FlakyTestResultAction();\n   211\t    FlakyTestResultAction actionTwo = new FlakyTestResultAction();\n   212\t    FlakyTestResultAction actionThree = new FlakyTestResultAction();\n   213\t\n   214\t    Map<String, SingleTestFlakyStatsWithRevision> testFlakyStatsWithRevisionMap =\n   215\t        new HashMap<String, SingleTestFlakyStatsWithRevision>();\n   216\t    testFlakyStatsWithRevisionMap.put(TEST_ONE,\n   217\t        createSingleTestFlakyStatsWithRevision(TOTAL_RUNS, REVISION_ONE, TestState.PASSED));\n   218\t    testFlakyStatsWithRevisionMap.put(TEST_TWO,\n   219\t        createSingleTestFlakyStatsWithRevision(TOTAL_RUNS, REVISION_ONE, TestState.FAILED));\n   220\t    testFlakyStatsWithRevisionMap.put(TEST_THREE,\n   221\t        createSingleTestFlakyStatsWithRevision(TOTAL_RUNS, REVISION_ONE, TestState.PASSED));\n   222\t    testFlakyStatsWithRevisionMap.put(TEST_FOUR,\n   223\t        createSingleTestFlakyStatsWithRevision(TOTAL_RUNS, REVISION_ONE, TestState.FLAKED));\n   224\t\n   225\t    FlakyRunStats actionOneResult = new FlakyRunStats(testFlakyStatsWithRevisionMap);\n   226\t\n   227\t    testFlakyStatsWithRevisionMap = new HashMap<String, SingleTestFlakyStatsWithRevision>();\n   228\t    testFlakyStatsWithRevisionMap.put(TEST_ONE,\n   229\t        createSingleTestFlakyStatsWithRevision(TOTAL_RUNS, REVISION_ONE, TestState.PASSED));\n   230\t    testFlakyStatsWithRevisionMap.put(TEST_TWO,\n   231\t        createSingleTestFlakyStatsWithRevision(TOTAL_RUNS, REVISION_ONE, TestState.FLAKED));\n   232\t    testFlakyStatsWithRevisionMap.put(TEST_THREE,\n   233\t        createSingleTestFlakyStatsWithRevision(TOTAL_RUNS, REVISION_ONE, TestState.FAILED));\n   234\t    testFlakyStatsWithRevisionMap.put(TEST_FOUR,\n   235\t        createSingleTestFlakyStatsWithRevision(TOTAL_RUNS, REVISION_ONE, TestState.FAILED));\n   236\t\n   237\t    FlakyRunStats actionTwoResult = new FlakyRunStats(testFlakyStatsWithRevisionMap);\n   238\t\n   239\t    testFlakyStatsWithRevisionMap = new HashMap<String, SingleTestFlakyStatsWithRevision>();\n   240\t    testFlakyStatsWithRevisionMap.put(TEST_ONE,\n   241\t        createSingleTestFlakyStatsWithRevision(TOTAL_RUNS, REVISION_TWO, TestState.FLAKED));\n   242\t    testFlakyStatsWithRevisionMap.put(TEST_TWO,\n   243\t        createSingleTestFlakyStatsWithRevision(TOTAL_RUNS, REVISION_TWO, TestState.PASSED));\n   244\t    testFlakyStatsWithRevisionMap.put(TEST_THREE,\n   245\t        createSingleTestFlakyStatsWithRevision(TOTAL_RUNS, REVISION_TWO, TestState.FAILED));\n   246\t    testFlakyStatsWithRevisionMap.put(TEST_FOUR,\n   247\t        createSingleTestFlakyStatsWithRevision(TOTAL_RUNS, REVISION_TWO, TestState.PASSED));\n   248\t\n   249\t    FlakyRunStats actionThreeResult = new FlakyRunStats(testFlakyStatsWithRevisionMap);\n   250\t\n   251\t    actionOne.setFlakyRunStats(actionOneResult);\n   252\t    actionTwo.setFlakyRunStats(actionTwoResult);\n   253\t    actionThree.setFlakyRunStats(actionThreeResult);\n   254\t\n   255\t    List<FlakyTestResultAction> actionList = new ArrayList<FlakyTestResultAction>();\n   256\t\n   257\t    actionList.add(actionOne);\n   258\t    actionList.add(actionTwo);\n   259\t    actionList.add(actionThree);\n   260\t    return actionList;',
+│   │   │   name='read_file',
+│   │   │   id='ca4e1ca2-13ca-4e4b-9bea-7c97fa89bc8b',
+│   │   │   tool_call_id='call_pnC2ITzsNPKkrlDAXWJz3Kbh'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5d07-784b-7bd3-9acc-cb5bc1a001ae',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'write_todos',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'todos': [
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '枚举审计目录结构并识别项目语言与关键源码位置',
+│   │   │   │   │   │   │   │   'status': 'completed'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '使用静态审计工具和源码阅读定位潜在安全漏洞',
+│   │   │   │   │   │   │   │   'status': 'completed'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '基于证据输出唯一审计结论标签',
+│   │   │   │   │   │   │   │   'status': 'in_progress'
+│   │   │   │   │   │   │   }
+│   │   │   │   │   │   ]
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_AkuJVdxS9urBz3AC0RJB354m',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 42474,
+│   │   │   │   'output_tokens': 164,
+│   │   │   │   'total_tokens': 42638,
+│   │   │   │   'input_token_details': {'cache_read': 36864},
+│   │   │   │   'output_token_details': {'reasoning': 81}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content="Updated todo list to [{'content': '枚举审计目录结构并识别项目语言与关键源码位置', 'status': 'completed'}, {'content': '使用静态审计工具和源码阅读定位潜在安全漏洞', 'status': 'completed'}, {'content': '基于证据输出唯一审计结论标签', 'status': 'in_progress'}]",
+│   │   │   name='write_todos',
+│   │   │   id='6ccf76bc-a69d-4897-bca2-85503faca8c7',
+│   │   │   tool_call_id='call_AkuJVdxS9urBz3AC0RJB354m'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='vulnerable',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'stop',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5d07-902b-7c20-b925-c0be2424871b',
+│   │   │   tool_calls=[],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 42646,
+│   │   │   │   'output_tokens': 38,
+│   │   │   │   'total_tokens': 42684,
+│   │   │   │   'input_token_details': {'cache_read': 42368},
+│   │   │   │   'output_token_details': {'reasoning': 29}
+│   │   │   }
+│   │   )
+│   ],
+│   'files': {},
+│   'todos': [
+│   │   {
+│   │   │   'content': '枚举审计目录结构并识别项目语言与关键源码位置',
+│   │   │   'status': 'completed'
+│   │   },
+│   │   {
+│   │   │   'content': '使用静态审计工具和源码阅读定位潜在安全漏洞',
+│   │   │   'status': 'completed'
+│   │   },
+│   │   {'content': '基于证据输出唯一审计结论标签', 'status': 'in_progress'}
+│   ]
+}

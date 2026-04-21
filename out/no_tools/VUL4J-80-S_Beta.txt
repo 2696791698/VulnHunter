@@ -1,0 +1,475 @@
+vulnerable
+----------------------------------------------------------------------------------------------------
+{
+│   'messages': [
+│   │   HumanMessage(
+│   │   │   content='审计目录：/home/houning/Projects/dataset/VUL4J-80-S/Beta',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={},
+│   │   │   id='95fe344a-a3cf-4877-bb4f-3e87b815e486'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5cdc-e260-7952-8f45-877fdd287cea',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'write_todos',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'todos': [
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '枚举审计目录中的文件并识别项目类型',
+│   │   │   │   │   │   │   │   'status': 'in_progress'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '阅读关键源代码与配置文件，定位潜在安全点',
+│   │   │   │   │   │   │   │   'status': 'pending'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '综合判断是否存在安全漏洞并输出唯一标签',
+│   │   │   │   │   │   │   │   'status': 'pending'
+│   │   │   │   │   │   │   }
+│   │   │   │   │   │   ]
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_CtLvl5t6OzcR9DRYbljfWXHg',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 6047,
+│   │   │   │   'output_tokens': 100,
+│   │   │   │   'total_tokens': 6147,
+│   │   │   │   'input_token_details': {'cache_read': 5888},
+│   │   │   │   'output_token_details': {'reasoning': 22}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content="Updated todo list to [{'content': '枚举审计目录中的文件并识别项目类型', 'status': 'in_progress'}, {'content': '阅读关键源代码与配置文件，定位潜在安全点', 'status': 'pending'}, {'content': '综合判断是否存在安全漏洞并输出唯一标签', 'status': 'pending'}]",
+│   │   │   name='write_todos',
+│   │   │   id='1723fbf7-9e2c-450f-8bd6-285106a53419',
+│   │   │   tool_call_id='call_CtLvl5t6OzcR9DRYbljfWXHg'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5cdc-ee11-7590-86e6-22282bf47df9',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'ls',
+│   │   │   │   │   'args': {'path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta'},
+│   │   │   │   │   'id': 'call_NvDgw6PDsuoANCpEOIPyb7r5',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'glob',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta',
+│   │   │   │   │   │   'pattern': '**/*'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_XGSBPhfsb2y7S5cwts975Fcq',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 6209,
+│   │   │   │   'output_tokens': 86,
+│   │   │   │   'total_tokens': 6295,
+│   │   │   │   'input_token_details': {'cache_read': 5888},
+│   │   │   │   'output_token_details': {'reasoning': 0}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content="['/home/houning/Projects/dataset/VUL4J-80-S/Beta/.github/', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/.gitignore', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/QMP1-Primera-Iteracion.png', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/README.md', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/pom.xml', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/']",
+│   │   │   name='ls',
+│   │   │   id='7efeec41-cdc9-467f-8329-0632de40849e',
+│   │   │   tool_call_id='call_NvDgw6PDsuoANCpEOIPyb7r5'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content="['/home/houning/Projects/dataset/VUL4J-80-S/Beta/.github/classroom/autograding.json', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/.github/workflows/classroom.yml', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/.gitignore', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/QMP1-Primera-Iteracion.png', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/README.md', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/pom.xml', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/.gitkeep', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Excepciones/FaltaTipoDePrendaException.java', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Excepciones/PrendaInvalidaException.java', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Excepciones/TipoDePrendaInvalidaException.java', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Ropa/Atuendo.java', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Ropa/CategoriaPrenda.java', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Ropa/GeneradorDePrendas.java', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Ropa/Prenda.java', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Ropa/RepositorioTipoPrendas.java', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/test/java/.gitkeep', '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/test/java/Tests/RopaTest.java']",
+│   │   │   name='glob',
+│   │   │   id='2bc42d9f-7446-435a-8f0b-4b8cf6992ec6',
+│   │   │   tool_call_id='call_XGSBPhfsb2y7S5cwts975Fcq'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5cdc-f869-7113-9aa9-f1b9c3f63049',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'write_todos',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'todos': [
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '枚举审计目录中的文件并识别项目类型',
+│   │   │   │   │   │   │   │   'status': 'completed'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '阅读关键源代码与配置文件，定位潜在安全点',
+│   │   │   │   │   │   │   │   'status': 'in_progress'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '综合判断是否存在安全漏洞并输出唯一标签',
+│   │   │   │   │   │   │   │   'status': 'pending'
+│   │   │   │   │   │   │   }
+│   │   │   │   │   │   ]
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_31LDe4j2hHaUxpJhYYR58uQY',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 6930,
+│   │   │   │   'output_tokens': 76,
+│   │   │   │   'total_tokens': 7006,
+│   │   │   │   'input_token_details': {'cache_read': 6144},
+│   │   │   │   'output_token_details': {'reasoning': 0}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content="Updated todo list to [{'content': '枚举审计目录中的文件并识别项目类型', 'status': 'completed'}, {'content': '阅读关键源代码与配置文件，定位潜在安全点', 'status': 'in_progress'}, {'content': '综合判断是否存在安全漏洞并输出唯一标签', 'status': 'pending'}]",
+│   │   │   name='write_todos',
+│   │   │   id='d5a6fca8-e51d-4049-bfde-ce90203d5907',
+│   │   │   tool_call_id='call_31LDe4j2hHaUxpJhYYR58uQY'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5cdd-02f0-7fe1-aee1-230881202b3b',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta/pom.xml',
+│   │   │   │   │   │   'limit': 200,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_oWVKYi9zN8JZpe2J410aVG13',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta/README.md',
+│   │   │   │   │   │   'limit': 250,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_xSBZqFs4tTxLUvQCJFR7QQHH',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Ropa/Atuendo.java',
+│   │   │   │   │   │   'limit': 250,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_w4CTfl0VrsbnLDxWhCHmt9Kg',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Ropa/GeneradorDePrendas.java',
+│   │   │   │   │   │   'limit': 250,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_zZnV5fjHA3FMMLnc265wdToC',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Ropa/Prenda.java',
+│   │   │   │   │   │   'limit': 250,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_nnOeQ0cqRrMNxhVlLz5ERYP6',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Ropa/RepositorioTipoPrendas.java',
+│   │   │   │   │   │   'limit': 250,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_U6WhQdE78IYm2896nRewJ76W',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/test/java/Tests/RopaTest.java',
+│   │   │   │   │   │   'limit': 250,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_s592PscihIlRzqAboDZKP3P0',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 7092,
+│   │   │   │   'output_tokens': 357,
+│   │   │   │   'total_tokens': 7449,
+│   │   │   │   'input_token_details': {'cache_read': 6912},
+│   │   │   │   'output_token_details': {'reasoning': 0}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\t<?xml version="1.0" encoding="UTF-8"?>\n     2\t\n     3\t<project xmlns="http://maven.apache.org/POM/4.0.0"\n     4\t         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n     5\t         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">\n     6\t  <modelVersion>4.0.0</modelVersion>\n     7\t\n     8\t  <groupId>ar.edu.utn.frba.dds</groupId>\n     9\t  <artifactId>ejercicio</artifactId>\n    10\t  <version>1.0-SNAPSHOT</version>\n    11\t\n    12\t  <name>ejercicio</name>\n    13\t  <url>https://github.com/dds-utn</url>\n    14\t\n    15\t  <properties>\n    16\t    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n    17\t    <maven.compiler.source>1.8</maven.compiler.source>\n    18\t    <maven.compiler.target>1.8</maven.compiler.target>\n    19\t  </properties>\n    20\t\n    21\t  <dependencies>\n    22\t    <dependency>\n    23\t      <groupId>org.junit.jupiter</groupId>\n    24\t      <artifactId>junit-jupiter-engine</artifactId>\n    25\t      <version>5.7.0</version>\n    26\t      <scope>test</scope>\n    27\t    </dependency>\n    28\t  </dependencies>\n    29\t\n    30\t  <build>\n    31\t    <plugins>\n    32\t      <plugin>\n    33\t        <groupId>org.apache.maven.plugins</groupId>\n    34\t        <artifactId>maven-surefire-plugin</artifactId>\n    35\t        <version>2.22.2</version>\n    36\t      </plugin>\n    37\t      <plugin>\n    38\t        <groupId>org.apache.maven.plugins</groupId>\n    39\t        <artifactId>maven-checkstyle-plugin</artifactId>\n    40\t        <version>3.1.2</version>\n    41\t        <configuration>\n    42\t          <configLocation>google_checks.xml</configLocation>\n    43\t        </configuration>\n    44\t        <executions>\n    45\t          <execution>\n    46\t            <id>Validar Formateo</id>\n    47\t            <phase>verify</phase>\n    48\t            <goals>\n    49\t              <goal>check</goal>\n    50\t            </goals>\n    51\t          </execution>\n    52\t        </executions>\n    53\t      </plugin>\n    54\t      <!-- <plugin>\n    55\t        <groupId>com.github.spotbugs</groupId>\n    56\t        <artifactId>spotbugs-maven-plugin</artifactId>\n    57\t        <version>4.2.0</version>\n    58\t        <executions>\n    59\t          <execution>\n    60\t            <id>Validar Code Smells</id>\n    61\t            <phase>verify</phase>\n    62\t            <goals>\n    63\t              <goal>check</goal>\n    64\t            </goals>\n    65\t          </execution>\n    66\t        </executions>\n    67\t      </plugin> -->\n    68\t      <plugin>\n    69\t        <groupId>org.jacoco</groupId>\n    70\t        <artifactId>jacoco-maven-plugin</artifactId>\n    71\t        <version>0.8.2</version>\n    72\t        <executions>\n    73\t          <execution>\n    74\t            <id>default-prepare-agent</id>\n    75\t            <goals>\n    76\t              <goal>prepare-agent</goal>\n    77\t            </goals>\n    78\t          </execution>\n    79\t          <execution>\n    80\t            <id>Validar Cobertura</id>\n    81\t            <phase>verify</phase>\n    82\t            <goals>\n    83\t              <goal>check</goal>\n    84\t            </goals>\n    85\t            <configuration>\n    86\t              <rules>\n    87\t                <rule>\n    88\t                  <element>PACKAGE</element>\n    89\t                  <limits>\n    90\t                    <limit>\n    91\t                      <counter>LINE</counter>\n    92\t                      <value>COVEREDRATIO</value>\n    93\t                      <minimum>0.60</minimum>\n    94\t                    </limit>\n    95\t                  </limits>\n    96\t                </rule>\n    97\t              </rules>\n    98\t            </configuration>\n    99\t          </execution>\n   100\t        </executions>\n   101\t      </plugin>\n   102\t      <plugin>\n   103\t        <groupId>org.apache.maven.plugins</groupId>\n   104\t        <artifactId>maven-compiler-plugin</artifactId>\n   105\t        <version>3.8.1</version>\n   106\t        <configuration>\n   107\t          <source>8</source>\n   108\t          <target>8</target>\n   109\t        </configuration>\n   110\t      </plugin>\n   111\t    </plugins>\n   112\t  </build>\n   113\t</project>',
+│   │   │   name='read_file',
+│   │   │   id='1b5b4623-d69d-4721-9688-45505725793c',
+│   │   │   tool_call_id='call_oWVKYi9zN8JZpe2J410aVG13'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\t# QMP1-Primera-Iteracion\n     2\t\n     3\t## Diagrama de clases\n     4\t\n     5\t<p align="center"> \n     6\t<img src="QMP1-Primera-Iteracion.png">\n     7\t</p>\n     8\t\n     9\t\n    10\t## Explicacion\n    11\t\n    12\t* La clase "Prenda" tiene estado, pero no tiene comportamiento relevante (por el momento). No se debe poder \n    13\t  instanciar clases de "Prenda" directamente, se deben instanciar desde el "GeneradorDePrendas"\n    14\t\n    15\t\n    16\t* La clase "GeneradorDePrendas" sirve para configurar las instancias de "Prenda" y dejarlas con un estado aceptable \n    17\t  para el sistema. Además esta clase permite evitar tener un constructor de "Prenda" con demasiados atributos.\n    18\t  \n    19\t\n    20\t* La clase "RepositorioTipoVentas" es un singleton que usamos para tratar de representar lo que sería una petición a\n    21\t  una base de datos, aunque no sabemos si sería correcto. La idea es que las listas que están en esta clase se puedan \n    22\t  persistir y actualizar para poder identificar TIPOS de prendas válidos. Que a su vez nos permite identificar a que\n    23\t  categoria pertenece una prenda.\n    24\t\n    25\t\n    26\t## Pseudocodigo\n    27\t\n    28\t~~~\n    29\t\n    30\tclass Atuendo{\n    31\t  List<Prenda> prendas\n    32\t  \n    33\t}\n    34\t\n    35\tclass Prenda{\n    36\t  String tipo\n    37\t  CategoriaPrenda categoria\n    38\t  String materialConstruccion\n    39\t  int[] colorPrincipal = new int[3];\n    40\t  int[] colorSecundario = new int[3];\n    41\t  \n    42\t  \n    43\t  setTipo(String tipo){\n    44\t    TODO ❕\n    45\t  }\n    46\t  \n    47\t  setCategoria(CategoriaPrenda categoria){\n    48\t    TODO ❕\n    49\t  }\n    50\t  \n    51\t  setMaterialConstruccion(String materialConstruccion){\n    52\t    TODO ❕\n    53\t  }\n    54\t  \n    55\t  setColorPrincipal(int color1, int color2, int color3){\n    56\t    TODO ❕\n    57\t  }\n    58\t  \n    59\t  setColorSecundario(int color1, int color2, int color3){\n    60\t    TODO ❕\n    61\t  }\n    62\t}\n    63\t\n    64\t\n    65\tenum CategoriaPrenda{\n    66\t  PARTE-SUPERIOR, CALZADO, PARTE-INFERIOR, ACCESORIO\n    67\t}\n    68\t\n    69\tclass GeneradorDePrendas{\n    70\t  Prenda prenda\n    71\t  \n    72\t  \n    73\t  crearNuevaPrenda(){\n    74\t    prenda = new Prenda();\n    75\t  }\n    76\t  \n    77\t  getPrenda(){\n    78\t  \n    79\t    if(!prenda.tipo || !prenda.materialConstruccion || !prenda.colorPrimario){\n    80\t      throw new exception("La prenda generada no es valida. Debe tener tipo de prenda, material de construccion y color primario")\n    81\t    }\n    82\t    \n    83\t    return prenda;\n    84\t  }\n    85\t  \n    86\t  \n    87\t  \n    88\t  \n    89\t  setTipoConCategoria(String tipoPrenda){\n    90\t    prenda.setTipo(tipoPrenda)\n    91\t    CategoriaPrenda categoria = RepositorioTipoPrendas.instance().buscarCategoria(tipo)\n    92\t    \n    93\t    prenda.setCategoria(categoria)\n    94\t  }\n    95\t  \n    96\t  setMaterialConstruccion(String materialConstruccion){\n    97\t    prenda.setMaterialConstruccion(materialConstruccion)\n    98\t  }\n    99\t  \n   100\t  setColorPrincipal(int color1, int color2, int color3){\n   101\t    prenda.setColorPrincipal(color1, color2, color3)\n   102\t  }\n   103\t  \n   104\t  setColorSecundario(int color1, int color2, int color3){\n   105\t    prenda.setColorSecundario(color1, color2, color3)\n   106\t  }\n   107\t  \n   108\t\n   109\t}\n   110\t\n   111\t\n   112\tclass RepositorioTipoPrendas{\n   113\t\n   114\t  private static final RepositorioTipoPrendas INSTANCE = new RepositorioTipoPrendas();\n   115\t  \n   116\t  private RepositorioTipoPrendas(){}  //constructor\n   117\t  \n   118\t  public static RepositorioTipoPrendas instance(){\n   119\t    return INSTANCE\n   120\t  }\n   121\t  \n   122\t  List<String> partesSuperiores\n   123\t  List<String> partesInferiores\n   124\t  List<String> calzados\n   125\t  List<String> accesorios\n   126\t  \n   127\t  \n   128\t  buscarCategoria(String tipoPrenda){\n   129\t    \n   130\t    if(partesSuperiores.contains(tipoPrenda)) return CategoriaPrenda.PARTE-SUPERIOR\n   131\t    if(partesInferiores.contains(tipoPrenda)) return CategoriaPrenda.PARTE-INFERIOR\n   132\t    if(calzados.contains(tipoPrenda)) return CategoriaPrenda.CALZADO\n   133\t    if(accesorios.contains(tipoPrenda)) return CategoriaPrenda.ACCESORIO\n   134\t    else{\n   135\t    \tthrow new exception("El tipo de prenda ingresado no es valido")\n   136\t    }\n   137\t  }\n   138\t   \n   139\t}\n   140\t\n   141\t\n   142\t~~~\n   143\t\n   144\t\n   145\t---\n   146\t\n   147\t# Ejecutar tests\n   148\t\n   149\t```\n   150\tmvn test\n   151\t```\n   152\t\n   153\t# Validar el proyecto de forma exahustiva\n   154\t\n   155\t```\n   156\tmvn clean verify\n   157\t```\n   158\t\n   159\tEste comando hará lo siguiente:\n   160\t\n   161\t 1. Ejecutará los tests\n   162\t 2. Validará las convenciones de formato mediante checkstyle\n   163\t 3. Detectará la presencia de (ciertos) code smells\n   164\t 4. Validará la cobertura del proyecto\n   165\t\n   166\t# Entrega del proyecto\n   167\t\n   168\tPara entregar el proyecto, crear un tag llamado `entrega-final`. Es importante que antes de realizarlo se corra la validación\n   169\texplicada en el punto anterior. Se recomienda hacerlo de la siguiente forma:\n   170\t\n   171\t```\n   172\tmvn clean verify && git tag entrega-final && git push origin HEAD --tags\n   173\t```\n   174\t\n   175\t# Configuración del IDE (IntelliJ)\n   176\t\n   177\t 1. Tabular con dos espacios: ![Screenshot_2021-04-09_18-23-26](https://user-images.githubusercontent.com/677436/114242543-73e1fe00-9961-11eb-9a61-7e34be9fb8de.png)\n   178\t 2. Instalar y configurar Checkstyle:\n   179\t    1. Instalar el plugin https://plugins.jetbrains.com/plugin/1065-checkstyle-idea:\n   180\t    2. Configurarlo activando los Checks de Google: ![Screenshot_2021-04-09_18-16-13](https://user-images.githubusercontent.com/677436/114242548-75132b00-9961-11eb-972e-28e6e1412979.png)\n   181\t 3. Usar fin de linea unix\n   182\t    1. En **Settings/Preferences**, ir a a **Editor | Code Style**.\n   183\t    2. En la lista **Line separator**, seleccionar `Unix and OS X (\\n)`.\n   184\t ![Screenshot 2021-04-10 03-49-00](https://user-images.githubusercontent.com/11875266/114260872-c6490c00-99ad-11eb-838f-022acc1903f4.png)',
+│   │   │   name='read_file',
+│   │   │   id='3f3323ce-0541-4a18-821d-58f81c0eee56',
+│   │   │   tool_call_id='call_xSBZqFs4tTxLUvQCJFR7QQHH'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage Ropa;\n     2\t\n     3\timport java.util.List;\n     4\t\n     5\tpublic class Atuendo {\n     6\t\n     7\t  private List<Prenda> prendas;\n     8\t}',
+│   │   │   name='read_file',
+│   │   │   id='2dde6371-64b1-4dce-8a0b-dcd6c2f8014e',
+│   │   │   tool_call_id='call_w4CTfl0VrsbnLDxWhCHmt9Kg'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage Ropa;\n     2\t\n     3\timport Excepciones.FaltaTipoDePrendaException;\n     4\timport Excepciones.PrendaInvalidaException;\n     5\t\n     6\tpublic class GeneradorDePrendas {\n     7\t\n     8\t  private Prenda prenda = new Prenda();\n     9\t\n    10\t\n    11\t  public void configurarNuevaPrenda(){\n    12\t    prenda = new Prenda();\n    13\t  }\n    14\t\n    15\t  public Prenda getPrenda(){\n    16\t\n    17\t    if(this.prenda.getTipo() == null ||\n    18\t        this.prenda.getMaterialConstruccion() == null ||\n    19\t        this.prenda.getColorPrincipal() == null){\n    20\t\n    21\t      throw new PrendaInvalidaException("La prenda generada no es valida. Debe tener tipo de prenda, material de construccion y color primario");\n    22\t    }\n    23\t\n    24\t    return prenda;\n    25\t  }\n    26\t\n    27\t\n    28\t\n    29\t  public CategoriaPrenda identificarCategoria(){\n    30\t\n    31\t    if(this.prenda.getTipo() == null){\n    32\t      throw new FaltaTipoDePrendaException("Para Identificar la CATEGORIA de tu prenda primero es necesario ingresar su TIPO");\n    33\t    }\n    34\t    return prenda.getCategoria();\n    35\t  }\n    36\t\n    37\t  public void setTipoConCategoria(String tipoPrenda){\n    38\t    CategoriaPrenda categoria = RepositorioTipoPrendas.instance().buscarCategoria(tipoPrenda);\n    39\t    prenda.setTipo(tipoPrenda);\n    40\t    prenda.setCategoria(categoria);\n    41\t  }\n    42\t\n    43\t  public void setMaterialConstruccion(String materialConstruccion){\n    44\t    prenda.setMaterialConstruccion(materialConstruccion);\n    45\t  }\n    46\t\n    47\t  public void setColorPrincipal(int color1, int color2, int color3){\n    48\t    prenda.setColorPrincipal(color1, color2, color3);\n    49\t  }\n    50\t\n    51\t  public void setColorSecundario(int color1, int color2, int color3){\n    52\t    prenda.setColorSecundario(color1, color2, color3);\n    53\t  }\n    54\t}',
+│   │   │   name='read_file',
+│   │   │   id='d0e98bdc-596b-43b1-9fed-9352977ca057',
+│   │   │   tool_call_id='call_zZnV5fjHA3FMMLnc265wdToC'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage Ropa;\n     2\t\n     3\tpublic class Prenda {\n     4\t\n     5\t  private String tipo;\n     6\t  private CategoriaPrenda categoria;\n     7\t  private String materialConstruccion;\n     8\t  private int[] colorPrincipal;\n     9\t  private int[] colorSecundario;\n    10\t\n    11\t  public Prenda(){}\n    12\t\n    13\t  //SETTERS\n    14\t  public void setTipo(String tipo){\n    15\t    this.tipo = tipo;\n    16\t  }\n    17\t\n    18\t  public void setCategoria(CategoriaPrenda categoria){\n    19\t    this.categoria = categoria;\n    20\t  }\n    21\t\n    22\t  public void setMaterialConstruccion(String materialConstruccion){\n    23\t    this.materialConstruccion = materialConstruccion;\n    24\t  }\n    25\t\n    26\t  public void setColorPrincipal(int color1, int color2, int color3){\n    27\t    this.colorPrincipal = new int[3];\n    28\t    this.colorPrincipal[0] = color1;\n    29\t    this.colorPrincipal[1] = color2;\n    30\t    this.colorPrincipal[2] = color3;\n    31\t  }\n    32\t\n    33\t  public void setColorSecundario(int color1, int color2, int color3){\n    34\t    this.colorSecundario = new int[3];\n    35\t    this.colorSecundario[0] = color1;\n    36\t    this.colorSecundario[1] = color2;\n    37\t    this.colorSecundario[2] = color3;\n    38\t  }\n    39\t\n    40\t\n    41\t  //GETTERS\n    42\t  public String getTipo() {\n    43\t    return tipo;\n    44\t  }\n    45\t\n    46\t  public CategoriaPrenda getCategoria() {\n    47\t    return categoria;\n    48\t  }\n    49\t\n    50\t  public String getMaterialConstruccion() {\n    51\t    return materialConstruccion;\n    52\t  }\n    53\t\n    54\t  public int[] getColorPrincipal() {\n    55\t    int[] clonColorPrincipal = new int[3];\n    56\t    clonColorPrincipal[0] = this.colorPrincipal[0];\n    57\t    clonColorPrincipal[1] = this.colorPrincipal[1];\n    58\t    clonColorPrincipal[2] = this.colorPrincipal[2];\n    59\t    return clonColorPrincipal;\n    60\t  }\n    61\t\n    62\t  public int[] getColorSecundario() {\n    63\t    int[] clonColorSecundario = new int[3];\n    64\t    clonColorSecundario[0] = this.colorSecundario[0];\n    65\t    clonColorSecundario[1] = this.colorSecundario[1];\n    66\t    clonColorSecundario[2] = this.colorSecundario[2];\n    67\t    return clonColorSecundario;\n    68\t  }\n    69\t}',
+│   │   │   name='read_file',
+│   │   │   id='7a922091-b4b7-4802-b016-9c527607ff30',
+│   │   │   tool_call_id='call_nnOeQ0cqRrMNxhVlLz5ERYP6'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage Ropa;\n     2\t\n     3\timport Excepciones.TipoDePrendaInvalidaException;\n     4\t\n     5\timport java.util.List;\n     6\t\n     7\tpublic class RepositorioTipoPrendas {\n     8\t\n     9\t  private static RepositorioTipoPrendas INSTANCE;\n    10\t\n    11\t  //CONSTRUCTOR\n    12\t  private RepositorioTipoPrendas(){}\n    13\t\n    14\t  public static RepositorioTipoPrendas instance(){\n    15\t\n    16\t    if(INSTANCE == null){\n    17\t      INSTANCE = new RepositorioTipoPrendas();\n    18\t    }\n    19\t\n    20\t    return INSTANCE;\n    21\t  }\n    22\t\n    23\t\n    24\t\n    25\t  private List<String> partesSuperiores;\n    26\t  private List<String> partesInferiores;\n    27\t  private List<String> calzados;\n    28\t  private List<String> accesorios;\n    29\t\n    30\t  public CategoriaPrenda buscarCategoria(String tipoPrenda){\n    31\t\n    32\t    if(partesSuperiores.contains(tipoPrenda)) return CategoriaPrenda.PARTE_SUPERIOR;\n    33\t    if(partesInferiores.contains(tipoPrenda)) return CategoriaPrenda.PARTE_INFERIOR;\n    34\t    if(calzados.contains(tipoPrenda)) return CategoriaPrenda.CALZADO;\n    35\t    if(accesorios.contains(tipoPrenda)) return CategoriaPrenda.ACCESORIO;\n    36\t    else{\n    37\t      throw new TipoDePrendaInvalidaException("El TIPO de prenda ingresado no es valido");\n    38\t    }\n    39\t  }\n    40\t\n    41\t\n    42\t\n    43\t  //SETTERS\n    44\t  public void setPartesSuperiores(List<String> partesSuperiores) {\n    45\t    this.partesSuperiores = partesSuperiores;\n    46\t  }\n    47\t\n    48\t  public void setPartesInferiores(List<String> partesInferiores) {\n    49\t    this.partesInferiores = partesInferiores;\n    50\t  }\n    51\t\n    52\t  public void setCalzados(List<String> calzados) {\n    53\t    this.calzados = calzados;\n    54\t  }\n    55\t\n    56\t  public void setAccesorios(List<String> accesorios) {\n    57\t    this.accesorios = accesorios;\n    58\t  }\n    59\t\n    60\t}',
+│   │   │   name='read_file',
+│   │   │   id='7a0f6907-ce80-44d6-b27a-a74b8d0e2470',
+│   │   │   tool_call_id='call_U6WhQdE78IYm2896nRewJ76W'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage Tests;\n     2\t\n     3\timport Excepciones.FaltaTipoDePrendaException;\n     4\timport Excepciones.PrendaInvalidaException;\n     5\timport Excepciones.TipoDePrendaInvalidaException;\n     6\timport org.junit.jupiter.api.Assertions;\n     7\timport org.junit.jupiter.api.BeforeAll;\n     8\timport org.junit.jupiter.api.Test;\n     9\t\n    10\timport Ropa.*;\n    11\t\n    12\timport java.util.ArrayList;\n    13\timport java.util.List;\n    14\t\n    15\tpublic class RopaTest {\n    16\t\n    17\t  private static final RepositorioTipoPrendas repo = RepositorioTipoPrendas.instance();\n    18\t\n    19\t  public void pedirCategoriaDeGorraAlRepo(){\n    20\t\n    21\t    repo.buscarCategoria("gorra");\n    22\t  }\n    23\t\n    24\t  @BeforeAll\n    25\t  public static void llenarRepoConDatos(){\n    26\t    List<String> partesSuperiores = new ArrayList<>();\n    27\t    List<String> partesInferiores = new ArrayList<>();\n    28\t    List<String> calzados = new ArrayList<>();\n    29\t    List<String> accesorios = new ArrayList<>();\n    30\t\n    31\t    partesSuperiores.add("camisa");\n    32\t    partesSuperiores.add("remera");\n    33\t    partesSuperiores.add("campera");\n    34\t    repo.setPartesSuperiores(partesSuperiores);\n    35\t\n    36\t    partesInferiores.add("pantalon");\n    37\t    partesInferiores.add("bermuda");\n    38\t    repo.setPartesInferiores(partesInferiores);\n    39\t\n    40\t    calzados.add("zapatillas");\n    41\t    calzados.add("ojotas");\n    42\t    repo.setCalzados(calzados);\n    43\t\n    44\t    accesorios.add("lentes");\n    45\t    accesorios.add("corbata");\n    46\t    repo.setAccesorios(accesorios);\n    47\t  }\n    48\t\n    49\t  @Test\n    50\t  public void siBuscoCategoriaDePantalonDaPARTE_INFERIOR() {\n    51\t    CategoriaPrenda categoriaEsperada = CategoriaPrenda.PARTE_INFERIOR;\n    52\t    CategoriaPrenda categoriaResultante = repo.buscarCategoria("pantalon");\n    53\t    Assertions.assertEquals(categoriaEsperada, categoriaResultante);\n    54\t  }\n    55\t\n    56\t  @Test\n    57\t  public void siBuscoCategoriaDeGorraDaTipoDePrendaInvalidaException() {\n    58\t    Assertions.assertThrows(TipoDePrendaInvalidaException.class, this::pedirCategoriaDeGorraAlRepo);\n    59\t  }\n    60\t\n    61\t  @Test\n    62\t  public void siCreoUnaPrendaValidaNoPasaNada(){\n    63\t    GeneradorDePrendas generadorDePrendas = new GeneradorDePrendas();\n    64\t    generadorDePrendas.setTipoConCategoria("remera");\n    65\t    generadorDePrendas.setMaterialConstruccion("algodon");\n    66\t    generadorDePrendas.setColorPrincipal(1, 2, 3);\n    67\t    Assertions.assertDoesNotThrow(generadorDePrendas::getPrenda);\n    68\t  }\n    69\t\n    70\t  @Test\n    71\t  public void siCreoUnaPrendaInvalidaDaPrendaInvalidaException(){\n    72\t    GeneradorDePrendas generadorDePrendas = new GeneradorDePrendas();\n    73\t    generadorDePrendas.setColorSecundario(1, 2, 3);\n    74\t    Assertions.assertThrows(PrendaInvalidaException.class, generadorDePrendas::getPrenda);\n    75\t  }\n    76\t\n    77\t  @Test\n    78\t  public void siIngresoTipoDeRopaInvalidoDaTipoDePrendaInvalidaException(){\n    79\t    GeneradorDePrendas generadorDePrendas = new GeneradorDePrendas();\n    80\t    Assertions.assertThrows(TipoDePrendaInvalidaException.class, () -> generadorDePrendas.setTipoConCategoria("banana"));\n    81\t  }// uso lambda porque si no, no me deja. Creo que es porque la funcion tiene un parametro\n    82\t\n    83\t  @Test\n    84\t  public void siPidoCategoriaDespuesDeIngresarTipoDePrendaNoPasaNada(){\n    85\t    GeneradorDePrendas generadorDePrendas = new GeneradorDePrendas();\n    86\t    generadorDePrendas.setTipoConCategoria("remera");\n    87\t    Assertions.assertEquals(CategoriaPrenda.PARTE_SUPERIOR, generadorDePrendas.identificarCategoria());\n    88\t  }\n    89\t\n    90\t  @Test\n    91\t  public void siPidoCategoriaSinIngresarTipoDaFaltaTipoDePrendaException(){\n    92\t    GeneradorDePrendas generadorDePrendas = new GeneradorDePrendas();\n    93\t    Assertions.assertThrows(FaltaTipoDePrendaException.class, generadorDePrendas::identificarCategoria);\n    94\t  }\n    95\t\n    96\t}',
+│   │   │   name='read_file',
+│   │   │   id='dd470a02-e436-4b06-ae79-fcbbf330b8ae',
+│   │   │   tool_call_id='call_s592PscihIlRzqAboDZKP3P0'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5cdd-1a78-7613-abbc-3e7ec8c1d82b',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Ropa/CategoriaPrenda.java',
+│   │   │   │   │   │   'limit': 100,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_1Io0QA0gwXqEr0tMivJh9O5Q',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Excepciones/FaltaTipoDePrendaException.java',
+│   │   │   │   │   │   'limit': 100,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_Oz2wUWaLluP6QTyndfbiPfCL',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Excepciones/PrendaInvalidaException.java',
+│   │   │   │   │   │   'limit': 100,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_vvHA8F3mfLJ8dSMsVwwQfMxW',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Excepciones/TipoDePrendaInvalidaException.java',
+│   │   │   │   │   │   'limit': 100,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_Py2Z11cKG1fWNtJe2SxSonF7',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta',
+│   │   │   │   │   │   'pattern': 'getColorSecundario()'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_DuC8wu2uthfPyHM0qOrg8TCi',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-80-S/Beta',
+│   │   │   │   │   │   'pattern': 'getColorPrincipal()'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_iujRA7sfkDW7RSfrJjKxiLL6',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 13731,
+│   │   │   │   'output_tokens': 392,
+│   │   │   │   'total_tokens': 14123,
+│   │   │   │   'input_token_details': {'cache_read': 7296},
+│   │   │   │   'output_token_details': {'reasoning': 53}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage Ropa;\n     2\t\n     3\tpublic enum CategoriaPrenda {\n     4\t\n     5\t  PARTE_SUPERIOR, CALZADO, PARTE_INFERIOR, ACCESORIO\n     6\t}',
+│   │   │   name='read_file',
+│   │   │   id='9c4b5498-6c03-47c0-9b0e-72ec0455b08a',
+│   │   │   tool_call_id='call_1Io0QA0gwXqEr0tMivJh9O5Q'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage Excepciones;\n     2\t\n     3\tpublic class FaltaTipoDePrendaException extends RuntimeException {\n     4\t  public FaltaTipoDePrendaException(String s) {\n     5\t    super(s);\n     6\t  }\n     7\t}',
+│   │   │   name='read_file',
+│   │   │   id='618f404d-eed6-4032-aee3-d05888612c57',
+│   │   │   tool_call_id='call_Oz2wUWaLluP6QTyndfbiPfCL'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage Excepciones;\n     2\t\n     3\tpublic class PrendaInvalidaException extends RuntimeException {\n     4\t  public PrendaInvalidaException(String s) {\n     5\t    super(s);\n     6\t  }\n     7\t}',
+│   │   │   name='read_file',
+│   │   │   id='d4e271e0-aae6-4656-84c5-16abc48ba01f',
+│   │   │   tool_call_id='call_vvHA8F3mfLJ8dSMsVwwQfMxW'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage Excepciones;\n     2\t\n     3\tpublic class TipoDePrendaInvalidaException extends RuntimeException {\n     4\t  public TipoDePrendaInvalidaException(String s) {\n     5\t    super(s);\n     6\t  }\n     7\t}',
+│   │   │   name='read_file',
+│   │   │   id='8daee68f-a9d7-47d7-9a7d-80dc3f8e19f8',
+│   │   │   tool_call_id='call_Py2Z11cKG1fWNtJe2SxSonF7'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Ropa/Prenda.java:\n  62:   public int[] getColorSecundario() {',
+│   │   │   name='grep',
+│   │   │   id='59de1879-d7cc-4983-9508-8a65048d7234',
+│   │   │   tool_call_id='call_DuC8wu2uthfPyHM0qOrg8TCi'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Ropa/GeneradorDePrendas.java:\n  19:         this.prenda.getColorPrincipal() == null){\n/home/houning/Projects/dataset/VUL4J-80-S/Beta/src/main/java/Ropa/Prenda.java:\n  54:   public int[] getColorPrincipal() {',
+│   │   │   name='grep',
+│   │   │   id='0d8e896e-6ab0-4dae-9db2-0b7fc0e3f44c',
+│   │   │   tool_call_id='call_iujRA7sfkDW7RSfrJjKxiLL6'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5cdd-43b2-7132-96c0-9d41c7bfc550',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'write_todos',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'todos': [
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '枚举审计目录中的文件并识别项目类型',
+│   │   │   │   │   │   │   │   'status': 'completed'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '阅读关键源代码与配置文件，定位潜在安全点',
+│   │   │   │   │   │   │   │   'status': 'completed'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   {
+│   │   │   │   │   │   │   │   'content': '综合判断是否存在安全漏洞并输出唯一标签',
+│   │   │   │   │   │   │   │   'status': 'in_progress'
+│   │   │   │   │   │   │   }
+│   │   │   │   │   │   ]
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_NmXNnRJrMlxkFoR3LDLGeMvY',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 14493,
+│   │   │   │   'output_tokens': 160,
+│   │   │   │   'total_tokens': 14653,
+│   │   │   │   'input_token_details': {'cache_read': 13568},
+│   │   │   │   'output_token_details': {'reasoning': 82}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content="Updated todo list to [{'content': '枚举审计目录中的文件并识别项目类型', 'status': 'completed'}, {'content': '阅读关键源代码与配置文件，定位潜在安全点', 'status': 'completed'}, {'content': '综合判断是否存在安全漏洞并输出唯一标签', 'status': 'in_progress'}]",
+│   │   │   name='write_todos',
+│   │   │   id='07ec6347-40b1-4e60-a472-2b75d601bd90',
+│   │   │   tool_call_id='call_NmXNnRJrMlxkFoR3LDLGeMvY'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='vulnerable',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'stop',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5cdd-5c70-72a1-9406-5d0507648d20',
+│   │   │   tool_calls=[],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 14655,
+│   │   │   │   'output_tokens': 98,
+│   │   │   │   'total_tokens': 14753,
+│   │   │   │   'input_token_details': {'cache_read': 14336},
+│   │   │   │   'output_token_details': {'reasoning': 89}
+│   │   │   }
+│   │   )
+│   ],
+│   'todos': [
+│   │   {'content': '枚举审计目录中的文件并识别项目类型', 'status': 'completed'},
+│   │   {'content': '阅读关键源代码与配置文件，定位潜在安全点', 'status': 'completed'},
+│   │   {'content': '综合判断是否存在安全漏洞并输出唯一标签', 'status': 'in_progress'}
+│   ],
+│   'files': {}
+}

@@ -1,0 +1,536 @@
+vulnerable
+----------------------------------------------------------------------------------------------------
+{
+│   'messages': [
+│   │   HumanMessage(
+│   │   │   content='审计目录：/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={},
+│   │   │   id='8fb894a7-940e-4cbd-963c-67cd8b8c49fe'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5cd8-94d1-7a22-b9fc-e4d3f9bb04c6',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'ls',
+│   │   │   │   │   'args': {'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha'},
+│   │   │   │   │   'id': 'call_bFaPtKenixBwRo1GdV5XmrAK',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 6046,
+│   │   │   │   'output_tokens': 67,
+│   │   │   │   'total_tokens': 6113,
+│   │   │   │   'input_token_details': {'cache_read': 5888},
+│   │   │   │   'output_token_details': {'reasoning': 31}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content="['/home/houning/Projects/dataset/VUL4J-77/Alpha/.gitignore', '/home/houning/Projects/dataset/VUL4J-77/Alpha/.travis.yml', '/home/houning/Projects/dataset/VUL4J-77/Alpha/LICENSE', '/home/houning/Projects/dataset/VUL4J-77/Alpha/README.md', '/home/houning/Projects/dataset/VUL4J-77/Alpha/appveyor.yml', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/', '/home/houning/Projects/dataset/VUL4J-77/Alpha/pom.xml']",
+│   │   │   name='ls',
+│   │   │   id='e453d0e4-a848-4d21-985b-18d586e9131c',
+│   │   │   tool_call_id='call_bFaPtKenixBwRo1GdV5XmrAK'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5cd8-a535-75d1-9710-88ef2aae865d',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'glob',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': '**/*.java'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_uzjg1D1cNWnuP2yQJYGBnRjr',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'glob',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': '**/*.xml'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_wFayt489N38wgUQKVifbXcL0',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'count',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': 'Runtime.getRuntime().exec'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_AKp0wALTxLxkq7sOjmfY3jUf',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'count',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': 'ProcessBuilder'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_xd2MeHN9OLoMewRNzoLaN4zk',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'count',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': 'ScriptEngine'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_q0u8LzfK2KpCue33WBhJnu1t',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'count',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': 'XPath'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_K8GLatZRAHAWSG468jLvwOFq',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'count',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': 'Cipher.getInstance'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_3RjUwsFaVSbCuL0DEVzQm8EB',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'count',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': 'ObjectInputStream'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_H55MucuKFHxhzliivGU1XcQx',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'count',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': 'setFeature("http://apache.org/xml/features/disallow-doctype-decl"'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_7HOcotz565GIfaXin7QDrcKw',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'count',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': 'DocumentBuilderFactory.newInstance'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_heP8BKhbAQhI2hczaxqwc9i4',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'count',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': 'SAXParserFactory.newInstance'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_SuMihYYvzasPM0KCUecUjd1R',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'count',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': 'Yaml'
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_JwPd43FucDFcl8k6EN6JxSef',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'count',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': 'new URL('
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_Ws0dJHF34On3XaVoCyaSz1Fb',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'count',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': 'SELECT '
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_QuLkxSgX8JWqPogB6kGeqgQd',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'count',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha',
+│   │   │   │   │   │   'pattern': 'Statement '
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_M5tA4GhU380mpEMaEY34M6vV',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 6236,
+│   │   │   │   'output_tokens': 713,
+│   │   │   │   'total_tokens': 6949,
+│   │   │   │   'input_token_details': {'cache_read': 5888},
+│   │   │   │   'output_token_details': {'reasoning': 0}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content="['/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/deserializer/AbstractSwaggerDeserializer.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/deserializer/ApiDeclarationDeserializer.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/deserializer/ResourceListingDeserializer.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/deserializer/SwaggerDeserializer.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/io/Authentication.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/io/HeaderAuthentication.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/io/HttpClient.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/io/NoAuthentication.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/io/QueryParamAuthentication.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/AuthorizationScope.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/AuthorizationType.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/Format.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/Method.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/ParamType.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/PassAs.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/SwaggerBaseModel.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/SwaggerVersion.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/apideclaration/Api.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/apideclaration/ApiDeclaration.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/apideclaration/ExtendedTypedObject.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/apideclaration/Items.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/apideclaration/Model.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/apideclaration/ModelProperty.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/apideclaration/Operation.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/apideclaration/Parameter.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/apideclaration/ResponseMessage.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/apideclaration/TypedObject.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/reader/ApiDeclarationParser.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/reader/ApiDeclarationReader.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/reader/ResourceListingReader.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/reader/SwaggerParser.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/resourcelisting/ApiInfo.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/resourcelisting/ApiKeyAuthorization.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/resourcelisting/ApiListingReference.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/resourcelisting/Authorization.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/resourcelisting/AuthorizationCodeGrant.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/resourcelisting/BasicAuthorization.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/resourcelisting/GrantTypes.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/resourcelisting/ImplicitGrant.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/resourcelisting/LoginEndpoint.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/resourcelisting/OAuth2Authorization.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/resourcelisting/ResourceListing.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/resourcelisting/TokenEndpoint.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/resourcelisting/TokenRequestEndpoint.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/parser/SwaggerCompatConverter.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/parser/SwaggerException.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/parser/SwaggerLegacyParser.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/reader/ProxySwaggerReader.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/reader/SimpleSwaggerReader.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/reader/SwaggerReader.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/reader/SwaggerReaderConfiguration.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/reader/SwaggerReaderFactory.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/report/Message.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/report/MessageBuilder.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/report/Severity.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/migrate/ApiArrayMigrator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/migrate/ApiDeclarationMigrator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/migrate/ApiObjectMigrator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/migrate/ApiOperationMigrator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/migrate/OperationParametersMigrator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/migrate/ResourceListingMigrator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/migrate/SwaggerJsonMigrator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/migrate/SwaggerMigrator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/migrate/V11AllowableValuesMigrator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/migrate/V11ApiDeclarationMigrator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/migrate/V11ResourceListingMigrator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/migrate/V11TypeMigrator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/migrate/resourcelisting/PathAppenderMigrator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/util/APIFileDownload.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/util/MutableJsonTree.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/util/SwaggerJsonSchemaFactory.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/util/SwaggerMigrationException.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/util/SwaggerMigrators.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/validate/ApiDeclarationJsonValidator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/validate/ApiDeclarationSchemaValidator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/validate/ResourceListingJsonValidator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/validate/ResourceListingSchemaValidator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/validate/SwaggerJsonValidator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/validate/SwaggerSchemaValidator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/converter/LegacyConverterTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/converter/ModelConverterTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/converter/ModelPropertyConverterTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/converter/OperationConverterTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/converter/PathParameterConverterTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/converter/QueryParameterConverterTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/converter/ResourceListingConverterTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/parser/ResourceListingExtractorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/parserExtensions/ParserExtensionsTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/transform/ApiObjectMigratorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/transform/MembersToStringMigratorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/transform/MigrationErrorData.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/transform/MigrationTestData.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/transform/PathAppenderMigratorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/transform/RenameMemberTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/transform/ResourceListingBasePathPushDownTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/transform/SwaggerMigratorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/transform/V11AllowableValuesMigratorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/transform/V11TypeMigratorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/validate/Issue1Test.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/test/java/io/swagger/validate/SwaggerSchemaValidatorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/ResolverCache.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/ResolverOptions.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/Swagger20Parser.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/SwaggerParser.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/SwaggerParserExtension.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/SwaggerResolver.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/processors/DefinitionsProcessor.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/processors/ExternalRefProcessor.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/processors/ModelProcessor.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/processors/OperationProcessor.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/processors/ParameterProcessor.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/processors/PathsProcessor.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/processors/PropertyProcessor.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/processors/ResponseProcessor.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/ClasspathHelper.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/DeserializationUtils.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/HostAuthorizationValue.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/ManagedValue.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/PathUtils.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/RefUtils.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/RemoteUrl.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/SwaggerDeserializationResult.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/SwaggerDeserializer.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/AnchorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/FileReferenceTests.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/JsonToYamlFileDuplicator.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/LocalReferenceTests.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/NetworkReferenceTests.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/RelativeReferenceTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/ResolverCacheTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/ResponseResolverTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/Swagger20ParserTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/SwaggerParserExtensionTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/SwaggerParserTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/SwaggerReaderTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/SwaggerResolverTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/processors/DefinitionsProcessorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/processors/ExternalRefProcessorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/processors/ModelProcessorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/processors/OperationProcessorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/processors/ParameterProcessorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/processors/PropertyProcessorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/processors/ResponseProcessorTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/util/ClasspathHelperTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/util/HostAuthorizationValueTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/util/PathUtilTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/util/RefUtilsTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/util/RemoteUrlTest.java', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/util/SwaggerDeserializerTest.java']",
+│   │   │   name='glob',
+│   │   │   id='e4f65cb8-f6d5-48fd-ae33-97c0470d2136',
+│   │   │   tool_call_id='call_uzjg1D1cNWnuP2yQJYGBnRjr'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content="['/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/pom.xml', '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/pom.xml', '/home/houning/Projects/dataset/VUL4J-77/Alpha/pom.xml']",
+│   │   │   name='glob',
+│   │   │   id='e37811bb-21ef-4399-848d-c8b0060a6f5d',
+│   │   │   tool_call_id='call_wFayt489N38wgUQKVifbXcL0'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='9c4b5a59-1dea-4626-990c-13dbd200afcb',
+│   │   │   tool_call_id='call_AKp0wALTxLxkq7sOjmfY3jUf'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='a9d62f36-2493-4717-9b24-af0570edfaa2',
+│   │   │   tool_call_id='call_xd2MeHN9OLoMewRNzoLaN4zk'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='c7a65e33-2ece-4011-9ece-1bf484fd6f57',
+│   │   │   tool_call_id='call_q0u8LzfK2KpCue33WBhJnu1t'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='4cc2a61a-7b7b-482a-8316-116947f681c1',
+│   │   │   tool_call_id='call_K8GLatZRAHAWSG468jLvwOFq'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='9105cab8-2b50-4d64-9c25-3d4460d6f325',
+│   │   │   tool_call_id='call_3RjUwsFaVSbCuL0DEVzQm8EB'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='ad445247-1380-42dc-b940-86b28edf8388',
+│   │   │   tool_call_id='call_H55MucuKFHxhzliivGU1XcQx'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='e432e512-2b70-45f2-b31d-3148d8ab34f2',
+│   │   │   tool_call_id='call_7HOcotz565GIfaXin7QDrcKw'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='d9c6ae97-3d8c-4972-9857-ba0f005e8d18',
+│   │   │   tool_call_id='call_heP8BKhbAQhI2hczaxqwc9i4'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='8afa566b-80af-4c80-b059-b5b46d28367c',
+│   │   │   tool_call_id='call_SuMihYYvzasPM0KCUecUjd1R'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/Swagger20Parser.java: 2\n/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/SwaggerParser.java: 1\n/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/DeserializationUtils.java: 7\n/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/JsonToYamlFileDuplicator.java: 5\n/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/SwaggerParserTest.java: 4\n/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/SwaggerReaderTest.java: 1\n/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/SwaggerResolverTest.java: 6\n/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/util/SwaggerDeserializerTest.java: 2',
+│   │   │   name='grep',
+│   │   │   id='4356831a-fa93-481c-a5ae-f564c3786c7a',
+│   │   │   tool_call_id='call_JwPd43FucDFcl8k6EN6JxSef'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/reader/ApiDeclarationReader.java: 1\n/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/reader/ResourceListingReader.java: 2\n/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/util/APIFileDownload.java: 1\n/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/RemoteUrl.java: 1\n/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/test/java/io/swagger/parser/util/HostAuthorizationValueTest.java: 2',
+│   │   │   name='grep',
+│   │   │   id='28efeebb-2f6d-41a9-a110-19a879f7f747',
+│   │   │   tool_call_id='call_Ws0dJHF34On3XaVoCyaSz1Fb'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='bea6d54d-4fb0-4672-8673-52e798c3db86',
+│   │   │   tool_call_id='call_QuLkxSgX8JWqPogB6kGeqgQd'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='No matches found',
+│   │   │   name='grep',
+│   │   │   id='aff5cb24-a0a0-4c24-9b8f-28901f5b0da3',
+│   │   │   tool_call_id='call_M5tA4GhU380mpEMaEY34M6vV'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5cd8-e382-7de1-91cc-e73e57c17c9c',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/DeserializationUtils.java',
+│   │   │   │   │   │   'limit': 260,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_qRcghkzTaoesyoaEn4lJFsIw',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/RemoteUrl.java',
+│   │   │   │   │   │   'limit': 260,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_XHv1Vkc14WdPPeSU4YzKt7pp',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/Swagger20Parser.java',
+│   │   │   │   │   │   'limit': 260,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_jUZcVlZ8ezEeyaHg4tsQwCBg',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/SwaggerParser.java',
+│   │   │   │   │   │   'limit': 220,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_uNhLpGsA1LELl13R7UdMUwny',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/transform/util/APIFileDownload.java',
+│   │   │   │   │   │   'limit': 220,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_enBMEj00vC4DvEB4N25YTqe4',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-compat-spec-parser/src/main/java/io/swagger/models/reader/ResourceListingReader.java',
+│   │   │   │   │   │   'limit': 220,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_4s3DMYfKiFS6G0F3Vjeow74m',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 12927,
+│   │   │   │   'output_tokens': 391,
+│   │   │   │   'total_tokens': 13318,
+│   │   │   │   'input_token_details': {'cache_read': 5888},
+│   │   │   │   'output_token_details': {'reasoning': 42}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage io.swagger.parser.util;\n     2\t\n     3\timport com.fasterxml.jackson.databind.JsonNode;\n     4\timport io.swagger.util.Json;\n     5\timport io.swagger.util.Yaml;\n     6\t\n     7\timport java.io.IOException;\n     8\t\n     9\t/**\n    10\t * Created by russellb337 on 7/14/15.\n    11\t */\n    12\tpublic class DeserializationUtils {\n    13\t    public static JsonNode deserializeIntoTree(String contents, String fileOrHost) {\n    14\t        JsonNode result;\n    15\t\n    16\t        try {\n    17\t            if (isJson(contents)) {\n    18\t                result = Json.mapper().readTree(contents);\n    19\t            } else {\n    20\t                result = readYamlTree(contents);\n    21\t            }\n    22\t        } catch (IOException e) {\n    23\t            throw new RuntimeException("An exception was thrown while trying to deserialize the contents of " + fileOrHost + " into a JsonNode tree", e);\n    24\t        }\n    25\t\n    26\t        return result;\n    27\t    }\n    28\t\n    29\t    public static <T> T deserialize(Object contents, String fileOrHost, Class<T> expectedType) {\n    30\t        T result;\n    31\t\n    32\t        boolean isJson = false;\n    33\t\n    34\t        if(contents instanceof String && isJson((String)contents)) {\n    35\t            isJson = true;\n    36\t        }\n    37\t\n    38\t        try {\n    39\t            if (contents instanceof String) {\n    40\t                if (isJson) {\n    41\t                    result = Json.mapper().readValue((String) contents, expectedType);\n    42\t                } else {\n    43\t                    result = Yaml.mapper().readValue((String) contents, expectedType);\n    44\t                }\n    45\t            } else {\n    46\t                result = Json.mapper().convertValue(contents, expectedType);\n    47\t            }\n    48\t        } catch (Exception e) {\n    49\t            throw new RuntimeException("An exception was thrown while trying to deserialize the contents of " + fileOrHost + " into type " + expectedType, e);\n    50\t        }\n    51\t\n    52\t        return result;\n    53\t    }\n    54\t\n    55\t    private static boolean isJson(String contents) {\n    56\t        return contents.toString().trim().startsWith("{");\n    57\t    }\n    58\t\n    59\t    public static JsonNode readYamlTree(String contents) {\n    60\t        org.yaml.snakeyaml.Yaml yaml = new org.yaml.snakeyaml.Yaml();\n    61\t        return Json.mapper().convertValue(yaml.load(contents), JsonNode.class);\n    62\t    }\n    63\t\n    64\t    public static <T> T readYamlValue(String contents, Class<T> expectedType) {\n    65\t        org.yaml.snakeyaml.Yaml yaml = new org.yaml.snakeyaml.Yaml();\n    66\t        return Json.mapper().convertValue(yaml.load(contents), expectedType);\n    67\t    }\n    68\t}',
+│   │   │   name='read_file',
+│   │   │   id='1fda4ed9-40ac-4952-9fd4-e7de92222b1b',
+│   │   │   tool_call_id='call_qRcghkzTaoesyoaEn4lJFsIw'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage io.swagger.parser.util;\n     2\t\n     3\timport io.swagger.models.auth.AuthorizationValue;\n     4\timport org.slf4j.Logger;\n     5\timport org.slf4j.LoggerFactory;\n     6\t\n     7\timport javax.net.ssl.*;\n     8\timport java.io.BufferedReader;\n     9\timport java.io.InputStream;\n    10\timport java.io.InputStreamReader;\n    11\timport java.net.URI;\n    12\timport java.net.URL;\n    13\timport java.net.URLConnection;\n    14\timport java.net.URLEncoder;\n    15\timport java.nio.charset.Charset;\n    16\timport java.nio.charset.StandardCharsets;\n    17\timport java.security.KeyManagementException;\n    18\timport java.security.NoSuchAlgorithmException;\n    19\timport java.security.cert.X509Certificate;\n    20\timport java.util.ArrayList;\n    21\timport java.util.Collection;\n    22\timport java.util.List;\n    23\t\n    24\t\n    25\tpublic class RemoteUrl {\n    26\t    static Logger LOGGER = LoggerFactory.getLogger(RemoteUrl.class);\n    27\t\n    28\t    private static final String TRUST_ALL = String.format("%s.trustAll", RemoteUrl.class.getName());\n    29\t    private static final ConnectionConfigurator CONNECTION_CONFIGURATOR = createConnectionConfigurator();\n    30\t    private static final Charset UTF_8 = StandardCharsets.UTF_8;\n    31\t    private static final String ACCEPT_HEADER_VALUE = "application/json, application/yaml, */*";\n    32\t    private static final String USER_AGENT_HEADER_VALUE = "Apache-HttpClient/Swagger";\n    33\t\n    34\t    private static ConnectionConfigurator createConnectionConfigurator() {\n    35\t        if (Boolean.parseBoolean(System.getProperty(TRUST_ALL))) {\n    36\t            try {\n    37\t                // Create a trust manager that does not validate certificate chains\n    38\t                final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {\n    39\t\n    40\t                    public X509Certificate[] getAcceptedIssuers() {\n    41\t                        return null;\n    42\t                    }\n    43\t\n    44\t                    public void checkClientTrusted(X509Certificate[] certs, String authType) {\n    45\t                    }\n    46\t\n    47\t                    public void checkServerTrusted(X509Certificate[] certs, String authType) {\n    48\t                    }\n    49\t                }};\n    50\t\n    51\t                // Install the all-trusting trust manager\n    52\t                final SSLContext sc = SSLContext.getInstance("SSL");\n    53\t                sc.init(null, trustAllCerts, new java.security.SecureRandom());\n    54\t                final SSLSocketFactory sf = sc.getSocketFactory();\n    55\t\n    56\t                // Create all-trusting host name verifier\n    57\t                final HostnameVerifier trustAllNames = new HostnameVerifier() {\n    58\t                    public boolean verify(String hostname, SSLSession session) {\n    59\t                        return true;\n    60\t                    }\n    61\t                };\n    62\t\n    63\t                return new ConnectionConfigurator() {\n    64\t\n    65\t                    @Override\n    66\t                    public void process(URLConnection connection) {\n    67\t                        if (connection instanceof HttpsURLConnection) {\n    68\t                            final HttpsURLConnection httpsConnection = (HttpsURLConnection) connection;\n    69\t                            httpsConnection.setSSLSocketFactory(sf);\n    70\t                            httpsConnection.setHostnameVerifier(trustAllNames);\n    71\t                        }\n    72\t                    }\n    73\t                };\n    74\t            } catch (NoSuchAlgorithmException e) {\n    75\t                LOGGER.error("Not Supported", e);\n    76\t            } catch (KeyManagementException e) {\n    77\t                LOGGER.error("Not Supported", e);\n    78\t            }\n    79\t        }\n    80\t        return new ConnectionConfigurator() {\n    81\t\n    82\t            @Override\n    83\t            public void process(URLConnection connection) {\n    84\t                // Do nothing\n    85\t            }\n    86\t        };\n    87\t    }\n    88\t\n    89\t    public static String cleanUrl(String url) {\n    90\t        return url.replaceAll("\\\\{", "%7B").replaceAll("\\\\}", "%7D");\n    91\t    }\n    92\t\n    93\t    public static String urlToString(String url, List<AuthorizationValue> auths) throws Exception {\n    94\t        InputStream is = null;\n    95\t        BufferedReader br = null;\n    96\t\n    97\t        try {\n    98\t            final URL inUrl = new URL(cleanUrl(url));\n    99\t            final List<AuthorizationValue> query = new ArrayList<>();\n   100\t            final List<AuthorizationValue> header = new ArrayList<>();\n   101\t            if (auths != null) {\n   102\t                for (AuthorizationValue auth : auths) {\n   103\t                    if ("query".equals(auth.getType())) {\n   104\t                        appendValue(inUrl, auth, query);\n   105\t                    } else if ("header".equals(auth.getType())) {\n   106\t                        appendValue(inUrl, auth, header);\n   107\t                    }\n   108\t                }\n   109\t            }\n   110\t            final URLConnection conn;\n   111\t            if (!query.isEmpty()) {\n   112\t                final URI inUri = inUrl.toURI();\n   113\t                final StringBuilder newQuery = new StringBuilder(inUri.getQuery() == null ? "" : inUri.getQuery());\n   114\t                for (AuthorizationValue item : query) {\n   115\t                    if (newQuery.length() > 0) {\n   116\t                        newQuery.append("&");\n   117\t                    }\n   118\t                    newQuery.append(URLEncoder.encode(item.getKeyName(), UTF_8.name())).append("=")\n   119\t                            .append(URLEncoder.encode(item.getValue(), UTF_8.name()));\n   120\t                }\n   121\t                conn = new URI(inUri.getScheme(), inUri.getAuthority(), inUri.getPath(), newQuery.toString(),\n   122\t                        inUri.getFragment()).toURL().openConnection();\n   123\t            } else {\n   124\t                conn = inUrl.openConnection();\n   125\t            }\n   126\t            CONNECTION_CONFIGURATOR.process(conn);\n   127\t            for (AuthorizationValue item : header) {\n   128\t                conn.setRequestProperty(item.getKeyName(), item.getValue());\n   129\t            }\n   130\t\n   131\t            conn.setRequestProperty("Accept", ACCEPT_HEADER_VALUE);\n   132\t            conn.setRequestProperty("User-Agent", USER_AGENT_HEADER_VALUE);\n   133\t            conn.connect();\n   134\t            InputStream in = conn.getInputStream();\n   135\t\n   136\t            StringBuilder contents = new StringBuilder();\n   137\t\n   138\t            BufferedReader input = new BufferedReader(new InputStreamReader(in, UTF_8));\n   139\t\n   140\t            for (int i = 0; i != -1; i = input.read()) {\n   141\t                char c = (char) i;\n   142\t                if (!Character.isISOControl(c)) {\n   143\t                    contents.append((char) i);\n   144\t                }\n   145\t                if (c == \'\\n\') {\n   146\t                    contents.append(\'\\n\');\n   147\t                }\n   148\t            }\n   149\t\n   150\t            in.close();\n   151\t\n   152\t            return contents.toString();\n   153\t        } catch (javax.net.ssl.SSLProtocolException e) {\n   154\t            LOGGER.warn("there is a problem with the target SSL certificate");\n   155\t            LOGGER.warn("**** you may want to run with -Djsse.enableSNIExtension=false\\n\\n");\n   156\t            LOGGER.error("unable to read", e);\n   157\t            throw e;\n   158\t        } catch (Exception e) {\n   159\t            LOGGER.error("unable to read", e);\n   160\t            throw e;\n   161\t        } finally {\n   162\t            if (is != null) {\n   163\t                is.close();\n   164\t            }\n   165\t            if (br != null) {\n   166\t                br.close();\n   167\t            }\n   168\t        }\n   169\t    }\n   170\t\n   171\t    private static void appendValue(URL url, AuthorizationValue value, Collection<AuthorizationValue> to) {\n   172\t        if (value instanceof ManagedValue) {\n   173\t            if (!((ManagedValue) value).process(url)) {\n   174\t                return;\n   175\t            }\n   176\t        }\n   177\t        to.add(value);\n   178\t    }\n   179\t\n   180\t    private interface ConnectionConfigurator {\n   181\t\n   182\t        void process(URLConnection connection);\n   183\t    }\n   184\t}',
+│   │   │   name='read_file',
+│   │   │   id='b206b29c-5e88-44dc-9449-0c9ae7760d1f',
+│   │   │   tool_call_id='call_XHv1Vkc14WdPPeSU4YzKt7pp'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage io.swagger.parser;\n     2\t\n     3\timport com.fasterxml.jackson.databind.JsonNode;\n     4\timport com.fasterxml.jackson.databind.ObjectMapper;\n     5\timport io.swagger.models.Swagger;\n     6\timport io.swagger.models.auth.AuthorizationValue;\n     7\timport io.swagger.parser.util.ClasspathHelper;\n     8\timport io.swagger.parser.util.DeserializationUtils;\n     9\timport io.swagger.parser.util.RemoteUrl;\n    10\timport io.swagger.parser.util.SwaggerDeserializationResult;\n    11\timport io.swagger.parser.util.SwaggerDeserializer;\n    12\timport io.swagger.util.Json;\n    13\timport org.apache.commons.io.FileUtils;\n    14\timport org.apache.commons.lang3.Validate;\n    15\timport org.apache.commons.lang3.builder.ReflectionToStringBuilder;\n    16\timport org.apache.commons.lang3.builder.ToStringStyle;\n    17\timport org.slf4j.Logger;\n    18\timport org.slf4j.LoggerFactory;\n    19\t\n    20\timport javax.net.ssl.SSLHandshakeException;\n    21\timport java.io.IOException;\n    22\timport java.net.URI;\n    23\timport java.nio.file.Files;\n    24\timport java.nio.file.Path;\n    25\timport java.nio.file.Paths;\n    26\timport java.util.List;\n    27\t\n    28\tpublic class Swagger20Parser implements SwaggerParserExtension {\n    29\t    private static final Logger LOGGER = LoggerFactory.getLogger(Swagger20Parser.class);\n    30\t\n    31\t    @Override\n    32\t    public SwaggerDeserializationResult readWithInfo(JsonNode node) {\n    33\t        SwaggerDeserializer ser = new SwaggerDeserializer();\n    34\t        return ser.deserialize(node);\n    35\t    }\n    36\t\n    37\t    @Override\n    38\t    public SwaggerDeserializationResult readWithInfo(String location, List<AuthorizationValue> auths) {\n    39\t        String data;\n    40\t\n    41\t        try {\n    42\t            location = location.replaceAll("\\\\\\\\","/");\n    43\t            if (location.toLowerCase().startsWith("http")) {\n    44\t                data = RemoteUrl.urlToString(location, auths);\n    45\t            } else {\n    46\t                final String fileScheme = "file:";\n    47\t                Path path;\n    48\t                if (location.toLowerCase().startsWith(fileScheme)) {\n    49\t                    path = Paths.get(URI.create(location));\n    50\t                } else {\n    51\t                    path = Paths.get(location);\n    52\t                }\n    53\t                if (Files.exists(path)) {\n    54\t                    data = FileUtils.readFileToString(path.toFile(), "UTF-8");\n    55\t                } else {\n    56\t                    data = ClasspathHelper.loadFileFromClasspath(location);\n    57\t                }\n    58\t            }\n    59\t            JsonNode rootNode;\n    60\t            if (data.trim().startsWith("{")) {\n    61\t                ObjectMapper mapper = Json.mapper();\n    62\t                rootNode = mapper.readTree(data);\n    63\t            } else {\n    64\t                rootNode = DeserializationUtils.readYamlTree(data);\n    65\t            }\n    66\t            return readWithInfo(rootNode);\n    67\t        }\n    68\t        catch (SSLHandshakeException e) {\n    69\t            SwaggerDeserializationResult output = new SwaggerDeserializationResult();\n    70\t            output.message("unable to read location `" + location + "` due to a SSL configuration error.  " +\n    71\t                    "It is possible that the server SSL certificate is invalid, self-signed, or has an untrusted " +\n    72\t                    "Certificate Authority.");\n    73\t            return output;\n    74\t        }\n    75\t        catch (Exception e) {\n    76\t            SwaggerDeserializationResult output = new SwaggerDeserializationResult();\n    77\t            output.message("unable to read location `" + location + "`");\n    78\t            return output;\n    79\t        }\n    80\t    }\n    81\t\n    82\t    @Override\n    83\t    public Swagger read(String location, List<AuthorizationValue> auths) throws IOException {\n    84\t        LOGGER.info("reading from " + location);\n    85\t        try {\n    86\t            String data;\n    87\t            location = location.replaceAll("\\\\\\\\","/");\n    88\t            if (location.toLowerCase().startsWith("http")) {\n    89\t                data = RemoteUrl.urlToString(location, auths);\n    90\t            } else {\n    91\t                final String fileScheme = "file:";\n    92\t                Path path;\n    93\t                if (location.toLowerCase().startsWith(fileScheme)) {\n    94\t                    path = Paths.get(URI.create(location));\n    95\t                } else {\n    96\t                    path = Paths.get(location);\n    97\t                }\n    98\t                if(Files.exists(path)) {\n    99\t                    data = FileUtils.readFileToString(path.toFile(), "UTF-8");\n   100\t                } else {\n   101\t                    data = ClasspathHelper.loadFileFromClasspath(location);\n   102\t                }\n   103\t            }\n   104\t\n   105\t            return convertToSwagger(data);\n   106\t        } catch (Exception e) {\n   107\t            if (System.getProperty("debugParser") != null) {\n   108\t                e.printStackTrace();\n   109\t            }\n   110\t            return null;\n   111\t        }\n   112\t    }\n   113\t\n   114\t    private Swagger convertToSwagger(String data) throws IOException {\n   115\t        if (data != null) {\n   116\t            JsonNode rootNode;\n   117\t            if (data.trim().startsWith("{")) {\n   118\t                ObjectMapper mapper = Json.mapper();\n   119\t                rootNode = mapper.readTree(data);\n   120\t            } else {\n   121\t                rootNode = DeserializationUtils.readYamlTree(data);\n   122\t            }\n   123\t\n   124\t            if (System.getProperty("debugParser") != null) {\n   125\t                LOGGER.info("\\n\\nSwagger Tree: \\n"\n   126\t                    + ReflectionToStringBuilder.toString(rootNode, ToStringStyle.MULTI_LINE_STYLE) + "\\n\\n");\n   127\t            }\n   128\t            if(rootNode == null) {\n   129\t                return null;\n   130\t            }\n   131\t            // must have swagger node set\n   132\t            JsonNode swaggerNode = rootNode.get("swagger");\n   133\t            if (swaggerNode == null) {\n   134\t                return null;\n   135\t            } else {\n   136\t                SwaggerDeserializationResult result = new SwaggerDeserializer().deserialize(rootNode);\n   137\t\n   138\t                Swagger convertValue = result.getSwagger();\n   139\t                if (System.getProperty("debugParser") != null) {\n   140\t                    LOGGER.info("\\n\\nSwagger Tree convertValue : \\n"\n   141\t                        + ReflectionToStringBuilder.toString(convertValue, ToStringStyle.MULTI_LINE_STYLE) + "\\n\\n");\n   142\t                }\n   143\t                return convertValue;\n   144\t            }\n   145\t        } else {\n   146\t            return null;\n   147\t        }\n   148\t    }\n   149\t\n   150\t    public Swagger parse(String data) throws IOException {\n   151\t        Validate.notEmpty(data, "data must not be null!");\n   152\t        return convertToSwagger(data);\n   153\t    }\n   154\t\n   155\t    @Override\n   156\t    public Swagger read(JsonNode node) throws IOException {\n   157\t        if (node == null) {\n   158\t            return null;\n   159\t        }\n   160\t\n   161\t        return Json.mapper().convertValue(node, Swagger.class);\n   162\t    }\n   163\t}',
+│   │   │   name='read_file',
+│   │   │   id='55b7fcc9-ff55-4963-813f-676c5ae0ca4a',
+│   │   │   tool_call_id='call_jUZcVlZ8ezEeyaHg4tsQwCBg'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage io.swagger.parser;\n     2\t\n     3\timport com.fasterxml.jackson.databind.JsonNode;\n     4\timport com.fasterxml.jackson.databind.ObjectMapper;\n     5\timport io.swagger.models.Swagger;\n     6\timport io.swagger.models.auth.AuthorizationValue;\n     7\timport io.swagger.parser.util.DeserializationUtils;\n     8\timport io.swagger.parser.util.SwaggerDeserializationResult;\n     9\timport io.swagger.util.Json;\n    10\t\n    11\timport java.io.IOException;\n    12\timport java.util.ArrayList;\n    13\timport java.util.Iterator;\n    14\timport java.util.List;\n    15\timport java.util.ServiceLoader;\n    16\t\n    17\tpublic class SwaggerParser {\n    18\t\n    19\t    public SwaggerDeserializationResult readWithInfo(String location, List<AuthorizationValue> auths, boolean resolve) {\n    20\t        if (location == null) {\n    21\t            return null;\n    22\t        }\n    23\t        location = location.replaceAll("\\\\\\\\","/");\n    24\t        List<SwaggerParserExtension> parserExtensions = getExtensions();\n    25\t        SwaggerDeserializationResult output;\n    26\t\n    27\t        if(auths == null) {\n    28\t            auths = new ArrayList<AuthorizationValue>();\n    29\t        }\n    30\t\n    31\t        output = new Swagger20Parser().readWithInfo(location, auths);\n    32\t        if (output != null) {\n    33\t            if(output.getSwagger() != null && "2.0".equals(output.getSwagger().getSwagger())) {\n    34\t                if(resolve) {\n    35\t                    output.setSwagger(new SwaggerResolver(output.getSwagger(), auths, location).resolve());\n    36\t                }\n    37\t                return output;\n    38\t            }\n    39\t        }\n    40\t        for (SwaggerParserExtension extension : parserExtensions) {\n    41\t            output = extension.readWithInfo(location, auths);\n    42\t            if (output != null && output.getSwagger() != null && "2.0".equals(output.getSwagger().getSwagger())) {\n    43\t                return output;\n    44\t            }\n    45\t        }\n    46\t        if(output == null) {\n    47\t            output = new SwaggerDeserializationResult()\n    48\t                .message("The swagger definition could not be read");\n    49\t        }\n    50\t        return output;\n    51\t    }\n    52\t\n    53\t    public Swagger read(String location) {\n    54\t        return read(location, null, true);\n    55\t    }\n    56\t\n    57\t    public Swagger read(String location, List<AuthorizationValue> auths, boolean resolve) {\n    58\t        if (location == null) {\n    59\t            return null;\n    60\t        }\n    61\t        location = location.replaceAll("\\\\\\\\","/");\n    62\t        Swagger output;\n    63\t\n    64\t        try {\n    65\t            output = new Swagger20Parser().read(location, auths);\n    66\t            if (output != null) {\n    67\t                return new SwaggerResolver(output, auths, location).resolve();\n    68\t            }\n    69\t        } catch (IOException e) {\n    70\t        }\n    71\t\n    72\t        List<SwaggerParserExtension> parserExtensions = getExtensions();\n    73\t        for (SwaggerParserExtension extension : parserExtensions) {\n    74\t            try {\n    75\t                output = extension.read(location, auths);\n    76\t                if (output != null) {\n    77\t                    return output;\n    78\t                }\n    79\t            } catch (IOException e) {\n    80\t                if (System.getProperty("debugParser") != null) {\n    81\t                    e.printStackTrace();\n    82\t                }\n    83\t                // continue to next parser\n    84\t            }\n    85\t        }\n    86\t        return null;\n    87\t    }\n    88\t\n    89\t    public SwaggerDeserializationResult readWithInfo(String swaggerAsString) {\n    90\t        if(swaggerAsString == null) {\n    91\t            return new SwaggerDeserializationResult().message("empty or null swagger supplied");\n    92\t        }\n    93\t        try {\n    94\t            JsonNode node;\n    95\t            if (swaggerAsString.trim().startsWith("{")) {\n    96\t                ObjectMapper mapper = Json.mapper();\n    97\t                node = mapper.readTree(swaggerAsString);\n    98\t            } else {\n    99\t                node = DeserializationUtils.readYamlTree(swaggerAsString);\n   100\t            }\n   101\t\n   102\t            SwaggerDeserializationResult result = new Swagger20Parser().readWithInfo(node);\n   103\t            if (result != null) {\n   104\t                result.setSwagger(new SwaggerResolver(result.getSwagger(), new ArrayList<AuthorizationValue>(), null).resolve());\n   105\t            }\n   106\t            else {\n   107\t            \tresult = new SwaggerDeserializationResult().message("Definition does not appear to be a valid Swagger format");\n   108\t            }\n   109\t            return result;\n   110\t        }\n   111\t        catch (Exception e) {\n   112\t            return new SwaggerDeserializationResult().message("malformed or unreadable swagger supplied");\n   113\t        }\n   114\t    }\n   115\t\n   116\t    public Swagger parse(String swaggerAsString) {\n   117\t        return parse(swaggerAsString, null);\n   118\t    }\n   119\t\n   120\t    public Swagger parse(String swaggerAsString, List<AuthorizationValue> auths) {\n   121\t        Swagger output;\n   122\t        try {\n   123\t            output = new Swagger20Parser().parse(swaggerAsString);\n   124\t            if (output != null) {\n   125\t                return new SwaggerResolver(output, auths, null).resolve();\n   126\t            }\n   127\t        } catch (IOException e) {\n   128\t        }\n   129\t        return null;\n   130\t    }\n   131\t\n   132\t    public Swagger read(JsonNode node) {\n   133\t        return read(node, new ArrayList<AuthorizationValue>(), false);\n   134\t    }\n   135\t\n   136\t    public Swagger read(JsonNode node, boolean resolve) {\n   137\t        return read(node, new ArrayList<AuthorizationValue>(), resolve);\n   138\t    }\n   139\t\n   140\t    public Swagger read(JsonNode node, List<AuthorizationValue> authorizationValues, boolean resolve) {\n   141\t        if (node == null) {\n   142\t            return null;\n   143\t        }\n   144\t\n   145\t        List<SwaggerParserExtension> parserExtensions = getExtensions();\n   146\t        Swagger output = null;\n   147\t\n   148\t        try {\n   149\t            output = new Swagger20Parser().read(node);\n   150\t            if (output != null) {\n   151\t                if(resolve) {\n   152\t                    return new SwaggerResolver(output, authorizationValues).resolve();\n   153\t                }\n   154\t                else {\n   155\t                    return output;\n   156\t                }\n   157\t            }\n   158\t        } catch (IOException e) {\n   159\t        }\n   160\t        for (SwaggerParserExtension extension : parserExtensions) {\n   161\t            try {\n   162\t                output = extension.read(node);\n   163\t                if (output != null) {\n   164\t                    return output;\n   165\t                }\n   166\t            } catch (IOException e) {\n   167\t                if (System.getProperty("debugParser") != null) {\n   168\t                    e.printStackTrace();\n   169\t                }\n   170\t                // continue to next parser\n   171\t            }\n   172\t        }\n   173\t        return null;\n   174\t    }\n   175\t\n   176\t    public List<SwaggerParserExtension> getExtensions() {\n   177\t        ServiceLoader<SwaggerParserExtension> loader = ServiceLoader.load(SwaggerParserExtension.class);\n   178\t        List<SwaggerParserExtension> output = new ArrayList<SwaggerParserExtension>();\n   179\t        Iterator<SwaggerParserExtension> itr = loader.iterator();\n   180\t        while (itr.hasNext()) {\n   181\t            output.add(itr.next());\n   182\t        }\n   183\t        return output;\n   184\t    }\n   185\t}',
+│   │   │   name='read_file',
+│   │   │   id='99846203-e414-4d78-a8cb-3a8a68914712',
+│   │   │   tool_call_id='call_uNhLpGsA1LELl13R7UdMUwny'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage io.swagger.transform.util;\n     2\t\n     3\timport com.fasterxml.jackson.databind.JsonNode;\n     4\timport com.fasterxml.jackson.databind.ObjectMapper;\n     5\timport com.fasterxml.jackson.databind.ObjectWriter;\n     6\timport com.github.fge.jackson.JacksonUtils;\n     7\t\n     8\timport java.io.BufferedWriter;\n     9\timport java.io.IOException;\n    10\timport java.io.InputStream;\n    11\timport java.net.URL;\n    12\timport java.nio.charset.StandardCharsets;\n    13\timport java.nio.file.Files;\n    14\timport java.nio.file.Path;\n    15\timport java.nio.file.Paths;\n    16\timport java.nio.file.StandardOpenOption;\n    17\t\n    18\tpublic final class APIFileDownload {\n    19\t    private static final Path RESOURCE_PATH;\n    20\t    private static final ObjectMapper MAPPER = JacksonUtils.newMapper();\n    21\t    private static final ObjectWriter JSONWRITER\n    22\t            = MAPPER.writerWithDefaultPrettyPrinter();\n    23\t\n    24\t    private APIFileDownload() {\n    25\t    }\n    26\t\n    27\t    public static void main(final String... args)\n    28\t            throws IOException {\n    29\t        if (args.length != 2) {\n    30\t            System.err.println("Requiring two arguments (URL, destination)");\n    31\t            System.exit(2);\n    32\t        }\n    33\t\n    34\t        final URL source = new URL(args[0]);\n    35\t        final Path dstFile = RESOURCE_PATH.resolve(args[1]).toAbsolutePath();\n    36\t\n    37\t        if (!dstFile.startsWith(RESOURCE_PATH)) {\n    38\t            System.err.println("Illegal destination path " + dstFile);\n    39\t            System.exit(2);\n    40\t        }\n    41\t\n    42\t        Files.createDirectories(dstFile.getParent());\n    43\t\n    44\t        try (\n    45\t                final InputStream in = source.openStream();\n    46\t                final BufferedWriter writer = Files.newBufferedWriter(dstFile,\n    47\t                        StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);\n    48\t        ) {\n    49\t            final JsonNode node = MAPPER.readTree(in);\n    50\t            JSONWRITER.writeValue(writer, node);\n    51\t        }\n    52\t    }\n    53\t\n    54\t    static {\n    55\t        try {\n    56\t            RESOURCE_PATH = Paths.get("src/main/resources/samples")\n    57\t                    .toRealPath();\n    58\t        } catch (IOException e) {\n    59\t            throw new ExceptionInInitializerError(e);\n    60\t        }\n    61\t    }\n    62\t}',
+│   │   │   name='read_file',
+│   │   │   id='0883ec2d-c03b-4728-921f-26e975939a82',
+│   │   │   tool_call_id='call_enBMEj00vC4DvEB4N25YTqe4'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\tpackage io.swagger.models.reader;\n     2\t\n     3\timport com.fasterxml.jackson.databind.DeserializationFeature;\n     4\timport com.fasterxml.jackson.databind.ObjectMapper;\n     5\timport io.swagger.models.apideclaration.ApiDeclaration;\n     6\timport io.swagger.models.resourcelisting.ApiListingReference;\n     7\timport io.swagger.models.resourcelisting.ResourceListing;\n     8\t\n     9\timport java.io.IOException;\n    10\timport java.net.URI;\n    11\timport java.net.URISyntaxException;\n    12\timport java.net.URL;\n    13\timport java.util.HashMap;\n    14\timport java.util.List;\n    15\timport java.util.Map;\n    16\t\n    17\tpublic class ResourceListingReader {\n    18\t    public static void main(String[] args) throws IOException, URISyntaxException {\n    19\t        ObjectMapper objectMapper = new ObjectMapper();\n    20\t        objectMapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);\n    21\t\n    22\t        String baseUrl = "http://petstore.swagger.io/api/api-docs";\n    23\t\n    24\t        ResourceListing resourceListing = objectMapper.readValue(new URL(baseUrl), ResourceListing.class);\n    25\t        Map<String, ApiDeclaration> apiDeclarations = new HashMap<>();\n    26\t\n    27\t        List<ApiListingReference> apis = resourceListing.getApis();\n    28\t\n    29\t        if (apis != null) {\n    30\t            for (ApiListingReference api : apis) {\n    31\t                URL apiUrl;\n    32\t\n    33\t                URI uri = new URI(api.getPath());\n    34\t                if (uri.isAbsolute()) {\n    35\t                    apiUrl = uri.toURL();\n    36\t                } else {\n    37\t                    apiUrl = new URL(baseUrl + api.getPath());\n    38\t                }\n    39\t\n    40\t                apiDeclarations.put(api.getPath(), objectMapper.readValue(apiUrl, ApiDeclaration.class));\n    41\t            }\n    42\t        }\n    43\t\n    44\t        System.out.println("---=== Resource Listing (" + baseUrl + ") ==--");\n    45\t        System.out.println(resourceListing);\n    46\t\n    47\t        for (Map.Entry<String, ApiDeclaration> apiDeclarationEntry : apiDeclarations.entrySet()) {\n    48\t            System.out.println("---=== API Declaration (" + apiDeclarationEntry.getKey() + ") ==--");\n    49\t            System.out.println(apiDeclarationEntry.getValue());\n    50\t        }\n    51\t\n    52\t    }\n    53\t}',
+│   │   │   name='read_file',
+│   │   │   id='b652467a-2e91-441c-836f-ea49078f57ec',
+│   │   │   tool_call_id='call_4s3DMYfKiFS6G0F3Vjeow74m'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'tool_calls',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5cd9-0005-7f62-87c0-e385b725d001',
+│   │   │   tool_calls=[
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/pom.xml',
+│   │   │   │   │   │   'limit': 220,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_VdQSuPmuABurgemJZd3dslRr',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'read_file',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'file_path': '/home/houning/Projects/dataset/VUL4J-77/Alpha/pom.xml',
+│   │   │   │   │   │   'limit': 260,
+│   │   │   │   │   │   'offset': 0
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_1SlyPHZcktk0nUTJkCKfuRCQ',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java',
+│   │   │   │   │   │   'pattern': 'readYamlValue('
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_VjJRoKTTKrc5tW5JUJ0bpBL3',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   },
+│   │   │   │   {
+│   │   │   │   │   'name': 'grep',
+│   │   │   │   │   'args': {
+│   │   │   │   │   │   'glob': '**/*.java',
+│   │   │   │   │   │   'output_mode': 'content',
+│   │   │   │   │   │   'path': '/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java',
+│   │   │   │   │   │   'pattern': 'readYamlTree('
+│   │   │   │   │   },
+│   │   │   │   │   'id': 'call_HLvGe5v662eJDVr8g5BQaYlt',
+│   │   │   │   │   'type': 'tool_call'
+│   │   │   │   }
+│   │   │   ],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 20551,
+│   │   │   │   'output_tokens': 321,
+│   │   │   │   'total_tokens': 20872,
+│   │   │   │   'input_token_details': {'cache_read': 5888},
+│   │   │   │   'output_token_details': {'reasoning': 104}
+│   │   │   }
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\t<?xml version="1.0" encoding="UTF-8"?>\n     2\t<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"\n     3\t         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">\n     4\t    <parent>\n     5\t        <groupId>io.swagger</groupId>\n     6\t        <artifactId>swagger-parser-project</artifactId>\n     7\t        <version>1.0.30</version>\n     8\t        <relativePath>../..</relativePath>\n     9\t    </parent>\n    10\t    <modelVersion>4.0.0</modelVersion>\n    11\t    <artifactId>swagger-parser</artifactId>\n    12\t    <packaging>jar</packaging>\n    13\t    <name>swagger-parser</name>\n    14\t    <profiles>\n    15\t        <profile>\n    16\t            <id>test-single</id>\n    17\t            <build>\n    18\t                <plugins>\n    19\t                    <plugin>\n    20\t                        <artifactId>maven-surefire-plugin</artifactId>\n    21\t                        <configuration>\n    22\t                            <groups>single</groups>\n    23\t                            <workingDirectory>.</workingDirectory>\n    24\t                        </configuration>\n    25\t                    </plugin>\n    26\t                </plugins>\n    27\t            </build>\n    28\t        </profile>\n    29\t    </profiles>\n    30\t    <dependencies>\n    31\t        <dependency>\n    32\t            <groupId>org.testng</groupId>\n    33\t            <artifactId>testng</artifactId>\n    34\t            <version>${testng-version}</version>\n    35\t            <scope>test</scope>\n    36\t        </dependency>\n    37\t        <dependency>\n    38\t            <groupId>org.jmockit</groupId>\n    39\t            <artifactId>jmockit</artifactId>\n    40\t            <version>${jmockit-version}</version>\n    41\t            <scope>test</scope>\n    42\t        </dependency>\n    43\t        <dependency>\n    44\t            <groupId>io.swagger</groupId>\n    45\t            <artifactId>swagger-core</artifactId>\n    46\t            <version>${swagger-core-version}</version>\n    47\t        </dependency>\n    48\t        <dependency>\n    49\t            <groupId>${project.parent.groupId}</groupId>\n    50\t            <artifactId>swagger-core</artifactId>\n    51\t            <version>${swagger-core-version}</version>\n    52\t            <type>test-jar</type>\n    53\t            <scope>test</scope>\n    54\t        </dependency>\n    55\t        <dependency>\n    56\t            <groupId>junit</groupId>\n    57\t            <artifactId>junit</artifactId>\n    58\t            <version>${junit-version}</version>\n    59\t            <scope>test</scope>\n    60\t        </dependency>\n    61\t        <dependency>\n    62\t            <groupId>org.slf4j</groupId>\n    63\t            <artifactId>slf4j-ext</artifactId>\n    64\t            <version>${slf4j-version}</version>\n    65\t        </dependency>\n    66\t        <dependency>\n    67\t            <groupId>org.slf4j</groupId>\n    68\t            <artifactId>slf4j-api</artifactId>\n    69\t            <version>${slf4j-version}</version>\n    70\t        </dependency>\n    71\t        <dependency>\n    72\t            <groupId>commons-io</groupId>\n    73\t            <artifactId>commons-io</artifactId>\n    74\t            <version>${commons-io-version}</version>\n    75\t        </dependency>\n    76\t        <dependency>\n    77\t            <groupId>org.slf4j</groupId>\n    78\t            <artifactId>slf4j-simple</artifactId>\n    79\t            <version>${slf4j-version}</version>\n    80\t            <scope>test</scope>\n    81\t        </dependency>\n    82\t        <dependency>\n    83\t            <groupId>com.github.tomakehurst</groupId>\n    84\t            <artifactId>wiremock</artifactId>\n    85\t            <version>${wiremock-version}</version>\n    86\t            <scope>test</scope>\n    87\t            <exclusions>\n    88\t                <exclusion>\n    89\t                    <artifactId>jackson-core</artifactId>\n    90\t                    <groupId>com.fasterxml.jackson.core</groupId>\n    91\t                </exclusion>\n    92\t            </exclusions>\n    93\t        </dependency>\n    94\t    </dependencies>\n    95\t</project>',
+│   │   │   name='read_file',
+│   │   │   id='4085d678-7ac5-4adf-aae5-74cb5d2fd0af',
+│   │   │   tool_call_id='call_VdQSuPmuABurgemJZd3dslRr'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='     1\t<?xml version="1.0" encoding="UTF-8"?>\n     2\t<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"\n     3\t         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">\n     4\t    <parent>\n     5\t        <groupId>org.sonatype.oss</groupId>\n     6\t        <artifactId>oss-parent</artifactId>\n     7\t        <version>5</version>\n     8\t    </parent>\n     9\t    <modelVersion>4.0.0</modelVersion>\n    10\t    <groupId>io.swagger</groupId>\n    11\t    <artifactId>swagger-parser-project</artifactId>\n    12\t    <version>1.0.30</version>\n    13\t    <packaging>pom</packaging>\n    14\t    <name>swagger-parser-project</name>\n    15\t    <developers>\n    16\t        <developer>\n    17\t            <id>fehguy</id>\n    18\t            <name>Tony Tam</name>\n    19\t            <email>fehguy@gmail.com</email>\n    20\t        </developer>\n    21\t        <developer>\n    22\t            <id>webron</id>\n    23\t            <name>Ron Ratovsky</name>\n    24\t            <email>webron@gmail.com</email>\n    25\t        </developer>\n    26\t        <developer>\n    27\t            <id>fge</id>\n    28\t            <name>Francis Galiegue</name>\n    29\t            <email>fgaliegue@gmail.com</email>\n    30\t        </developer>\n    31\t    </developers>\n    32\t    <issueManagement>\n    33\t        <system>github</system>\n    34\t        <url>https://github.com/swagger-api/swagger-parser/issues</url>\n    35\t    </issueManagement>\n    36\t    <mailingLists>\n    37\t        <mailingList>\n    38\t            <name>swagger-swaggersocket</name>\n    39\t            <archive>https://groups.google.com/forum/#!forum/swagger-swaggersocket</archive>\n    40\t        </mailingList>\n    41\t    </mailingLists>\n    42\t    <licenses>\n    43\t        <license>\n    44\t            <name>Apache License 2.0</name>\n    45\t            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>\n    46\t            <distribution>repo</distribution>\n    47\t        </license>\n    48\t    </licenses>\n    49\t    <build>\n    50\t        <defaultGoal>install</defaultGoal>\n    51\t        <resources>\n    52\t            <resource>\n    53\t                <directory>src/main/resources</directory>\n    54\t                <excludes>\n    55\t                    <exclude>logback.xml</exclude>\n    56\t                </excludes>\n    57\t            </resource>\n    58\t        </resources>\n    59\t        <plugins>\n    60\t            <plugin>\n    61\t                <groupId>org.apache.maven.plugins</groupId>\n    62\t                <artifactId>maven-surefire-plugin</artifactId>\n    63\t                <version>${surefire-version}</version>\n    64\t                <configuration>\n    65\t                    <testNGArtifactName>none:none</testNGArtifactName>\n    66\t                </configuration>\n    67\t                <executions>\n    68\t                    <execution>\n    69\t                        <id>test-testng</id>\n    70\t                        <phase>test</phase>\n    71\t                        <goals>\n    72\t                            <goal>test</goal>\n    73\t                        </goals>\n    74\t                        <configuration>\n    75\t                            <junitArtifactName>none:none</junitArtifactName>\n    76\t                            <testNGArtifactName>org.testng:testng</testNGArtifactName>\n    77\t                        </configuration>\n    78\t                    </execution>\n    79\t                </executions>\n    80\t            </plugin>\n    81\t            <plugin>\n    82\t                <artifactId>maven-dependency-plugin</artifactId>\n    83\t                <executions>\n    84\t                    <execution>\n    85\t                        <phase>package</phase>\n    86\t                        <goals>\n    87\t                            <goal>copy-dependencies</goal>\n    88\t                        </goals>\n    89\t                        <configuration>\n    90\t                            <outputDirectory>${project.build.directory}/lib</outputDirectory>\n    91\t                        </configuration>\n    92\t                    </execution>\n    93\t                </executions>\n    94\t            </plugin>\n    95\t            <plugin>\n    96\t                <groupId>org.apache.maven.plugins</groupId>\n    97\t                <artifactId>maven-jar-plugin</artifactId>\n    98\t                <version>2.4</version>\n    99\t                <configuration>\n   100\t                    <excludes>\n   101\t                        <exclude>**/logback.xml</exclude>\n   102\t                    </excludes>\n   103\t                    <archive>\n   104\t                        <manifestEntries>\n   105\t                            <mode>development</mode>\n   106\t                            <url>${project.url}</url>\n   107\t                            <implementation-version>${project.version}</implementation-version>\n   108\t                            <package>io.swagger</package>\n   109\t                        </manifestEntries>\n   110\t                    </archive>\n   111\t                </configuration>\n   112\t            </plugin>\n   113\t            <plugin>\n   114\t                <artifactId>maven-compiler-plugin</artifactId>\n   115\t                <version>3.5</version>\n   116\t                <configuration>\n   117\t                    <source>1.7</source>\n   118\t                    <target>1.7</target>\n   119\t                </configuration>\n   120\t            </plugin>\n   121\t            <plugin>\n   122\t                <groupId>org.apache.maven.plugins</groupId>\n   123\t                <artifactId>maven-javadoc-plugin</artifactId>\n   124\t                <version>2.7</version>\n   125\t                <configuration>\n   126\t                    <aggregate>true</aggregate>\n   127\t                    <source>1.7</source>\n   128\t                    <encoding>UTF-8</encoding>\n   129\t                    <maxmemory>1g</maxmemory>\n   130\t                    <links>\n   131\t                        <link>http://java.sun.com/javase/6/docs/api/</link>\n   132\t                    </links>\n   133\t                </configuration>\n   134\t                <executions>\n   135\t                    <execution>\n   136\t                        <id>attach-javadocs</id>\n   137\t                        <phase>verify</phase>\n   138\t                        <goals>\n   139\t                            <goal>jar</goal>\n   140\t                        </goals>\n   141\t                    </execution>\n   142\t                </executions>\n   143\t            </plugin>\n   144\t            <plugin>\n   145\t                <groupId>org.apache.maven.plugins</groupId>\n   146\t                <artifactId>maven-source-plugin</artifactId>\n   147\t                <version>2.1.2</version>\n   148\t                <executions>\n   149\t                    <execution>\n   150\t                        <id>attach-sources</id>\n   151\t                        <phase>verify</phase>\n   152\t                        <goals>\n   153\t                            <goal>jar-no-fork</goal>\n   154\t                        </goals>\n   155\t                    </execution>\n   156\t                </executions>\n   157\t            </plugin>\n   158\t            <plugin>\n   159\t                <groupId>org.jacoco</groupId>\n   160\t                <artifactId>jacoco-maven-plugin</artifactId>\n   161\t                <version>0.7.5.201505241946</version>\n   162\t                <executions>\n   163\t                    <execution>\n   164\t                        <id>default-prepare-agent</id>\n   165\t                        <goals>\n   166\t                            <goal>prepare-agent</goal>\n   167\t                        </goals>\n   168\t                    </execution>\n   169\t                    <execution>\n   170\t                        <id>default-report</id>\n   171\t                        <goals>\n   172\t                            <goal>report</goal>\n   173\t                        </goals>\n   174\t                    </execution>\n   175\t                    <execution>\n   176\t                        <id>default-check</id>\n   177\t                        <goals>\n   178\t                            <goal>check</goal>\n   179\t                        </goals>\n   180\t                        <configuration></configuration>\n   181\t                    </execution>\n   182\t                </executions>\n   183\t                <configuration>\n   184\t                    <rules>\n   185\t                        <rule>\n   186\t                            <element>BUNDLE</element>\n   187\t                        </rule>\n   188\t                    </rules>\n   189\t                </configuration>\n   190\t            </plugin>\n   191\t        </plugins>\n   192\t    </build>\n   193\t    <dependencyManagement>\n   194\t        <dependencies>\n   195\t            <dependency>\n   196\t                <groupId>io.swagger</groupId>\n   197\t                <artifactId>swagger-core</artifactId>\n   198\t                <version>${swagger-core-version}</version>\n   199\t            </dependency>\n   200\t            <dependency>\n   201\t                <groupId>org.testng</groupId>\n   202\t                <artifactId>testng</artifactId>\n   203\t                <version>${testng-version}</version>\n   204\t                <scope>test</scope>\n   205\t                <exclusions>\n   206\t                    <exclusion>\n   207\t                        <artifactId>snakeyaml</artifactId>\n   208\t                        <groupId>org.yaml</groupId>\n   209\t                    </exclusion>\n   210\t                </exclusions>\n   211\t            </dependency>\n   212\t            <dependency>\n   213\t                <groupId>org.jmockit</groupId>\n   214\t                <artifactId>jmockit</artifactId>\n   215\t                <version>${jmockit-version}</version>\n   216\t                <scope>test</scope>\n   217\t            </dependency>\n   218\t            <dependency>\n   219\t                <groupId>junit</groupId>\n   220\t                <artifactId>junit</artifactId>\n   221\t                <version>${junit-version}</version>\n   222\t                <scope>test</scope>\n   223\t            </dependency>\n   224\t            <dependency>\n   225\t                <groupId>com.github.tomakehurst</groupId>\n   226\t                <artifactId>wiremock</artifactId>\n   227\t                <version>${wiremock-version}</version>\n   228\t                <scope>test</scope>\n   229\t            </dependency>\n   230\t        </dependencies>\n   231\t    </dependencyManagement>\n   232\t    <modules>\n   233\t        <module>modules/swagger-parser</module>\n   234\t        <module>modules/swagger-compat-spec-parser</module>\n   235\t    </modules>\n   236\t    <properties>\n   237\t        <commons-io-version>2.4</commons-io-version>\n   238\t        <slf4j-version>1.6.3</slf4j-version>\n   239\t        <swagger-core-version>1.5.15</swagger-core-version>\n   240\t        <junit-version>4.8.1</junit-version>\n   241\t        <testng-version>6.9.6</testng-version>\n   242\t        <jmockit-version>1.19</jmockit-version>\n   243\t        <wiremock-version>2.4.1</wiremock-version>\n   244\t        <surefire-version>2.18.1</surefire-version>\n   245\t    </properties>\n   246\t</project>',
+│   │   │   name='read_file',
+│   │   │   id='e76b8650-a399-4b61-80a8-4f60f21fd1d0',
+│   │   │   tool_call_id='call_1SlyPHZcktk0nUTJkCKfuRCQ'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/DeserializationUtils.java:\n  64:     public static <T> T readYamlValue(String contents, Class<T> expectedType) {',
+│   │   │   name='grep',
+│   │   │   id='164057ad-8e4f-4024-a478-4396ce5bccf7',
+│   │   │   tool_call_id='call_VjJRoKTTKrc5tW5JUJ0bpBL3'
+│   │   ),
+│   │   ToolMessage(
+│   │   │   content='/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/Swagger20Parser.java:\n  64:                 rootNode = DeserializationUtils.readYamlTree(data);\n  121:                 rootNode = DeserializationUtils.readYamlTree(data);\n/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/SwaggerParser.java:\n  99:                 node = DeserializationUtils.readYamlTree(swaggerAsString);\n/home/houning/Projects/dataset/VUL4J-77/Alpha/modules/swagger-parser/src/main/java/io/swagger/parser/util/DeserializationUtils.java:\n  20:                 result = readYamlTree(contents);\n  59:     public static JsonNode readYamlTree(String contents) {',
+│   │   │   name='grep',
+│   │   │   id='06def448-4496-422e-b1a8-687baf4852bb',
+│   │   │   tool_call_id='call_HLvGe5v662eJDVr8g5BQaYlt'
+│   │   ),
+│   │   AIMessage(
+│   │   │   content='vulnerable',
+│   │   │   additional_kwargs={},
+│   │   │   response_metadata={
+│   │   │   │   'finish_reason': 'stop',
+│   │   │   │   'model_name': 'gpt-5.4',
+│   │   │   │   'model_provider': 'openai'
+│   │   │   },
+│   │   │   id='lc_run--019d5cd9-1f39-7680-a050-ec2ac741d7e9',
+│   │   │   tool_calls=[],
+│   │   │   invalid_tool_calls=[],
+│   │   │   usage_metadata={
+│   │   │   │   'input_tokens': 24845,
+│   │   │   │   'output_tokens': 111,
+│   │   │   │   'total_tokens': 24956,
+│   │   │   │   'input_token_details': {'cache_read': 20352},
+│   │   │   │   'output_token_details': {'reasoning': 102}
+│   │   │   }
+│   │   )
+│   ]
+}
