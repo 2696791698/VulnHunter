@@ -98,19 +98,19 @@ async def agent():
 
     agent = create_deep_agent(
         model=model,
-        # tools=[*mcp_tools],
+        tools=[*mcp_tools],
         # system_prompt=system_prompt,
-        backend=LocalShellBackend(root_dir=".", virtual_mode=False),
-        subagents=subagents
+        # backend=LocalShellBackend(root_dir=".", virtual_mode=False),
+        # subagents=subagents
     )
 
     result = await agent.ainvoke({
         "messages": [
-            {"role": "user", "content": "你好, 列出你当前的环境和所有工具还有subagent"}
+            {"role": "user", "content": "你好, 你现在可以使用哪些工具"}
         ]
     })
 
-    print(result)
+    print(result["messages"][-1].content)
 
 if __name__ == "__main__":
     asyncio.run(agent())
