@@ -1,6 +1,6 @@
 import asyncio
 import pandas as pd
-from run_sample import run_sample
+from run_one_sample import run_sample
 from rich.console import Console
 from rich.pretty import pprint
 
