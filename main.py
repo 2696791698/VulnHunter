@@ -1,116 +1,536 @@
+from __future__ import annotations
 import asyncio
+import json
 import os
+from dataclasses import dataclass, field
 from dotenv import load_dotenv
+from collections.abc import Callable
+from typing import Annotated, Any, Literal
 from deepagents import create_deep_agent
-from deepagents.backends import LocalShellBackend
+from deepagents.backends import FilesystemBackend
+from langchain.agents.middleware import (
+    AgentState,
+    ModelRequest,
+    ModelResponse,
+    before_agent,
+    wrap_model_call,
+)
+from langchain.tools import ToolRuntime, tool
+from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
 from langchain_openai import ChatOpenAI
+from langgraph.runtime import Runtime
+from langgraph.types import Command
 from langchain_mcp_adapters.client import MultiServerMCPClient
-from langsmith import traceable
+from pydantic import BaseModel, Field, ConfigDict
+from tree_utils import show_tree
+from rich.console import Console
+from rich.pretty import pprint
+import docker
+import logging
+
+PROJECT_ROOT = "/home/houning/Projects/dataset/qwq"
+INITIAL_BLACKBOARD = """- 初始化: 尚无已确认事实"""
 
 load_dotenv()
 
-PROJECT_ROOT = "/home/houning/Projects/dataset/"
+logger = logging.getLogger(__name__)
 
-async def agent():
-    model = ChatOpenAI(
-        model="gpt-5.4",
-        api_key=os.getenv("OPENAI_API_KEY"),
-        base_url=os.getenv("OPENAI_BASE_URL"),
-        reasoning_effort="low",
-        streaming=True,
-        stream_usage=True,
-        max_retries=3
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+)
+
+
+def show_directory_tree() -> str:
+    """
+    列出项目的目录树结构
+    """
+    return show_tree(PROJECT_ROOT)
+
+class AuditState(AgentState):
+    """
+    审计状态（append-only blackboard）. 
+
+    blackboard_text:
+        黑板全文, 只允许在末尾追加新条目. 
+    """
+
+    blackboard_text: str
+
+
+@dataclass(slots=True)
+class BlackboardEvent:
+    facts: list[str]
+    evidence: list[dict[str, Any]] = field(default_factory=list)
+
+
+class BlackboardStore:
+    """
+    blackboard 的独立的存储对象. 
+    """
+
+    def __init__(self, initial_text: str):
+        self._initial_lines = self._normalize_seed(initial_text)
+        self._events: list[BlackboardEvent] = []
+
+    def reset(self, initial_text: str | None = None) -> None:
+        if initial_text is not None:
+            self._initial_lines = self._normalize_seed(initial_text)
+        self._events = []
+
+    def append(
+        self,
+        facts: list[str],
+        evidence: list[dict[str, Any]] | None = None,
+    ) -> str:
+        normalized_facts = [item.rstrip() for item in facts if item and item.strip()]
+        if not normalized_facts:
+            return self.text()
+
+        if self._initial_lines == self._normalize_seed(INITIAL_BLACKBOARD):
+            self._initial_lines = []
+
+        self._events.append(
+            BlackboardEvent(
+                facts=normalized_facts,
+                evidence=list(evidence or []),
+            )
+        )
+        return self._render()
+
+    def text(self) -> str:
+        return self._render()
+
+    @staticmethod
+    def _normalize_seed(seed_text: str) -> list[str]:
+        lines = [line.rstrip() for line in seed_text.splitlines() if line.strip()]
+        if lines:
+            return lines
+        return [INITIAL_BLACKBOARD.strip()]
+
+    def _render(self) -> str:
+        lines = list(self._initial_lines)
+        for event in self._events:
+            lines.extend(event.facts)
+            if event.evidence:
+                evidence_json = json.dumps(
+                    event.evidence,
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                )
+                lines.append(f"- 证据JSON: {evidence_json}")
+
+        if not lines:
+            lines = self._normalize_seed(INITIAL_BLACKBOARD)
+        return "\n".join(lines).strip() + "\n"
+
+
+BLACKBOARD_STORE = BlackboardStore(INITIAL_BLACKBOARD)
+
+
+def stringify_content(content: Any) -> str:
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts: list[str] = []
+        for block in content:
+            if isinstance(block, dict):
+                if block.get("type") == "text":
+                    parts.append(str(block.get("text", "")))
+                else:
+                    parts.append(str(block))
+            else:
+                parts.append(str(block))
+        return "\n".join(part for part in parts if part).strip()
+    return str(content)
+
+
+def render_blackboard_block(blackboard_text: str) -> str:
+    return f"""
+
+# [Blackboard]
+{blackboard_text.strip() or INITIAL_BLACKBOARD}
+"""
+
+
+class EvidenceRef(BaseModel):
+    kind: Literal["file", "command", "output", "url", "other"] = Field(
+        description="证据类型. "
+    )
+    ref: str = Field(min_length=1, description="证据引用, 例如文件路径、命令、输出ID或URL. ")
+    quote: str | None = Field(default=None, description="可选, 证据关键片段. ")
+
+
+class AppendBlackboardInput(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    facts: list[Annotated[str, Field(pattern=r"^-\s+.+")]] = Field(
+        min_length=1,
+        description="本轮已确认事实列表. 每条都必须以 '- ' 开头. "
+    )
+    evidence: list[EvidenceRef] = Field(default_factory=list, description="证据列表. ")
+    runtime: ToolRuntime
+
+
+@tool(args_schema=AppendBlackboardInput)
+def append_blackboard(
+    facts: list[str],
+    runtime: ToolRuntime,
+    evidence: list[EvidenceRef] | None = None,
+) -> Command:
+    """将结构化既定事实追加到 blackboard. """
+    evidence = evidence or []
+    evidence_records = [item.model_dump(mode="json") for item in evidence]
+    updated = BLACKBOARD_STORE.append(
+        facts=list(facts),
+        evidence=evidence_records,
+    )
+    tool_call_id = getattr(runtime, "tool_call_id", "")
+    if not tool_call_id:
+        raise ValueError("runtime.tool_call_id 为空, 无法构造匹配的 ToolMessage. ")
+
+    return Command(
+        update={
+            "blackboard_text": updated,
+            "messages": [
+                ToolMessage(
+                    content="blackboard 已追加 1 条结构化既定事实事件. ",
+                    tool_call_id=tool_call_id,
+                )
+            ],
+        }
     )
 
+
+def should_inject_for_this_call(request: ModelRequest) -> bool:
+    if request.system_message is None:
+        return True
+
+    system_text = stringify_content(getattr(request.system_message, "content", ""))
+    # 只给主 agent 注入, executor 调用不注入. 
+    if "漏洞动态验证代理" in system_text:
+        return False
+    return True
+
+
+def build_blackboard_middleware() -> list:
+    @before_agent(state_schema=AuditState)
+    def init_audit_state(state: AuditState, runtime: Runtime) -> dict[str, Any]:
+        return {
+            "blackboard_text": BLACKBOARD_STORE.text(),
+        }
+
+    @wrap_model_call(state_schema=AuditState)
+    async def inject_blackboard(
+        request: ModelRequest,
+        handler: Callable[[ModelRequest], Any],
+    ) -> ModelResponse:
+        if not should_inject_for_this_call(request):
+            return await handler(request)
+
+        blackboard_block = render_blackboard_block(
+            blackboard_text=BLACKBOARD_STORE.text(),
+        )
+
+        if request.system_message is not None:
+            base_content = list(request.system_message.content_blocks)
+            base_content.append({"type": "text", "text": blackboard_block})
+            updated_system_message = SystemMessage(content=base_content)
+        else:
+            updated_system_message = SystemMessage(content=blackboard_block)
+
+        return await handler(request.override(system_message=updated_system_message))
+
+    return [
+        init_audit_state,
+        inject_blackboard,
+    ]
+
+
+def build_model() -> ChatOpenAI:
+    return ChatOpenAI(
+        model="gpt-5.5",
+        api_key=os.getenv("OPENAI_API_KEY"),
+        base_url=os.getenv("OPENAI_BASE_URL"),
+        reasoning_effort="xhigh",
+        streaming=True,
+        stream_usage=True,
+        max_retries=3,
+    )
+
+
+async def get_docker_tools():
+    client = MultiServerMCPClient(
+        {
+            "docker-mcp": {
+                "transport": "sse",
+                "url": "http://127.0.0.1:19000/sse",
+            },
+        }
+    )
+
+    return await client.get_tools()
+
+
+async def get_analysis_tools():
     client = MultiServerMCPClient(
         {
             "CodeBadger": {
                 "transport": "http",
                 "url": "http://127.0.0.1:4242/mcp",
             },
-            "ql-mcp": {
+            "CodeQL": {
                 "transport": "stdio",
-                "command": "npx",
-                "args": ["-y", "codeql-development-mcp-server"],
+                "command": "codeql-development-mcp-server-schema-fixed",
+                "args": [],
+            },
+            "Semgrep": {
+                "transport": "stdio",
+                "command": "semgrep",
+                "args": ["mcp"],
+                "env": {
+                    **os.environ,
+                    "PS1": "$ ",
+                    "USE_SEMGREP_RPC": "false",
+                },
+            },
+            "docker-mcp": {
+                "transport": "sse",
+                "url": "http://127.0.0.1:19000/sse",
             },
         }
     )
 
-    mcp_tools = await client.get_tools()
+    tools = await client.get_tools()
 
-    system_prompt = """
-你是一名专业的静态代码安全审计员
+    blocked_tools = {
+        "semgrep_findings",
+        "semgrep_scan_supply_chain",
 
-任务目标：
-- 对给定审计目录中的代码进行静态安全审计
-- 判断该审计目录中是否存在安全漏洞
-- 你的最终目标是输出唯一的审计结论标签
+        "codeql_test_extract",
+        "codeql_test_run",
+        "codeql_test_accept",
+        "codeql_resolve_tests",
+        "codeql_resolve_qlref",
+        "codeql_resolve_queries",
+        "codeql_resolve_files",
+        "codeql_resolve_packs",
+        "codeql_resolve_library-path",
+        "codeql_resolve_metadata",
+        "codeql_pack_ls",
+        "codeql_query_format",
+        "codeql_generate_query-help",
+        "codeql_generate_log-summary",
 
-行为约束：
-- 优先调用代码审计工具进行辅助
-- 只允许读取审计目录中的文件和子目录
-- 不允许修改、创建、删除、重命名任何文件或目录
-- 不允许执行任何具有写操作、副作用或破坏性的命令
-- 不允许访问审计目录之外的任何路径
-- 不允许编造未读取到的代码内容
-- 必须基于实际读取到的代码内容作出判断
+        "codeql_lsp_completion",
+        "codeql_lsp_definition",
+        "codeql_lsp_references",
+        "codeql_lsp_document_symbols",
+        "codeql_lsp_diagnostics",
 
-最终输出规则：
-- 最终只能输出以下两个标签之一：vulnerable 或 non-vulnerable
-- 必须且只能输出一个标签
-- 不允许输出任何其他内容，包括但不限于：解释、分析过程、标点、空格、换行、前后缀、代码块
-- 如果确认存在安全漏洞，输出：vulnerable
-- 如果确认不存在安全漏洞，输出：non-vulnerable
-- 除上述两个标签外，禁止输出其它任何内容
-""".strip()
+        "validate_codeql_query",
+        "create_codeql_query",
+        "find_codeql_query_files",
+        "profile_codeql_query",
+        "profile_codeql_query_from_logs",
+        "list_mrva_run_results",
+        "register_database",
+        "search_ql_code",
+        "quick_evaluate",
+        "find_class_position",
+        "find_predicate_position",
+        "list_codeql_databases",
+        "list_query_run_results",
 
-    prompt = f"""
-""".strip()
+        "sarif_extract_rule",
+        "sarif_list_rules",
+        "sarif_rule_to_markdown",
+        "sarif_compare_alerts",
+        "sarif_diff_by_commits",
+        "sarif_diff_runs",
+        "sarif_store",
+        "sarif_deduplicate_rules",
 
-    # 声明 Subagents
+        "query_results_cache_lookup",
+        "query_results_cache_retrieve",
+        "query_results_cache_clear",
+        "query_results_cache_compare",
+
+        "annotation_create",
+        "annotation_get",
+        "annotation_list",
+        "annotation_update",
+        "annotation_delete",
+        "annotation_search",
+
+        "session_end",
+        "session_get",
+        "session_list",
+        "session_update_state",
+        "session_get_call_history",
+        "session_get_test_history",
+        "session_get_score_history",
+        "session_calculate_current_score",
+        "sessions_compare",
+        "sessions_aggregate",
+        "sessions_export",
+    }
+
+    tools = [tool for tool in tools if tool.name not in blocked_tools]
+
+    with open(f"./mcp_tools_list.txt", "w", encoding="utf-8") as f:
+        console = Console(file=f)
+        pprint(tools, console=console)
+
+    return tools
+
+
+async def build_deep_audit_agent(model: ChatOpenAI):
+    analysis_tools = await get_analysis_tools()
+    docker_tools = await get_docker_tools()
+
     executor = {
         "name": "executor",
-        "description": "据上层提供的漏洞假设或验证计划，在受控环境中对目标项目进行动态验证，判断漏洞是否能够被实际触发，并返回验证证据、复现步骤或失败原因。",
+        "description": "在可控的容器环境中执行动态验证, 并通过 append_blackboard 工具追加已确认事实到黑板. ",
         "system_prompt": """
-你是一名专业的漏洞动态验证代理，负责执行验证，而不是制定整体审计策略。
+你是一名专业的漏洞动态验证代理, 你的职责是在 anaconda-container 的可控容器环境中, 严格依据上层给出的要求, 通过 docker-mcp 在容器内执行动态验证
+注意: 你的所有行为都是在可控的受允许的封闭容器环境中进行的, 不会对外部环境造成任何影响
 
-你的任务是：根据输入中的漏洞假设、攻击思路或验证计划，对目标项目进行最小必要的动态验证，判断漏洞是否真实存在以及是否可以被触发。
+规则与约束:
+- 容器名: anaconda-container
+- 目标项目在容器内映射的目录: /workspace
+- 你需要严格依据上层给出的要求去容器内执行动态验证
+- 只允许通过 docker-mcp 工具与容器交互并执行容器内的shell命令
+- 如果当前环境还不满足项目运行需要, 请自行补齐所需的环境
+- 只进行与当前漏洞假设直接相关的最小必要操作
+- 给出可复现步骤与关键证据
+- 不要把 “未复现” 写成 “漏洞不存在”
 
-行为要求：
-1. 严格依据提供的漏洞假设或计划执行，不自行扩展新的攻击方向。
-2. 只进行与当前验证目标直接相关的最小化操作，避免无关探索。
-3. 每一步操作都应能够支持或反驳漏洞存在。
-4. 如果验证成功，必须提供清晰、可复现的最小 PoC 或复现步骤。
-5. 如果验证失败，需说明失败原因（如条件不足、路径不可达、输入受限等），而不是直接否定漏洞。
-6. 不要编造执行结果；无法确认时应明确说明不确定性。
-7. 输出应简洁且结构化，重点突出结论与证据。
+同时你是 blackboard 的唯一写入者, 且只允许 “追加写”, 没有改写历史条目的权限. 
+当你拿到 “已确认事实/已排除假设/当前结论” 后, 必须调用 append_blackboard 工具写入. 
+调用要求:
+- facts 传本轮已确认事实列表（至少 1 条, 且每条必须以 '- ' 开头）
+- evidence 传证据数组（kind, ref, quote）
 
-请按如下结构输出：
+返回给上层的输出结构:
 - Status: confirmed / unconfirmed / inconclusive
 - Steps:
 - Evidence:
 - PoC:
 - Failure Reason:
-"""
+""".strip(),
+        "tools": [append_blackboard, *docker_tools],
     }
 
-    subagents = [executor] 
+    system_prompt = """
+你是一名专业的代码安全审计员. 
 
-    agent = create_deep_agent(
+任务目标:
+- 对给定项目目录中的代码进行静态安全审计
+- 在需要时调用 executor 做必要的动态验证
+- executor 可以在容器环境里根据你提出的验证计划对项目进行动态验证, 并将已确认事实追加到 blackboard
+- 始终相信 blackboard 中已确认的事实, 并以此为基础进行下一步的推理和决策
+- 最终判断当前检测项目是否存在安全漏洞
+
+行为约束:
+- 优先依据实际读取到的代码、工具返回结果、executor 返回结果判断
+- 不允许把猜测写成已确认事实
+- 只允许读取审计目录中的文件和子目录
+- 不允许修改、创建、删除、重命名任何文件或目录
+- 不允许执行具有写操作、副作用或破坏性的命令
+- 不允许访问审计目录之外的任何路径
+- 所有需要实际执行的操作都必须交给 executor 在容器内完成
+- 如果 blackboard 已经明确支持最终结论, 应立即结束探索
+
+最终输出规则:
+- 如果判断存在漏洞, 请输出 vulnerable 并给出复现步骤和关键证据
+- 如果判断不存在漏洞, 请输出 non-vulnerable
+- 如有请说明你在审计过程中遇到的问题, 帮助我修复agent环境
+""".strip()
+
+    return create_deep_agent(
         model=model,
-        # tools=[*mcp_tools],
-        # system_prompt=system_prompt,
-        backend=LocalShellBackend(root_dir=".", virtual_mode=False),
-        subagents=subagents
+        system_prompt=system_prompt,
+        tools=[show_directory_tree, *analysis_tools],
+        backend=FilesystemBackend(root_dir=PROJECT_ROOT, virtual_mode=False),
+        subagents=[executor],
+        middleware=build_blackboard_middleware(),
     )
 
-    result = await agent.ainvoke({
-        "messages": [
-            {"role": "user", "content": "你好, 列出你当前的环境和所有工具还有subagent"}
-        ]
-    })
+async def audit_agent() -> dict[str, Any]:
+    BLACKBOARD_STORE.reset(INITIAL_BLACKBOARD)
+    model = build_model()
+    agent = await build_deep_audit_agent(model)
+    user_prompt = f"""
+目标项目在本地的目录: /home/houning/Projects/dataset/qwq
+目标项目在容器内映射的目录: /workspace
+语言: python
+请先调用 show_directory_tree 工具快速了解目标项目的目录结构, 并积极调用提供的静态分析工具辅助审计
+""".strip()
+    return await agent.ainvoke(
+        {
+            "blackboard_text": INITIAL_BLACKBOARD,
+            "messages": [
+                HumanMessage(
+                    content=user_prompt
+                )
+            ],
+        }
+    )
 
-    print(result)
+
+async def main() -> None:
+    result = await audit_agent()
+    with open(f"./out.txt", "w", encoding="utf-8") as f:
+        print(result["messages"][-1].content, file=f)
+
 
 if __name__ == "__main__":
-    asyncio.run(agent())
+    client = docker.from_env()
+    container = None
+
+    try:
+        logger.info("正在启动Docker容器...")
+        container = client.containers.run(
+            image="mcr.microsoft.com/devcontainers/anaconda:3",
+            command="sleep infinity",
+            detach=True,
+            name="anaconda-container",
+            auto_remove=False,
+            volumes={
+                PROJECT_ROOT: {
+                    "bind": "/workspace",
+                    "mode": "rw",
+                }
+            },
+            working_dir="/workspace",
+        )
+        logger.info("启动成功!")
+
+        asyncio.run(main())
+
+    except Exception:
+        logger.exception("agent执行失败")
+
+    finally:
+        if container is not None:
+            logger.info("开始清理Docker容器")
+            try:
+                logger.info("正在停止Docker容器...")
+                container.stop(timeout=20)
+                container.reload()
+
+                if container.status == "exited":
+                    logger.info("停止成功!")
+                else:
+                    logger.warning(f"容器停止后状态异常: {container.status}")
+
+            except Exception as e:
+                logger.exception("停止容器失败")
+
+            try:
+                logger.info("正在移除Docker容器...")
+                container.remove(force=True)
+                logger.info("移除成功!")
+
+            except Exception as e:
+                logger.exception("移除容器失败")

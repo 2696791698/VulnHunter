@@ -1,0 +1,1659 @@
+[
+│   StructuredTool(
+│   │   name='generate_cpg',
+│   │   description='Generate a Code Property Graph (CPG) for a codebase.\n\nThis tool initiates the analysis process by generating a CPG for the specified codebase.\nFor GitHub repositories, it clones the repo first. For local paths, it copies the source code.\nThe CPG is cached by a hash of the codebase.\n\nArgs:\n    source_type: Either \'local\' or \'github\'.\n    source_path: Absolute path (local) or full GitHub URL.\n    language: Programming language (java, c, cpp, python, javascript, go, etc.).\n    github_token: Optional PAT for private repos.\n    branch: Optional specific git branch.\n\nReturns:\n    {\n        "codebase_hash": "hash of the codebase",\n        "status": "ready" | "generating" | "cached",\n        "message": "Status message",\n        "cpg_path": "path to CPG file"\n    }\n\nNotes:\n    - This is an async operation. Use get_cpg_status to check progress.\n    - Large codebases may take several minutes to analyze.\n    - Supported languages: c, cpp, java, javascript, python, go, kotlin, csharp, php, ruby, swift.\n\nExamples:\n    generate_cpg(\n        source_type="github",\n        source_path="https://github.com/joernio/sample-repo",\n        language="java"\n    )',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'source_type': {'description': "Either 'local' or 'github'", 'type': 'string'},
+│   │   │   │   'source_path': {
+│   │   │   │   │   'description': 'For local: absolute path to source directory. For github: full GitHub URL (e.g., https://github.com/user/repo)',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
+│   │   │   │   'language': {
+│   │   │   │   │   'description': 'Programming language - one of: java, c, cpp, javascript, python, go, kotlin, csharp, ghidra, jimple, php, ruby, swift',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
+│   │   │   │   'github_token': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'GitHub Personal Access Token for private repositories (optional)'
+│   │   │   │   },
+│   │   │   │   'branch': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Specific git branch to checkout (optional, defaults to default branch)'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['source_type', 'source_path', 'language'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158ee6a20>
+│   ),
+│   StructuredTool(
+│   │   name='get_cpg_status',
+│   │   description='Get the status of a CPG generation or check if CPG exists.\n\nCheck if the analysis for a given codebase hash is complete and the CPG is ready.\nAlso retrieves the connection port for the Joern server if running.\n\nArgs:\n    codebase_hash: The unique hash identifier returned by generate_cpg.\n\nReturns:\n    {\n        "codebase_hash": "hash",\n        "status": "ready" | "generating" | "failed" | "not_found",\n        "cpg_path": "path to CPG if exists",\n        "joern_port": port number or null,\n        "language": "programming language"\n    }\n\nNotes:\n    - If status is \'ready\', the CPG is available for queries.\n    - If status is \'generating\', wait and retry.\n\nExamples:\n    get_cpg_status(codebase_hash="abc123456789")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The hash identifier of the codebase', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x72415933ac00>
+│   ),
+│   StructuredTool(
+│   │   name='remove_cpg',
+│   │   description="Free resources held by a codebase.\n\ndelete_files=False (default):\n    Terminate the Joern process and release the port.\n    CPG binary is kept on disk for fast re-activation later.\n    Status is set to 'sleeping'.\n\ndelete_files=True:\n    Full removal: kill the Joern process, delete the CPG binary and the\n    copied/cloned source under /playground/, and remove the DB row.\n    Requires a full CPG rebuild to use the codebase again.\n    Returns freed_mb in the response.\n",
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The hash identifier of the codebase', 'type': 'string'},
+│   │   │   │   'delete_files': {
+│   │   │   │   │   'default': False,
+│   │   │   │   │   'description': 'If True, permanently delete CPG and source files',
+│   │   │   │   │   'type': 'boolean'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92480>
+│   ),
+│   StructuredTool(
+│   │   name='list_methods',
+│   │   description='List methods/functions in the codebase.\n\nDiscover all methods and functions defined in the analyzed code.\n\nArgs:\n    codebase_hash: The codebase hash.\n    name_pattern: Regex filter for method name.\n    file_pattern: Regex filter for filename.\n    callee_pattern: Regex filter for methods that call this specific function.\n    include_external: Include external (library) methods (default False).\n    limit: Max results.\n    page: Page number.\n\nReturns:\n    {\n        "success": true,\n        "methods": [{"name": "main", "filename": "main.c", ...}],\n        "total": 100,\n        "page": 1,\n        "total_pages": 5\n    }\n\nNotes:\n    - Use name_pattern to find specific methods.\n    - Use callee_pattern to find usages (e.g., who calls \'malloc\').\n\nExamples:\n    list_methods(codebase_hash="abc", name_pattern=".*auth.*")\n    list_methods(codebase_hash="abc", callee_pattern="memcpy")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'name_pattern': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': "Optional regex to filter method names (e.g., '.*authenticate.*')"
+│   │   │   │   },
+│   │   │   │   'file_pattern': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional regex to filter by file path'
+│   │   │   │   },
+│   │   │   │   'callee_pattern': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': "Optional regex to filter for methods that call a specific function (e.g., 'memcpy|free|malloc')"
+│   │   │   │   },
+│   │   │   │   'include_external': {
+│   │   │   │   │   'default': False,
+│   │   │   │   │   'description': 'Include external/library methods',
+│   │   │   │   │   'type': 'boolean'
+│   │   │   │   },
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 1000,
+│   │   │   │   │   'description': 'Maximum number of results to fetch for caching',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'page': {'default': 1, 'description': 'Page number', 'type': 'integer'},
+│   │   │   │   'page_size': {'default': 100, 'description': 'Number of results per page', 'type': 'integer'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d931a0>
+│   ),
+│   StructuredTool(
+│   │   name='list_files',
+│   │   description='List source files in the codebase as a tree structure with pagination.\n\nArgs:\n    codebase_hash: The codebase hash.\n    local_path: Optional relative path to list from.\n    page: Page number (default 1).\n    page_size: Number of files per page (default 100).\n\nReturns:\n    A text-based tree representation of the file structure:\n    \n    project/\n    ├── src/\n    │   ├── main.c\n    │   └── utils.c\n    └── README.md\n    \n    --- Page 1/3 | Showing 100 of 250 items ---\n    (Use page=2 to see more)\n\nNotes:\n    - Returns plain text tree, NOT JSON.\n    - The .git folder is automatically excluded.\n    - Default limit is 100 files per page.\n\nExamples:\n    list_files(codebase_hash="abc")\n    list_files(codebase_hash="abc", local_path="src/lib")\n    list_files(codebase_hash="abc", page=2)',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'local_path': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional path inside the codebase to list (relative to source root or absolute).'
+│   │   │   │   },
+│   │   │   │   'page': {'default': 1, 'description': 'Page number (1-indexed)', 'type': 'integer'},
+│   │   │   │   'page_size': {
+│   │   │   │   │   'default': 100,
+│   │   │   │   │   'description': 'Number of files per page (default 100)',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8ae0>
+│   ),
+│   StructuredTool(
+│   │   name='get_method_source',
+│   │   description='Get the source code of a specific method.\n\nRetrieve the actual source code for a method to understand its implementation.\n\nArgs:\n    codebase_hash: The codebase hash.\n    method_name: Exact name or regex for method.\n    filename: Optional filename to disambiguate (relative to project root).\n\nReturns:\n    {\n        "success": true,\n        "methods": [\n            {\n                "name": "main",\n                "filename": "main.c",\n                "lineNumber": 10,\n                "lineNumberEnd": 20,\n                "code": "int main() { ... }"\n            }\n        ]\n    }\n\nNotes:\n    - Returns list in case multiple methods match the pattern.\n    - filename should be relative to the project root (e.g., \'src/main.c\' not \'/absolute/path/src/main.c\').\n\nExamples:\n    get_method_source(codebase_hash="abc", method_name="main")\n    get_method_source(codebase_hash="abc", method_name="init", filename="driver.c")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'method_name': {'description': 'Name of the method (can be regex pattern)', 'type': 'string'},
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional filename to disambiguate methods with same name'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash', 'method_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8c20>
+│   ),
+│   StructuredTool(
+│   │   name='list_calls',
+│   │   description='List function/method calls in the codebase.\n\nDiscover call relationships between functions.\n\nArgs:\n    codebase_hash: The codebase hash.\n    caller_pattern: Regex for the calling method.\n    callee_pattern: Regex for the called method.\n    limit: Max results.\n    page: Page number.\n\nReturns:\n    {\n        "success": true,\n        "calls": [\n            {"caller": "main", "callee": "printf", "fileName": "main.c", "lineNumber": 10}\n        ],\n        "total": 1\n    }\n\nNotes:\n    - Useful for finding where specific functions are used.\n\nExamples:\n    list_calls(codebase_hash="abc", callee_pattern="strcpy")\n    list_calls(codebase_hash="abc", caller_pattern="main")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'caller_pattern': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional regex to filter caller method names'
+│   │   │   │   },
+│   │   │   │   'callee_pattern': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional regex to filter callee method names'
+│   │   │   │   },
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 1000,
+│   │   │   │   │   'description': 'Maximum number of results to fetch for caching',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'page': {'default': 1, 'description': 'Page number', 'type': 'integer'},
+│   │   │   │   'page_size': {'default': 100, 'description': 'Number of results per page', 'type': 'integer'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db84a0>
+│   ),
+│   StructuredTool(
+│   │   name='get_call_graph',
+│   │   description='Get the call graph for a specific method.\n\nUnderstand what functions a method calls (outgoing) or what functions\ncall it (incoming).\n\nArgs:\n    codebase_hash: The codebase hash.\n    method_name: Name of the method to analyze.\n    depth: Traversal depth (default 5).\n    direction: \'outgoing\' (callees) or \'incoming\' (callers).\n\nReturns:\n    A human-readable text summary:\n    \n    Call Graph for main (outgoing)\n    ============================================================\n    Root: main at main.c:10\n    \n    [DEPTH 1]\n      main → init (config.c:25)\n      main → process (core.c:50)\n    \n    [DEPTH 2]\n      init → load_config (config.c:100)\n      process → validate (core.c:120)\n    \n    Total: 4 edges\n\nNotes:\n    - Essential for impact analysis and understanding code dependencies.\n    - Returns plain text.\n    - Includes file and line number for each call target.\n    - Line numbers refer to where the caller function starts, not the specific call site.\n\nExamples:\n    get_call_graph(codebase_hash="abc", method_name="main", direction="outgoing")\n    get_call_graph(codebase_hash="abc", method_name="vuln_func", direction="incoming")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'method_name': {
+│   │   │   │   │   'description': 'Name of the method to analyze (can be regex)',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
+│   │   │   │   'depth': {
+│   │   │   │   │   'default': 5,
+│   │   │   │   │   'description': 'How many levels deep to traverse (max recommended: 10)',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'direction': {
+│   │   │   │   │   'default': 'outgoing',
+│   │   │   │   │   'description': "Either 'outgoing' (callees) or 'incoming' (callers)",
+│   │   │   │   │   'type': 'string'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash', 'method_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9260>
+│   ),
+│   StructuredTool(
+│   │   name='list_parameters',
+│   │   description='List parameters of a specific method.\n\nGet detailed information about method parameters including their names,\ntypes, and order.\n\nArgs:\n    codebase_hash: The codebase hash.\n    method_name: Method name pattern.\n\nReturns:\n    {\n        "success": true,\n        "methods": [\n            {\n                "method": "authenticate",\n                "parameters": [\n                    {"name": "username", "type": "string", "index": 1},\n                    {"name": "password", "type": "string", "index": 2}\n                ]\n            }\n        ]\n    }\n\nNotes:\n    - Useful for understanding function signatures.\n\nExamples:\n    list_parameters(codebase_hash="abc", method_name="login")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'method_name': {'description': 'Name of the method (can be regex pattern)', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash', 'method_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9300>
+│   ),
+│   StructuredTool(
+│   │   name='get_codebase_summary',
+│   │   description='Get a high-level summary of the codebase structure.\n\nProvides an overview including file count, method count, language,\nand other metadata.\n\nArgs:\n    codebase_hash: The codebase hash.\n\nReturns:\n    {\n        "success": true,\n        "summary": {\n            "language": "C",\n            "total_files": 15,\n            "total_methods": 127\n            "lines_of_code": 5432\n        }\n    }\n\nNotes:\n    - Useful as a first step when exploring a new codebase.\n\nExamples:\n    get_codebase_summary(codebase_hash="abc")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9760>
+│   ),
+│   StructuredTool(
+│   │   name='get_code_snippet',
+│   │   description='Retrieve a code snippet from a specific file with line range.\n\nGet the source code from a file between specified start and end line numbers.\n\nArgs:\n    codebase_hash: The codebase hash.\n    filename: Relative path to source file (relative to project root).\n    start_line: Start line (1-indexed).\n    end_line: End line (1-indexed).\n\nReturns:\n    {\n        "success": true,\n        "filename": "main.c",\n        "start_line": 10,\n        "end_line": 20,\n        "code": "example code here"\n    }\n\nNotes:\n    - Useful for examining specific parts of the codebase.\n    - filename should be relative to the project root (e.g., \'src/main.c\' not \'/absolute/path/src/main.c\').\n\nExamples:\n    get_code_snippet(codebase_hash="abc", filename="main.c", start_line=10, end_line=20)',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'filename': {
+│   │   │   │   │   'description': 'Name of the file to retrieve code from (relative to source root)',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
+│   │   │   │   'start_line': {'description': 'Starting line number (1-indexed)', 'type': 'integer'},
+│   │   │   │   'end_line': {'description': 'Ending line number (1-indexed, inclusive)', 'type': 'integer'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash', 'filename', 'start_line', 'end_line'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db89a0>
+│   ),
+│   StructuredTool(
+│   │   name='run_cpgql_query',
+│   │   description='Execute a raw CPGQL query against the codebase.\n\nRun arbitrary Code Property Graph Query Language (CPGQL) queries\nfor advanced analysis.\n\nArgs:\n    codebase_hash: The codebase hash.\n    query: The CPGQL query string.\n    timeout: Optional execution timeout.\n    validate: Validate syntax before execution (default False).\n\nReturns:\n    {\n        "success": true,\n        "stdout": "raw output",\n        "stderr": "error output"\n    }\n\nNotes:\n    - Power user tool. Requires knowledge of Joern CPGQL.\n    - Use get_cpgql_syntax_help for reference.\n\nExamples:\n    run_cpgql_query(codebase_hash="abc", query="cpg.method.name.l")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'query': {'description': 'The CPGQL query string to execute', 'type': 'string'},
+│   │   │   │   'timeout': {
+│   │   │   │   │   'anyOf': [{'type': 'integer'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional timeout in seconds'
+│   │   │   │   },
+│   │   │   │   'validate': {
+│   │   │   │   │   'default': False,
+│   │   │   │   │   'description': 'If true, validate query syntax before executing',
+│   │   │   │   │   'type': 'boolean'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash', 'query'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8e00>
+│   ),
+│   StructuredTool(
+│   │   name='find_bounds_checks',
+│   │   description='Find bounds checks near buffer access.\n\nVerify if buffer accesses have corresponding bounds checks by analyzing\ncomparison operations involving the index variable.\n\nArgs:\n    codebase_hash: The codebase hash.\n    buffer_access_location: \'filename:line\' of the access (e.g., \'buf[i] = x\').\n\nReturns:\n    A human-readable text summary of the bounds check analysis.\n\nNotes:\n    - Helps identify potential buffer overflow vulnerabilities.\n    - Checks for missing bounds checks or checks that happen too late.\n    - filename in buffer_access_location should be relative to the project root (e.g., \'src/parser.c:100\').\n\nExamples:\n    find_bounds_checks(codebase_hash="abc", buffer_access_location="parser.c:3393")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'buffer_access_location': {
+│   │   │   │   │   'description': "Location of buffer access in format 'filename:line' (e.g., 'parser.c:3393')",
+│   │   │   │   │   'type': 'string'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash', 'buffer_access_location'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8040>
+│   ),
+│   StructuredTool(
+│   │   name='get_cpgql_syntax_help',
+│   │   description='Get comprehensive CPGQL syntax help and examples.\n\nProvides syntax documentation, common patterns, node types, and error solutions.\n\nArgs:\n    None.\n\nReturns:\n    {\n        "success": true,\n        "syntax_helpers": {...},\n        "error_guide": {...},\n        "quick_reference": {...}\n    }\n\nNotes:\n    - Use this to learn how to write queries for run_cpgql_query.\n\nExamples:\n    get_cpgql_syntax_help()',
+│   │   args_schema={'additionalProperties': False, 'properties': {}, 'type': 'object'},
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9620>
+│   ),
+│   StructuredTool(
+│   │   name='get_cfg',
+│   │   description='Get control flow graph (CFG) for a method.\n\nUnderstand the control flow of a method with a human-readable graph.\n\nArgs:\n    codebase_hash: The codebase hash.\n    method_name: Name of the method.\n    max_nodes: Limit nodes returned (default 100).\n\nReturns:\n    A human-readable text graph:\n    \n    Control Flow Graph for main\n    ============================================================\n    Nodes:\n      [1001] ControlStructure: if (x > 0)\n      [1002] Return: return x\n    \n    Edges:\n      [1001] -> [1002] [Label: TRUE]\n\nNotes:\n    - Essential for understanding loops, conditions, and execution paths.\n    - Returns plain text.\n\nExamples:\n    get_cfg(codebase_hash="abc", method_name="main")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'method_name': {'description': 'Name of the method (can be regex pattern)', 'type': 'string'},
+│   │   │   │   'max_nodes': {
+│   │   │   │   │   'default': 100,
+│   │   │   │   │   'description': 'Maximum CFG nodes to return (for large methods)',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash', 'method_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db93a0>
+│   ),
+│   StructuredTool(
+│   │   name='get_type_definition',
+│   │   description='Get type/struct definition with members.\n\nInspect struct or class memory layouts.\n\nArgs:\n    codebase_hash: The codebase hash.\n    type_name: Regex for type name.\n    limit: Max results.\n\nReturns:\n    {\n        "success": true,\n        "types": [\n            {\n                "name": "UserStruct",\n                "members": [{"name": "id", "type": "int"}, {"name": "buf", "type": "char*"}]\n            }\n        ]\n    }\n\nNotes:\n    - Essential for understanding buffer sizes and memory layouts.\n    - Does not read header files; uses CPG type info.\n\nExamples:\n    get_type_definition(codebase_hash="abc", type_name=".*request_t.*")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'type_name': {
+│   │   │   │   │   'description': "Type name pattern (regex, e.g., '.*Buffer.*')",
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
+│   │   │   │   'limit': {'default': 10, 'description': 'Maximum types to return', 'type': 'integer'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash', 'type_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9440>
+│   ),
+│   StructuredTool(
+│   │   name='get_macro_expansion',
+│   │   description='Check if calls at a location might be macro expansions.\n\nDetects potential macros using heuristics (naming conventions, dispatch type).\n\nArgs:\n    codebase_hash: The codebase hash.\n    filename: Filename (partial, relative to project root).\n    line_number: Optional line number.\n\nReturns:\n    {\n        "success": true,\n        "calls": [\n            {"name": "COPY_BUF", "is_macro": true, "macro_hints": ["ALL_CAPS"]}\n        ]\n    }\n\nNotes:\n    - Heuristic only (NOT definitive).\n    - C/C++ macros are expanded before the CPG is built.\n    - filename should be relative to the project root (e.g., \'src/main.c\').\n\nExamples:\n    get_macro_expansion(codebase_hash="abc", filename="main.c", line_number=42)',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'filename': {'description': 'Filename to search (partial match)', 'type': 'string'},
+│   │   │   │   'line_number': {
+│   │   │   │   │   'anyOf': [{'type': 'integer'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional line number to filter'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash', 'filename'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8900>
+│   ),
+│   StructuredTool(
+│   │   name='discover_fixed_vulnerabilities',
+│   │   description='Discover potential vulnerability fixes from git commit history.\n\nOPTIONAL reconnaissance tool to identify commits that may have fixed security issues.\nUse this to discover attack surface hints based on past vulnerability patterns.\n\nArgs:\n    codebase_hash: The codebase hash.\n    limit: Maximum commits to analyze (default 500).\n    patterns: Optional custom regex patterns to match (uses defaults if not provided).\n\nReturns:\n    Human-readable text summarizing discovered vulnerability-related commits:\n    \n    Discovered Vulnerability Fixes\n    ============================================================\n    Found 3 commits mentioning security fixes\n    \n    [1] abc1234 - Fix buffer overflow in parse_input\n        Matched: buffer overflow\n        Files: src/parser.c, include/parser.h\n    \n    [2] def5678 - CVE-2023-1234: Patch XSS in template\n        Matched: CVE-2023-1234\n        Files: templates/render.py\n\nNotes:\n    - This is a DISCOVERY tool, not a vulnerability scanner.\n    - Results are hints for further investigation, not confirmed vulnerabilities.\n    - Works on git repositories only.\n    - For comprehensive security analysis, use taint analysis and other CPG tools.\n\nExamples:\n    discover_fixed_vulnerabilities(codebase_hash="abc")\n    discover_fixed_vulnerabilities(codebase_hash="abc", limit=100)',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 500,
+│   │   │   │   │   'description': 'Maximum number of commits to analyze',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'patterns': {
+│   │   │   │   │   'anyOf': [{'items': {}, 'type': 'array'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional list of custom regex patterns to match'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9580>
+│   ),
+│   StructuredTool(
+│   │   name='find_taint_sources',
+│   │   description='Locate likely external input points (taint sources).\n\nSearch for function calls that could be entry points for untrusted data,\nsuch as user input, environment variables, or network data.\n\nArgs:\n    codebase_hash: The codebase hash from generate_cpg.\n    language: Programming language (c, cpp, java, python, javascript, go, csharp, php, ruby, swift, kotlin, etc). Default: uses CPG language.\n    source_patterns: Optional list of patterns for source functions (e.g., [\'getenv\', \'read\']).\n    filename: Optional regex to filter by filename (relative to project root).\n    limit: Max results (default 200).\n\nReturns:\n    {\n        "success": true,\n        "sources": [\n            {"node_id": "...", "name": "getenv", "code": "getenv(...)", "filename": "...", "lineNumber": 42}\n        ],\n        "total": 1\n    }\n\nNotes:\n    - Built-in default patterns for all supported languages.\n    - Sources are the starting points for taint analysis.\n    - Use node_id from results with find_taint_flows.\n\nExamples:\n    find_taint_sources(codebase_hash="abc", language="c")\n    find_taint_sources(codebase_hash="abc", source_patterns=["read_from_socket"])',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'language': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': "Programming language (c, cpp, java, python, javascript). If not provided, uses the CPG's language"
+│   │   │   │   },
+│   │   │   │   'source_patterns': {
+│   │   │   │   │   'anyOf': [{'items': {}, 'type': 'array'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional list of patterns to match source function names. If not provided, uses built-in defaults'
+│   │   │   │   },
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': "Optional filename to filter results (e.g., 'shell.c'). Uses regex matching"
+│   │   │   │   },
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 200,
+│   │   │   │   │   'description': 'Maximum number of results to return',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8fe0>
+│   ),
+│   StructuredTool(
+│   │   name='find_taint_sinks',
+│   │   description='Locate dangerous sinks where tainted data could cause vulnerabilities.\n\nSearch for function calls that could be security-sensitive destinations\nfor data, such as system execution, file operations, or format strings.\n\nArgs:\n    codebase_hash: The codebase hash from generate_cpg.\n    language: Programming language (c, cpp, java, python, javascript, go, csharp, php, ruby, swift, kotlin, etc). Default: uses CPG language.\n    sink_patterns: Optional list of regex patterns for sink functions (e.g., [\'system\', \'exec\']).\n    filename: Optional regex to filter by filename (relative to project root).\n    limit: Max results (default 200).\n\nReturns:\n    {\n        "success": true,\n        "sinks": [\n            {"node_id": "...", "name": "system", "code": "system(...)", "filename": "...", "lineNumber": 100}\n        ],\n        "total": 1\n    }\n\nNotes:\n    - Built-in default patterns for all supported languages.\n    - Sinks are the destinations where tainted data causes harm.\n    - Use node_id from results with find_taint_flows.\n\nExamples:\n    find_taint_sinks(codebase_hash="abc", language="c")\n    find_taint_sinks(codebase_hash="abc", sink_patterns=["custom_exec"])',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'language': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': "Programming language (c, cpp, java, python, javascript, etc). If not provided, uses the CPG's language"
+│   │   │   │   },
+│   │   │   │   'sink_patterns': {
+│   │   │   │   │   'anyOf': [{'items': {}, 'type': 'array'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': "Optional list of regex patterns to match sink function names (e.g., ['system', 'popen', 'sprintf']). If not provided, uses default patterns"
+│   │   │   │   },
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': "Optional filename to filter results (e.g., 'shell.c', 'main.c'). Uses regex matching, so partial names work (e.g., 'shell' matches 'shell.c')"
+│   │   │   │   },
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 200,
+│   │   │   │   │   'description': 'Maximum number of results to return',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9120>
+│   ),
+│   StructuredTool(
+│   │   name='find_taint_flows',
+│   │   description='Find taint flows from a source to a sink using Joern\'s native dataflow analysis.\n\nDetects data flow from a specific source node to a specific sink node.\nUses Joern\'s reachableByFlows() for accurate taint tracking including pointer aliasing,\narray propagation, and struct fields.\n\nSupports two modes:\n\nMODE 1 - Manual (default): Provide a specific source and sink.\n  - Use `find_taint_sources` first to get source locations/IDs.\n  - Use `find_taint_sinks` first to get sink locations/IDs.\n  - Provide BOTH source AND sink for every query.\n\nMODE 2 - Auto (mode="auto"): Batch-test ALL default sources against ALL default sinks.\n  - Runs `sinks.reachableByFlows(sources)` once for all default patterns.\n  - Returns ONLY confirmed flows — no manual source/sink picking needed.\n  - Ideal for security audits: one call covers hundreds of source-sink pairs.\n  - Optionally filter by language, filename, or custom source/sink patterns.\n\nArgs:\n    codebase_hash: The codebase hash from generate_cpg.\n    mode: Set to "auto" to run batch analysis with all default sources/sinks. Omit for manual mode.\n    source_location: (Manual mode) Source at \'file:line\' (e.g., \'xsltproc/xsltproc.c:818\').\n    sink_location: (Manual mode) Sink at \'file:line\' (e.g., \'libxslt/numbers.c:229\').\n    source_node_id: (Manual mode) Alternative: node ID from find_taint_sources output.\n    sink_node_id: (Manual mode) Alternative: node ID from find_taint_sinks output.\n    language: (Auto mode) Programming language for default patterns (c, cpp, java, python, etc). Auto-detected if omitted.\n    source_patterns: (Auto mode) Optional list of source function names to override defaults (e.g., [\'getenv\', \'read\']).\n    sink_patterns: (Auto mode) Optional list of sink function names to override defaults (e.g., [\'system\', \'strcpy\']).\n    filename: (Auto mode) Optional regex to filter sources/sinks by filename.\n    max_results: Maximum flows to return (default 20).\n    timeout: Query timeout in seconds (default 120 for manual, 300 for auto).\n\nReturns:\n    Human-readable text showing:\n    - Source and sink matched\n    - Detailed flow path showing each intermediate step\n    - Path length\n\nNotes:\n    - Manual mode: BOTH source AND sink are required.\n    - Auto mode: No source/sink needed — uses language-specific default patterns.\n    - Inter-procedural flows are tracked automatically.\n\nExamples:\n    # Auto mode — one call finds all confirmed flows\n    find_taint_flows(codebase_hash="...", mode="auto")\n    find_taint_flows(codebase_hash="...", mode="auto", language="c", filename="main.c")\n    find_taint_flows(codebase_hash="...", mode="auto", source_patterns=["getenv"], sink_patterns=["system", "strcpy"])\n\n    # Manual mode — specific source and sink\n    find_taint_flows(codebase_hash="...", source_location="main.c:42", sink_location="utils.c:100")\n    find_taint_flows(codebase_hash="...", source_node_id=12345, sink_node_id=67890)',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'source_location': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': "(Manual mode) Source at 'file:line' (e.g., 'parser.c:782')"
+│   │   │   │   },
+│   │   │   │   'sink_location': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': "(Manual mode) Sink at 'file:line' (e.g., 'parser.c:800')"
+│   │   │   │   },
+│   │   │   │   'source_node_id': {
+│   │   │   │   │   'anyOf': [{'type': 'integer'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': '(Manual mode) Node ID from find_taint_sources output'
+│   │   │   │   },
+│   │   │   │   'sink_node_id': {
+│   │   │   │   │   'anyOf': [{'type': 'integer'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': '(Manual mode) Node ID from find_taint_sinks output'
+│   │   │   │   },
+│   │   │   │   'max_results': {'default': 20, 'description': 'Maximum flows to return', 'type': 'integer'},
+│   │   │   │   'timeout': {
+│   │   │   │   │   'default': 120,
+│   │   │   │   │   'description': 'Query timeout in seconds (default 120 for manual, 300 for auto)',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'mode': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': "Set to 'auto' for batch analysis with all default sources/sinks. Omit for manual mode."
+│   │   │   │   },
+│   │   │   │   'language': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': '(Auto mode) Programming language for default patterns. Auto-detected if omitted.'
+│   │   │   │   },
+│   │   │   │   'source_patterns': {
+│   │   │   │   │   'anyOf': [{'items': {}, 'type': 'array'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': "(Auto mode) Override default source function names (e.g., ['getenv', 'read'])"
+│   │   │   │   },
+│   │   │   │   'sink_patterns': {
+│   │   │   │   │   'anyOf': [{'items': {}, 'type': 'array'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': "(Auto mode) Override default sink function names (e.g., ['system', 'strcpy'])"
+│   │   │   │   },
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': '(Auto mode) Regex to filter sources/sinks by filename'
+│   │   │   │   },
+│   │   │   │   'sanitizer_patterns': {
+│   │   │   │   │   'anyOf': [{'items': {}, 'type': 'array'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': '(Auto mode) Override default sanitizer function names. Flows through sanitizers are filtered out.'
+│   │   │   │   },
+│   │   │   │   'source_pattern': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'DEPRECATED: Do not use'
+│   │   │   │   },
+│   │   │   │   'sink_pattern': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'DEPRECATED: Do not use'
+│   │   │   │   },
+│   │   │   │   'depth': {
+│   │   │   │   │   'anyOf': [{'type': 'integer'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'DEPRECATED: Do not use'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db94e0>
+│   ),
+│   StructuredTool(
+│   │   name='get_program_slice',
+│   │   description='Build a program slice from a specific call location.\n\nCreates a program slice showing code that affects (backward) or is affected by (forward)\na specific call, including dataflow and control dependencies. Optimized for static code analysis.\n\nArgs:\n    codebase_hash: The codebase hash from generate_cpg.\n    location: \'filename:line\' or \'filename:line:call_name\' (file relative to project root).\n    direction: \'backward\' (default, what affects the call) or \'forward\' (what is affected by the call).\n    max_depth: Depth limit for recursive dependency tracking (default 5).\n    include_control_flow: Include control dependencies like if/while conditions (default True).\n    timeout: Maximum execution time in seconds (default 60).\n\nReturns:\n    Human-readable text summary showing:\n    - Target call info (name, code, location)\n    - Backward slice: data dependencies, control dependencies, parameters\n    - Forward slice: propagations, affected control flow\n\nNotes:\n    - Backward slice shows data origins and control conditions.\n    - Forward slice shows how results propagate and affect control flow.\n    - Use relative file paths like \'libxslt/numbers.c\' not absolute paths.\n\nExamples:\n    get_program_slice(codebase_hash="abc", location="main.c:42")\n    get_program_slice(codebase_hash="abc", location="parser.c:500:memcpy", direction="backward", max_depth=3)\n    get_program_slice(codebase_hash="abc", location="module/file.c:100", direction="forward")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'location': {
+│   │   │   │   │   'description': "'filename:line' or 'filename:line:call_name'. Example: 'main.c:42' or 'main.c:42:memcpy'",
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
+│   │   │   │   'direction': {
+│   │   │   │   │   'default': 'backward',
+│   │   │   │   │   'description': "Slice direction: 'backward' or 'forward'",
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
+│   │   │   │   'max_depth': {
+│   │   │   │   │   'default': 5,
+│   │   │   │   │   'description': 'Maximum depth for recursive dependency tracking',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'include_control_flow': {
+│   │   │   │   │   'default': True,
+│   │   │   │   │   'description': 'Include control dependencies (if/while conditions)',
+│   │   │   │   │   'type': 'boolean'
+│   │   │   │   },
+│   │   │   │   'timeout': {
+│   │   │   │   │   'default': 60,
+│   │   │   │   │   'description': 'Maximum execution time in seconds',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash', 'location'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8b80>
+│   ),
+│   StructuredTool(
+│   │   name='get_variable_flow',
+│   │   description='Analyze data dependencies for a variable at a specific location.\n\nFinds code locations that influence (backward) or are influenced by (forward)\na variable, with support for pointer aliasing.\n\nArgs:\n    codebase_hash: The codebase hash.\n    location: "filename:line" (e.g., "parser.c:3393"), filename relative to project root.\n    variable: Variable name to analyze.\n    direction: "backward" (definitions) or "forward" (usages).\n\nReturns:\n    Human-readable text showing:\n    - Target variable and method\n    - Aliases detected\n    - List of dependencies\n\nNotes:\n    - Backward: Finds initialization, assignment, modification, and pointer assignment.\n    - Forward: Finds usage, propagation, and modification.\n    - location filename should be relative to the project root.\n\nExamples:\n    get_variable_flow(codebase_hash="abc", location="main.c:50", variable="len", direction="backward")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'type': 'string'},
+│   │   │   │   'location': {'type': 'string'},
+│   │   │   │   'variable': {'type': 'string'},
+│   │   │   │   'direction': {'default': 'backward', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash', 'location', 'variable'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db85e0>
+│   ),
+│   StructuredTool(
+│   │   name='find_use_after_free',
+│   │   description='Detect Use-After-Free vulnerabilities by finding free(ptr) calls where ptr is used afterward.\n\nAnalyzes the codebase for potential UAF issues using three-phase detection:\n1. **Intraprocedural**: Finds usages of freed pointers within the same function\n2. **Pointer Aliasing**: Tracks p2 = ptr; free(ptr); use(p2) patterns  \n3. **Deep Interprocedural**: Uses Joern\'s reachableByFlows() to track freed pointers\n   across MULTIPLE function call levels (e.g., main -> func1 -> func2 -> usage)\n\nFilters out false positives:\n- Frees/usages in different if/else branches\n- Frees with early returns before usage\n- Usage that is itself a reassignment (e.g., ptr = NULL)\n- Pointer reassignments between free and usage\n\nSupports free() variants: free, cfree, g_free, xmlFree, xsltFree*\n\nArgs:\n    codebase_hash: The codebase hash from generate_cpg.\n    filename: Optional filename regex to filter results (e.g., \'runtest.c\').\n    limit: Maximum results to return (default 100).\n    timeout: Query timeout in seconds (default 300, higher due to dataflow analysis).\n\nReturns:\n    Human-readable text showing:\n    - Each potential UAF issue with free site location [file:line]\n    - The freed pointer name\n    - List of post-free usages with [file:line] and flow type tags\n    - For interprocedural flows: the call path (e.g., "main -> func1 -> func2")\n\nNotes:\n    - Deep interprocedural analysis can be slow (~2 min for large codebases).\n    - Use get_program_slice to understand control flow around specific locations.\n    - Use find_taint_flows for alternative dataflow analysis approach.',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional filename regex to filter results'
+│   │   │   │   },
+│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
+│   │   │   │   'timeout': {'default': 300, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9b20>
+│   ),
+│   StructuredTool(
+│   │   name='find_double_free',
+│   │   description="Detect Double-Free vulnerabilities by finding multiple free() calls on the same pointer.\n\nAnalyzes the codebase for potential double-free issues using:\n1. **Intraprocedural**: Multiple free() on the same pointer in the same function\n2. **Pointer Aliasing**: Tracks p2 = ptr; free(ptr); free(p2) patterns\n3. **Interprocedural**: Detects when freed pointer is passed to a function that also frees it\n\nFilters out false positives:\n- Frees in different if/else branches\n- Frees with early returns between them\n- Intervening reallocations (malloc, realloc, strdup)\n- Pointer reassignments between frees\n\nSupports free() variants: free, cfree, g_free, xmlFree, xsltFree*\n\nArgs:\n    codebase_hash: The codebase hash from generate_cpg.\n    filename: Optional filename regex to filter results (e.g., 'parser.c').\n    limit: Maximum results to return (default 100).\n    timeout: Query timeout in seconds (default 300).\n\nReturns:\n    Human-readable text showing:\n    - Each potential double-free issue with pointer name\n    - First and second free locations with [file:line]\n    - Flow type (same-ptr, alias, or [CROSS-FUNC])",
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional filename regex to filter results'
+│   │   │   │   },
+│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
+│   │   │   │   'timeout': {'default': 300, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9bc0>
+│   ),
+│   StructuredTool(
+│   │   name='find_null_pointer_deref',
+│   │   description='Detect Null Pointer Dereference vulnerabilities (CWE-476) by finding unchecked return values from allocation functions.\n\nAnalyzes the codebase for cases where:\n1. **Unchecked malloc/calloc/realloc**: ptr = malloc(n); ptr->field = value; without NULL check\n2. **Unchecked fopen/strdup/mmap**: Functions that can return NULL on failure\n3. **Missing NULL guards**: Pointer dereference without prior if(ptr != NULL) check\n4. **Deep Interprocedural**: Uses Joern\'s reachableByFlows() to track allocated pointers\n   across MULTIPLE function call levels (e.g., main -> func1 -> func2 -> dereference)\n\nFilters out false positives:\n- Dereferences guarded by if(ptr != NULL) or if(!ptr) checks\n- Dereferences after early return/exit/abort on NULL\n- Pointer reassignments between allocation and use\n- Safe wrapper allocators (xmalloc, g_malloc, etc.) that guarantee non-NULL\n- Cross-function dereferences with NULL checks in callee\n\nAllocation functions checked: malloc, calloc, realloc, strdup, strndup, aligned_alloc,\nreallocarray, fopen, fdopen, freopen, tmpfile, popen, dlopen, mmap,\nxmlMalloc, xmlMallocAtomic, xmlRealloc, xmlStrdup, xmlStrndup\n\nArgs:\n    codebase_hash: The codebase hash from generate_cpg.\n    filename: Optional filename regex to filter results (e.g., \'parser.c\').\n    limit: Maximum results to return (default 100).\n    timeout: Query timeout in seconds (default 300).\n\nReturns:\n    Human-readable text showing:\n    - Each potential null pointer dereference with allocation site [file:line]\n    - The assigned pointer name\n    - List of unchecked dereferences with [file:line] and type tags\n    - For interprocedural flows: the call path (e.g., "main -> func1 -> func2")\n\nNotes:\n    - Includes deep interprocedural analysis using Joern\'s dataflow engine.\n    - Use get_program_slice for deeper control-flow context around specific locations.\n    - Use find_taint_flows to check if allocation arguments come from external input.',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional filename regex to filter results'
+│   │   │   │   },
+│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
+│   │   │   │   'timeout': {'default': 300, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9c60>
+│   ),
+│   StructuredTool(
+│   │   name='find_integer_overflow',
+│   │   description="Detect Integer Overflow/Underflow vulnerabilities (CWE-190) before allocation or array indexing.\n\nAnalyzes the codebase for cases where arithmetic operations (multiplication, left-shift,\naddition, subtraction) could overflow/underflow before being used as:\n1. **Allocation size**: malloc(count * elem_size) where the multiplication can wrap around\n2. **Array index**: buffer[offset * stride] where the multiplication can wrap around\n\nDetection phases:\n1. **Direct arithmetic in allocation size**: Finds malloc/realloc calls where the size\n   argument contains unchecked multiplication or left-shift\n2. **Indirect arithmetic via variable**: Tracks size = a * b; malloc(size) patterns\n3. **Array index arithmetic**: Finds array indexing with unchecked multiplication/left-shift\n4. **Deep interprocedural**: Uses Joern's reachableByFlows() to track arithmetic results\n   flowing across function boundaries into allocation size arguments\n\nFilters out false positives:\n- Constant expressions (sizeof * literal, compile-time constants)\n- Arithmetic guarded by overflow checks (SIZE_MAX, __builtin_*_overflow, etc.)\n- calloc/reallocarray (handle multiplication overflow internally)\n- Single-variable + constant additions (e.g., len + 1)\n- Array indices with preceding bounds checks\n\nArgs:\n    codebase_hash: The codebase hash from generate_cpg.\n    filename: Optional filename regex to filter results (e.g., 'parser.c').\n    limit: Maximum results to return (default 100).\n    timeout: Query timeout in seconds (default 300).\n\nReturns:\n    Human-readable text showing:\n    - Each potential overflow issue with location [file:line]\n    - The arithmetic expression and operation type\n    - Risk level (HIGH for mult/shift in alloc, MEDIUM for add/sub or array index)\n    - [CROSS-FUNC] tag for interprocedural flows\n\nNotes:\n    - Includes deep interprocedural analysis using Joern's dataflow engine.\n    - Use get_program_slice for deeper control-flow context around specific locations.\n    - Use find_taint_flows to check if arithmetic operands come from external input.",
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional filename regex to filter results'
+│   │   │   │   },
+│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
+│   │   │   │   'timeout': {'default': 300, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9d00>
+│   ),
+│   StructuredTool(
+│   │   name='find_format_string_vulns',
+│   │   description='Detect Format String vulnerabilities (CWE-134) where a non-literal value is used as a printf-family format argument.\n\nAnalyzes the codebase for calls to format-string functions (printf, fprintf, sprintf,\nsnprintf, syslog, err, warn, etc.) where the format argument is not a string literal.\n\nDetection:\n- HIGH confidence: format argument is a variable assigned from a known taint source\n  (getenv, fgets, read, recv, etc.) in the same function\n- MEDIUM confidence: format argument is a variable, parameter, or computed expression\n\nFunctions checked: printf, vprintf, fprintf, vfprintf, dprintf, sprintf, vsprintf,\nsnprintf, vsnprintf, syslog, vsyslog, err, errx, warn, warnx, asprintf, vasprintf\n\nArgs:\n    codebase_hash: The codebase hash from generate_cpg.\n    filename: Optional filename regex to filter results (e.g., \'logger.c\').\n    limit: Maximum results to return (default 100).\n    timeout: Query timeout in seconds (default 120).\n\nReturns:\n    Human-readable text showing each potential format string issue with:\n    - Location [file:line] and function name\n    - The non-literal format argument expression\n    - Confidence level and reasoning\n\nExamples:\n    find_format_string_vulns(codebase_hash="abc")\n    find_format_string_vulns(codebase_hash="abc", filename="log.c")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional filename regex to filter results'
+│   │   │   │   },
+│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
+│   │   │   │   'timeout': {'default': 120, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9da0>
+│   ),
+│   StructuredTool(
+│   │   name='find_heap_overflow',
+│   │   description='Detect Heap Overflow vulnerabilities (CWE-122) where a write to a heap buffer exceeds its allocated size.\n\nAnalyzes the codebase for pairs of (allocation, write) where the write may exceed\nthe allocated buffer size:\n1. **Unbounded writes**: strcpy, strcat, gets, sprintf, vsprintf writing to a malloc\'d buffer\n   (no size argument — always dangerous)\n2. **Size-mismatched writes**: memcpy, memmove, read, recv with a write size that is not\n   bounded by or equal to the allocation size and no prior bounds check\n\nFilters out:\n- Writes guarded by a bounds check (if comparison) before the write\n- Writes where the size expression matches the allocation size expression\n- Buffer reassignments between allocation and write\n- Writes in mutually exclusive branches from the allocation\n\nArgs:\n    codebase_hash: The codebase hash from generate_cpg.\n    filename: Optional filename regex to filter results (e.g., \'net.c\').\n    limit: Maximum results to return (default 100).\n    timeout: Query timeout in seconds (default 240).\n\nReturns:\n    Human-readable text showing each potential heap overflow with:\n    - Allocation site [file:line] with buffer name and size expression\n    - Dangerous write(s) [file:line] with write size and overflow reason\n\nExamples:\n    find_heap_overflow(codebase_hash="abc")\n    find_heap_overflow(codebase_hash="abc", filename="buffer.c")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional filename regex to filter results'
+│   │   │   │   },
+│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
+│   │   │   │   'timeout': {'default': 240, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9e40>
+│   ),
+│   StructuredTool(
+│   │   name='find_stack_overflow',
+│   │   description='Detect Stack Buffer Overflow vulnerabilities (CWE-121) where a write to a fixed-size stack array may exceed its declared dimension.\n\nAnalyzes the codebase for local fixed-size array declarations (e.g. char buf[64]) combined\nwith write operations that can overflow them:\n1. **Unbounded writes**: strcpy, strcat, gets, sprintf, vsprintf — no size limit, always dangerous\n2. **Size-mismatched writes**: memcpy, strncpy, snprintf, read, recv — write size exceeds array\n   dimension or is a non-literal expression not statically bounded by the array size\n\nFilters out:\n- Bounded writes with a literal size <= array dimension\n- Write sizes containing sizeof or matching the array dimension constant\n- Writes guarded by a preceding bounds-check (if comparison on the size variable)\n- Writes in mutually exclusive branches from the declaration\n\nArgs:\n    codebase_hash: The codebase hash from generate_cpg.\n    filename: Optional filename regex to filter results (e.g., \'parser.c\').\n    limit: Maximum results to return (default 100).\n    timeout: Query timeout in seconds (default 240).\n\nReturns:\n    Human-readable text showing each potential stack overflow with:\n    - Stack buffer declaration [file:line] with variable name, type, and array size\n    - Dangerous write(s) [file:line] with write size and overflow reason\n\nExamples:\n    find_stack_overflow(codebase_hash="abc")\n    find_stack_overflow(codebase_hash="abc", filename="parser.c")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional filename regex to filter results'
+│   │   │   │   },
+│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
+│   │   │   │   'timeout': {'default': 240, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158f1fe20>
+│   ),
+│   StructuredTool(
+│   │   name='find_toctou',
+│   │   description='Detect TOCTOU (Time-of-Check-Time-of-Use) race condition vulnerabilities (CWE-367) where a file is checked with access()/stat()/lstat() and then opened or operated on in a separate step.\n\nAnalyzes the codebase for the classic TOCTOU pattern:\n1. A check call (access, stat, lstat, faccessat, euidaccess, statx, …) inspects a path\n2. A subsequent use call (open, fopen, creat, openat, rename, unlink, chmod, execve, …) acts on the same path\n3. Both calls appear in the same function with the check preceding the use\n\nBetween the check and the use an attacker may replace the file or swap it for a symlink, bypassing the access-control decision made at check time.\n\nArgs:\n    codebase_hash: The codebase hash from generate_cpg.\n    filename: Optional filename regex to filter results (e.g., \'fs_utils.c\').\n    limit: Maximum results to return (default 100).\n    timeout: Query timeout in seconds (default 240).\n\nReturns:\n    Human-readable text showing each potential TOCTOU issue with:\n    - Function name and file\n    - CHECK call [file:line] — the access/stat call\n    - USE call [file:line] — the open/fopen/… call on the same path\n    - The window (line distance) between check and use\n    - Exploitation description\n\nExamples:\n    find_toctou(codebase_hash="abc")\n    find_toctou(codebase_hash="abc", filename="fs_utils.c")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional filename regex to filter results'
+│   │   │   │   },
+│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
+│   │   │   │   'timeout': {'default': 240, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93240>
+│   ),
+│   StructuredTool(
+│   │   name='find_uninitialized_reads',
+│   │   description='Detect uninitialized variable reads (CWE-457) — variables used before assignment.\n\nAnalyzes the codebase for local variables that are read before they have been\nexplicitly assigned a value, or that are declared but never assigned at all.\nReading an uninitialized variable causes undefined behavior in C/C++ and can\nlead to information disclosure, incorrect control flow, or memory corruption.\n\nDetection strategy:\n1. Find every local variable declaration in each function\n2. Locate the first explicit assignment to that variable (if any)\n3. Flag any read of the variable that precedes the first assignment, or any\n   read of a variable that is never assigned\n\nArgs:\n    codebase_hash: The codebase hash from generate_cpg.\n    filename: Optional filename regex to filter results (e.g., \'parser.c\').\n    limit: Maximum results to return (default 100).\n    timeout: Query timeout in seconds (default 240).\n\nReturns:\n    Human-readable text showing each potential uninitialized read with:\n    - Variable name, type, and declaration location\n    - Line where the uninitialized read occurs\n    - Surrounding code context\n    - Reason (never assigned vs. read before first assignment)\n\nExamples:\n    find_uninitialized_reads(codebase_hash="abc")\n    find_uninitialized_reads(codebase_hash="abc", filename="parser.c")',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional filename regex to filter results'
+│   │   │   │   },
+│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
+│   │   │   │   'timeout': {'default': 240, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92fc0>
+│   ),
+│   StructuredTool(
+│   │   name='find_command_injection_sinks',
+│   │   description='Find potential OS command injection sinks (CWE-78).\n\nIdentifies call sites where shell-execution functions receive a non-literal\nargument — the minimal syntactic signal that user-controlled data might reach\na command interpreter.  Works across C, C++, Python, Java, JavaScript, Go,\nPHP, and Ruby.\n\nArgs:\n    codebase_hash: Hash returned by generate_cpg.\n    language:      Narrow to a language\'s sink set (c, cpp, python, java,\n                   javascript, go, php, ruby).  Auto-detected when omitted.\n    filename:      Optional filename to restrict results (substring match).\n    max_results:   Upper bound on returned call sites (default 50).\n\nReturns:\n    Text report listing each sink call site with location and code snippet,\n    followed by a suggested next step (find_taint_flows).\n\nNotes:\n    - A non-literal argument is necessary but NOT sufficient to confirm injection.\n    - Follow up with find_taint_flows(mode=\'auto\', sink_patterns=[...]).\n    - Literal-only calls (e.g., system("ls")) are excluded as safe.\n\nExamples:\n    find_command_injection_sinks(codebase_hash="abc123")\n    find_command_injection_sinks(codebase_hash="abc123", language="python")\n    find_command_injection_sinks(codebase_hash="abc123", filename="handler.c")\n',
+│   │   args_schema={
+│   │   │   'additionalProperties': False,
+│   │   │   'properties': {
+│   │   │   │   'codebase_hash': {'description': 'Codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'language': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Language for sink selection (auto-detected if omitted)'
+│   │   │   │   },
+│   │   │   │   'filename': {
+│   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
+│   │   │   │   │   'default': None,
+│   │   │   │   │   'description': 'Optional filename to restrict results'
+│   │   │   │   },
+│   │   │   │   'max_results': {
+│   │   │   │   │   'default': 50,
+│   │   │   │   │   'description': 'Maximum sink call sites to return',
+│   │   │   │   │   'maximum': 200,
+│   │   │   │   │   'minimum': 1,
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['codebase_hash'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   metadata={
+│   │   │   '_meta': {'fastmcp': {'tags': ['CWE-78', 'command-injection', 'injection', 'security', 'taint']}}
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92de0>
+│   ),
+│   StructuredTool(
+│   │   name='codeql_bqrs_decode',
+│   │   description='Decode BQRS result files to human-readable formats (text, csv, json). Typical workflow: (1) use list_query_run_results to find BQRS paths from previous codeql_query_run or codeql_database_analyze runs, (2) use codeql_bqrs_info to discover result sets and column schemas, (3) decode specific result sets with this tool. For large result sets, use --rows to paginate.',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'files': {
+│   │   │   │   │   'type': 'array',
+│   │   │   │   │   'items': {'type': 'string'},
+│   │   │   │   │   'description': 'BQRS file(s) to decode'
+│   │   │   │   },
+│   │   │   │   'format': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'enum': ['csv', 'json', 'text', 'bqrs'],
+│   │   │   │   │   'description': 'Output format: text (human-readable table, default), csv, json (streaming JSON), or bqrs (binary, requires --output)'
+│   │   │   │   },
+│   │   │   │   'result-set': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Decode a specific result set by name (use codeql_bqrs_info to list available sets). If omitted, all result sets are decoded.'
+│   │   │   │   },
+│   │   │   │   'output': {'type': 'string', 'description': 'Output file path'}
+│   │   │   },
+│   │   │   'required': ['files'],
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93060>
+│   ),
+│   StructuredTool(
+│   │   name='codeql_bqrs_info',
+│   │   description='Get metadata about BQRS result files: lists result sets, column names/types, and row counts. Use before codeql_bqrs_decode to discover available result sets (e.g., "#select", "edges", "nodes"). BQRS files are found at <runDir>/results.bqrs — use list_query_run_results to discover them. Use --format=json with --paginate-rows to get byte offsets for paginated decoding with codeql_bqrs_decode --start-at.',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'file': {'type': 'string', 'description': 'BQRS file to examine'},
+│   │   │   │   'format': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'enum': ['text', 'json'],
+│   │   │   │   │   'description': 'Output format: text (default) or json. Use json for machine-readable output and pagination offset computation.'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['file'],
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93ba0>
+│   ),
+│   StructuredTool(
+│   │   name='codeql_bqrs_interpret',
+│   │   description='Interpret BQRS result files according to query metadata and generate output in specified formats (CSV, SARIF, graph formats)',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'file': {'type': 'string', 'description': 'The BQRS file to interpret'},
+│   │   │   │   'format': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'enum': ['csv', 'sarif-latest', 'sarifv2.1.0', 'graphtext', 'dgml', 'dot'],
+│   │   │   │   │   'description': 'Output format: csv (comma-separated), sarif-latest/sarifv2.1.0 (SARIF), graphtext/dgml/dot (graph formats, only for @kind graph queries)'
+│   │   │   │   },
+│   │   │   │   'output': {'type': 'string', 'description': 'Output file path'},
+│   │   │   │   'database': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Path to the CodeQL database. When provided, auto-resolves --source-archive (for file contents/snippets) and --source-location-prefix (from codeql-database.yml metadata) so SARIF results include full source context'
+│   │   │   │   },
+│   │   │   │   't': {
+│   │   │   │   │   'type': 'array',
+│   │   │   │   │   'items': {'type': 'string'},
+│   │   │   │   │   'description': 'Query metadata key=value pairs in KEY=VALUE format. At least "kind" and "id" must be specified. Example: ["kind=problem", "id=js/sql-injection"]. Common keys: kind (problem|path-problem|graph|metric|diagnostic), id (query identifier like js/xss)'
+│   │   │   │   },
+│   │   │   │   'max-paths': {
+│   │   │   │   │   'type': 'number',
+│   │   │   │   │   'description': 'Maximum number of paths to produce for each alert with paths (default: 4)'
+│   │   │   │   },
+│   │   │   │   'sarif-add-file-contents': {
+│   │   │   │   │   'type': 'boolean',
+│   │   │   │   │   'description': '[SARIF only] Include full file contents for all files referenced in results'
+│   │   │   │   },
+│   │   │   │   'sarif-add-snippets': {
+│   │   │   │   │   'type': 'boolean',
+│   │   │   │   │   'description': '[SARIF only] Include code snippets for each location with context'
+│   │   │   │   },
+│   │   │   │   'sarif-group-rules-by-pack': {
+│   │   │   │   │   'type': 'boolean',
+│   │   │   │   │   'description': '[SARIF only] Place rule objects under their QL pack in tool.extensions property'
+│   │   │   │   },
+│   │   │   │   'sarif-multicause-markdown': {
+│   │   │   │   │   'type': 'boolean',
+│   │   │   │   │   'description': '[SARIF only] Include multi-cause alerts as Markdown-formatted lists'
+│   │   │   │   },
+│   │   │   │   'sarif-category': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': '[SARIF only] Category for this analysis (distinguishes multiple analyses on same code)'
+│   │   │   │   },
+│   │   │   │   'csv-location-format': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'enum': ['uri', 'line-column', 'offset-length'],
+│   │   │   │   │   'description': '[CSV only] Format for locations in CSV output (default: line-column)'
+│   │   │   │   },
+│   │   │   │   'dot-location-url-format': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': '[DOT only] Format string for file location URLs (placeholders: {path}, {start:line}, {start:column}, {end:line}, {end:column}, {offset}, {length})'
+│   │   │   │   },
+│   │   │   │   'threads': {
+│   │   │   │   │   'type': 'number',
+│   │   │   │   │   'description': 'Number of threads for computing paths (0 = one per core, -N = leave N cores unused)'
+│   │   │   │   },
+│   │   │   │   'column-kind': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'enum': ['utf8', 'utf16', 'utf32', 'bytes'],
+│   │   │   │   │   'description': '[SARIF only] Column kind for interpreting location columns'
+│   │   │   │   },
+│   │   │   │   'unicode-new-lines': {
+│   │   │   │   │   'type': 'boolean',
+│   │   │   │   │   'description': '[SARIF only] Whether unicode newlines (U+2028, U+2029) are considered as newlines'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['file', 'format', 't'],
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93560>
+│   ),
+│   StructuredTool(
+│   │   name='codeql_database_analyze',
+│   │   description='Run queries or query suites against CodeQL databases. Produces evaluator logs, BQRS results, and optionally SARIF output. Use list_codeql_databases to discover available databases, and register_database to register new ones. After analysis completes, use list_query_run_results to find result artifacts, then codeql_bqrs_info and codeql_bqrs_decode to inspect results.',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'database': {'type': 'string', 'description': 'Path to the CodeQL database directory.'},
+│   │   │   │   'queries': {'type': 'string', 'description': 'Query, query suite, or query pack to analyze.'},
+│   │   │   │   'format': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'enum': ['csv', 'json', 'sarif-latest', 'sarifv2.1.0'],
+│   │   │   │   │   'description': 'Optional output format.'
+│   │   │   │   },
+│   │   │   │   'output': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Optional output file path. Omit unless a concrete result file is needed.'
+│   │   │   │   },
+│   │   │   │   'rerun': {
+│   │   │   │   │   'type': 'boolean',
+│   │   │   │   │   'description': 'Force re-evaluation instead of reusing cached results.'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['database', 'queries'],
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92b60>
+│   ),
+│   StructuredTool(
+│   │   name='codeql_database_create',
+│   │   description='Create a CodeQL database from source code',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'database': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Required output directory for the CodeQL database, for example /tmp/project-codeql-db. This is not the source directory.'
+│   │   │   │   },
+│   │   │   │   'language': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Source language, for example python, javascript, java, cpp, csharp, go, ruby, rust, swift, or actions.'
+│   │   │   │   },
+│   │   │   │   'source-root': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Root directory of the source code to extract.'
+│   │   │   │   },
+│   │   │   │   'build-mode': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'enum': ['none', 'autobuild', 'manual'],
+│   │   │   │   │   'description': 'Use none for interpreted languages such as Python and JavaScript. Use manual only when also providing command.'
+│   │   │   │   },
+│   │   │   │   'command': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Build command only for compiled languages with build-mode=manual. Omit for Python/JavaScript or build-mode=none.'
+│   │   │   │   },
+│   │   │   │   'overwrite': {'type': 'boolean', 'description': 'Overwrite existing database if it exists'}
+│   │   │   },
+│   │   │   'required': ['database', 'language', 'source-root'],
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dba2a0>
+│   ),
+│   StructuredTool(
+│   │   name='codeql_pack_install',
+│   │   description='Install CodeQL pack dependencies',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'packDir': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Directory containing qlpack.yml (default: current)'
+│   │   │   │   },
+│   │   │   │   'force': {'type': 'boolean', 'description': 'Force reinstall of dependencies'},
+│   │   │   │   'no-strict-mode': {'type': 'boolean', 'description': 'Allow non-strict dependency resolution'}
+│   │   │   },
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dba3e0>
+│   ),
+│   StructuredTool(
+│   │   name='codeql_query_compile',
+│   │   description='Compile and validate CodeQL queries. By default, produces a .dil file containing the optimized DIL intermediate representation alongside the compilation output.',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'query': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Path to a .ql file to compile. This command does not take a CodeQL database; use codeql_query_run when a database is needed.'
+│   │   │   │   },
+│   │   │   │   'warnings': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'enum': ['hide', 'show', 'error'],
+│   │   │   │   │   'description': 'How to handle compilation warnings.'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['query'],
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dba5c0>
+│   ),
+│   StructuredTool(
+│   │   name='codeql_query_run',
+│   │   description='Execute a CodeQL query against a database. Use either "query" parameter for direct file path OR "queryName" + "queryLanguage" for pre-defined tool queries. Produces evaluator logs and BQRS results in a log directory. Use list_codeql_databases to discover databases, list_query_run_results to find previous results, and codeql_bqrs_decode to inspect BQRS output.',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'query': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Path to a .ql file to run. Do not pass queryName, queryLanguage, queryPack, sourceFiles, sourceFunction, or targetFunction with this mode.'
+│   │   │   │   },
+│   │   │   │   'database': {'type': 'string', 'description': 'Path to the CodeQL database directory.'}
+│   │   │   },
+│   │   │   'required': ['query', 'database'],
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dba700>
+│   ),
+│   StructuredTool(
+│   │   name='codeql_resolve_database',
+│   │   description='Resolve database path and validate database structure',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'database': {'type': 'string', 'description': 'Database path to resolve'},
+│   │   │   │   'format': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'enum': ['text', 'json', 'betterjson'],
+│   │   │   │   │   'description': 'Output format for database information'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['database'],
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dba7a0>
+│   ),
+│   StructuredTool(
+│   │   name='codeql_resolve_languages',
+│   │   description='List installed CodeQL extractor packs',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'format': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'enum': ['text', 'json', 'betterjson'],
+│   │   │   │   │   'description': 'Output format for language information'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dba8e0>
+│   ),
+│   StructuredTool(
+│   │   name='read_database_source',
+│   │   description='Read source file contents from a CodeQL database source archive (src.zip) or source directory (src/). Use this to explore code at alert locations discovered via codeql_bqrs_interpret SARIF output. Omit filePath to list all files in the archive. Accepts raw file paths, file:// URIs (as found in SARIF physicalLocation.artifactLocation.uri), or paths relative to the archive root. Use startLine/endLine to return only the relevant portion of large files.',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'databasePath': {'type': 'string', 'description': 'Path to the CodeQL database directory'},
+│   │   │   │   'endLine': {
+│   │   │   │   │   'type': 'integer',
+│   │   │   │   │   'exclusiveMinimum': 0,
+│   │   │   │   │   'description': 'Last line to return (1-based, inclusive). Defaults to end of file.'
+│   │   │   │   },
+│   │   │   │   'filePath': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Path of the source file to read. Accepts a raw path, a file:// URI from SARIF, or a path relative to the archive root. Omit to list all files in the archive.'
+│   │   │   │   },
+│   │   │   │   'maxEntries': {
+│   │   │   │   │   'type': 'integer',
+│   │   │   │   │   'exclusiveMinimum': 0,
+│   │   │   │   │   'description': 'Maximum number of entries to return in listing mode (when filePath is omitted). Defaults to 1000. When the total exceeds this limit the response includes truncated: true. Use prefix to narrow results for large databases.'
+│   │   │   │   },
+│   │   │   │   'prefix': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Filter listing results to entries starting with this prefix (listing mode only).'
+│   │   │   │   },
+│   │   │   │   'startLine': {
+│   │   │   │   │   'type': 'integer',
+│   │   │   │   │   'exclusiveMinimum': 0,
+│   │   │   │   │   'description': 'First line to return (1-based, inclusive). Defaults to 1.'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['databasePath'],
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dbb100>
+│   ),
+│   StructuredTool(
+│   │   name='audit_store_findings',
+│   │   description='Store CodeQL analysis findings for a repository. Each finding is persisted as an annotation with category "audit-finding".',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'owner': {'type': 'string', 'description': 'Repository owner.'},
+│   │   │   │   'repo': {'type': 'string', 'description': 'Repository name.'},
+│   │   │   │   'findings': {
+│   │   │   │   │   'type': 'array',
+│   │   │   │   │   'items': {
+│   │   │   │   │   │   'type': 'object',
+│   │   │   │   │   │   'properties': {
+│   │   │   │   │   │   │   'sourceLocation': {'type': 'string', 'description': 'File path of the finding.'},
+│   │   │   │   │   │   │   'line': {
+│   │   │   │   │   │   │   │   'type': 'integer',
+│   │   │   │   │   │   │   │   'minimum': 1,
+│   │   │   │   │   │   │   │   'description': 'Line number of the finding (integer >= 1).'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   'sourceType': {
+│   │   │   │   │   │   │   │   'type': 'string',
+│   │   │   │   │   │   │   │   'description': 'Type of the source (e.g. "RemoteFlowSource").'
+│   │   │   │   │   │   │   },
+│   │   │   │   │   │   │   'description': {'type': 'string', 'description': 'Human-readable description.'}
+│   │   │   │   │   │   },
+│   │   │   │   │   │   'required': ['sourceLocation', 'line', 'sourceType'],
+│   │   │   │   │   │   'additionalProperties': False
+│   │   │   │   │   },
+│   │   │   │   │   'description': 'Array of findings to store.'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['owner', 'repo', 'findings'],
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dbb9c0>
+│   ),
+│   StructuredTool(
+│   │   name='audit_list_findings',
+│   │   description='List all audit findings for a repository, including any analyst notes.',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'owner': {'type': 'string', 'description': 'Repository owner.'},
+│   │   │   │   'repo': {'type': 'string', 'description': 'Repository name.'},
+│   │   │   │   'limit': {
+│   │   │   │   │   'type': 'integer',
+│   │   │   │   │   'exclusiveMinimum': 0,
+│   │   │   │   │   'maximum': 1000,
+│   │   │   │   │   'description': 'Maximum number of results (1–1000).'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['owner', 'repo'],
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dbba60>
+│   ),
+│   StructuredTool(
+│   │   name='audit_add_notes',
+│   │   description='Append notes to an existing audit finding. Identify the finding by findingId (preferred) or by owner+repo+sourceLocation+line.',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'findingId': {
+│   │   │   │   │   'type': 'integer',
+│   │   │   │   │   'exclusiveMinimum': 0,
+│   │   │   │   │   'description': 'Annotation ID of the finding (returned by audit_store_findings and audit_list_findings). Preferred lookup method.'
+│   │   │   │   },
+│   │   │   │   'owner': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Repository owner (required when findingId is not provided).'
+│   │   │   │   },
+│   │   │   │   'repo': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Repository name (required when findingId is not provided).'
+│   │   │   │   },
+│   │   │   │   'sourceLocation': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'File path of the finding (required when findingId is not provided).'
+│   │   │   │   },
+│   │   │   │   'line': {
+│   │   │   │   │   'type': 'integer',
+│   │   │   │   │   'minimum': 1,
+│   │   │   │   │   'description': 'Line number of the finding (required when findingId is not provided).'
+│   │   │   │   },
+│   │   │   │   'notes': {'type': 'string', 'description': 'Notes to append.'}
+│   │   │   },
+│   │   │   'required': ['notes'],
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dbbb00>
+│   ),
+│   StructuredTool(
+│   │   name='audit_clear_repo',
+│   │   description='Delete all audit findings for a repository.',
+│   │   args_schema={
+│   │   │   'type': 'object',
+│   │   │   'properties': {
+│   │   │   │   'owner': {'type': 'string', 'description': 'Repository owner.'},
+│   │   │   │   'repo': {'type': 'string', 'description': 'Repository name.'}
+│   │   │   },
+│   │   │   'required': ['owner', 'repo'],
+│   │   │   'additionalProperties': False,
+│   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dbbba0>
+│   ),
+│   StructuredTool(
+│   │   name='semgrep_rule_schema',
+│   │   description='\n    Get the schema for a Semgrep rule\n\n    Use this tool when you need to:\n      - get the schema required to write a Semgrep rule\n      - need to see what fields are available for a Semgrep rule\n      - verify what fields are available for a Semgrep rule\n      - verify the syntax for a Semgrep rule is correct\n    ',
+│   │   args_schema={'properties': {}, 'title': 'semgrep_rule_schemaArguments', 'type': 'object'},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d936a0>
+│   ),
+│   StructuredTool(
+│   │   name='get_supported_languages',
+│   │   description='\n    Returns a list of supported languages by Semgrep\n\n    Only use this tool if you are not sure what languages Semgrep supports.\n    ',
+│   │   args_schema={'properties': {}, 'title': 'get_supported_languagesArguments', 'type': 'object'},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93a60>
+│   ),
+│   StructuredTool(
+│   │   name='semgrep_scan_with_custom_rule',
+│   │   description='\n    Runs a Semgrep scan with a custom rule on provided code content\n    and returns the findings in JSON format\n\n    Use this tool when you need to:\n      - scan code files for specific security vulnerability not covered by the default Semgrep rules\n      - scan code files for specific issue not covered by the default Semgrep rules\n    ',
+│   │   args_schema={
+│   │   │   '$defs': {
+│   │   │   │   'CodeFile': {
+│   │   │   │   │   'properties': {
+│   │   │   │   │   │   'path': {'description': 'Path of the code file', 'title': 'Path', 'type': 'string'},
+│   │   │   │   │   │   'content': {
+│   │   │   │   │   │   │   'description': 'Content of the code file',
+│   │   │   │   │   │   │   'title': 'Content',
+│   │   │   │   │   │   │   'type': 'string'
+│   │   │   │   │   │   }
+│   │   │   │   │   },
+│   │   │   │   │   'required': ['path', 'content'],
+│   │   │   │   │   'title': 'CodeFile',
+│   │   │   │   │   'type': 'object'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'properties': {
+│   │   │   │   'code_files': {
+│   │   │   │   │   'description': "List of dictionaries with 'path' and 'content' keys",
+│   │   │   │   │   'items': {'$ref': '#/$defs/CodeFile'},
+│   │   │   │   │   'title': 'Code Files',
+│   │   │   │   │   'type': 'array'
+│   │   │   │   },
+│   │   │   │   'rule': {'description': 'Semgrep YAML rule string', 'title': 'Rule', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['code_files', 'rule'],
+│   │   │   'title': 'semgrep_scan_with_custom_ruleArguments',
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93ce0>
+│   ),
+│   StructuredTool(
+│   │   name='semgrep_scan',
+│   │   description='\n    Runs a Semgrep scan locally on provided code files returns the findings in JSON format.\n\n    Files are expected to be absolute paths to the code files.\n\n    Use this tool when you need to:\n      - scan code files for security vulnerabilities\n      - scan code files for other issues\n    ',
+│   │   args_schema={
+│   │   │   '$defs': {
+│   │   │   │   'CodePath': {
+│   │   │   │   │   'properties': {
+│   │   │   │   │   │   'path': {
+│   │   │   │   │   │   │   'description': 'Absolute path of the code file',
+│   │   │   │   │   │   │   'title': 'Path',
+│   │   │   │   │   │   │   'type': 'string'
+│   │   │   │   │   │   }
+│   │   │   │   │   },
+│   │   │   │   │   'required': ['path'],
+│   │   │   │   │   'title': 'CodePath',
+│   │   │   │   │   'type': 'object'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'properties': {
+│   │   │   │   'code_files': {
+│   │   │   │   │   'description': "List of dictionaries with 'path' pointing to the absolute path of the code file",
+│   │   │   │   │   'items': {'$ref': '#/$defs/CodePath'},
+│   │   │   │   │   'title': 'Code Files',
+│   │   │   │   │   'type': 'array'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['code_files'],
+│   │   │   'title': 'semgrep_scanArguments',
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93880>
+│   ),
+│   StructuredTool(
+│   │   name='get_abstract_syntax_tree',
+│   │   description='\n    Returns the Abstract Syntax Tree (AST) for the provided code file in JSON format\n\n    Use this tool when you need to:\n      - get the Abstract Syntax Tree (AST) for the provided code file      - get the AST of a file\n      - understand the structure of the code in a more granular way\n      - see what a parser sees in the code\n    ',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'code': {'description': 'The code to get the AST for', 'title': 'Code', 'type': 'string'},
+│   │   │   │   'language': {
+│   │   │   │   │   'description': 'The programming language of the code',
+│   │   │   │   │   'title': 'Language',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['code', 'language'],
+│   │   │   'title': 'get_abstract_syntax_treeArguments',
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158cbc7c0>
+│   ),
+│   StructuredTool(
+│   │   name='pull_image',
+│   │   description='\n从指定的远程地址拉取镜像。\n参数：image_name（字符串）：镜像名称\n返回：镜像详细信息和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {'image_name': {'title': 'Image Name', 'type': 'string'}},
+│   │   │   'required': ['image_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92520>
+│   ),
+│   StructuredTool(
+│   │   name='list_images',
+│   │   description='\n列出所有镜像。\n参数：无\n返回：镜像详细信息和 status\n',
+│   │   args_schema={'properties': {}, 'type': 'object'},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d932e0>
+│   ),
+│   StructuredTool(
+│   │   name='create_container',
+│   │   description='\n创建容器。\n参数：image_name（字符串）：镜像名称\ncontainer_name（字符串）：容器名称\ncmd（字符串）：容器启动命令\nadd_caps（列表）：添加的capabilities\nhost_name（字符串）：主机名\nports_map（列表）：端口映射（例如：["8080:8080"]）\n返回：容器详细信息和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'image_name': {'title': 'Image Name', 'type': 'string'},
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
+│   │   │   │   'cmd': {'default': '', 'title': 'Cmd', 'type': 'string'},
+│   │   │   │   'add_caps': {'default': [], 'items': {'type': 'string'}, 'title': 'Add Caps', 'type': 'array'},
+│   │   │   │   'host_name': {'default': '', 'title': 'Host Name', 'type': 'string'},
+│   │   │   │   'ports_map': {
+│   │   │   │   │   'default': [],
+│   │   │   │   │   'items': {'type': 'string'},
+│   │   │   │   │   'title': 'Ports Map',
+│   │   │   │   │   'type': 'array'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['image_name', 'container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92660>
+│   ),
+│   StructuredTool(
+│   │   name='run_container_by_compose',
+│   │   description='\n根据compose文件运行容器。\n参数：compose_file（字符串）：compose文件内容\nother_files（json字符串）：其他文件内容（包括Dockerfile或启动必需的脚本等），键名为文件名字符串，键值为文件内容字符串，没有则填空字符串\n返回：容器详细信息和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'compose_file': {'title': 'Compose File', 'type': 'string'},
+│   │   │   │   'other_files': {'default': '{}', 'title': 'Other Files', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['compose_file'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8680>
+│   ),
+│   StructuredTool(
+│   │   name='fetch_container_logs',
+│   │   description='\n获取容器日志。\n参数：container_name（字符串）：容器名称\n返回：日志和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8360>
+│   ),
+│   StructuredTool(
+│   │   name='stop_container',
+│   │   description='\n停止容器。\n参数：container_name（字符串）：容器名称\n返回：状态\n',
+│   │   args_schema={
+│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db80e0>
+│   ),
+│   StructuredTool(
+│   │   name='start_container',
+│   │   description='\n启动容器。\n参数：container_name（字符串）：容器名称\n返回：状态\n',
+│   │   args_schema={
+│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8720>
+│   ),
+│   StructuredTool(
+│   │   name='restart_container',
+│   │   description='\n重启容器。\n参数：container_name（字符串）：容器名称\n返回：状态\n',
+│   │   args_schema={
+│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8ea0>
+│   ),
+│   StructuredTool(
+│   │   name='remove_container',
+│   │   description='\n删除容器。\n参数：container_name（字符串）：容器名称\n返回：状态\n',
+│   │   args_schema={
+│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db91c0>
+│   ),
+│   StructuredTool(
+│   │   name='fetch_container_info',
+│   │   description='\n获取容器信息。\n参数：container_name（字符串）：容器名称\n返回：容器详细信息和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8cc0>
+│   ),
+│   StructuredTool(
+│   │   name='create_exec_session',
+│   │   description='\n创建一个新的交互式 shell 会话。推荐使用。\n参数：container_name（字符串）：容器名称\n返回：包含 exec_session_id 的响应和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db87c0>
+│   ),
+│   StructuredTool(
+│   │   name='execute_command_in_session',
+│   │   description='\n在已存在的 shell 会话中执行命令。推荐使用。\n参数：container_name（字符串）：容器名称\ncmd（字符串）：要执行的命令\nexec_session_id（字符串）：会话ID（由 create_exec_session 返回）\n返回：命令输出和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
+│   │   │   │   'cmd': {'title': 'Cmd', 'type': 'string'},
+│   │   │   │   'exec_session_id': {'title': 'Exec Session Id', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['container_name', 'cmd', 'exec_session_id'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db96c0>
+│   ),
+│   StructuredTool(
+│   │   name='close_exec_session',
+│   │   description='\n关闭交互式 shell 会话。\n参数：container_name（字符串）：容器名称\nexec_session_id（字符串）：会话ID（由 create_exec_session 返回）\n返回：状态\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
+│   │   │   │   'exec_session_id': {'title': 'Exec Session Id', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['container_name', 'exec_session_id'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8540>
+│   ),
+│   StructuredTool(
+│   │   name='get_more_session_output',
+│   │   description='\n获取更多的交互式 shell 会话输出。当你认为仍有输出未被获取时，可以调用此接口。\n参数：exec_session_id（字符串）：会话ID（由 create_exec_session 返回）\ncontainer_name（字符串）：容器名称\n返回：会话输出\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
+│   │   │   │   'exec_session_id': {'title': 'Exec Session Id', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['container_name', 'exec_session_id'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9a80>
+│   ),
+│   StructuredTool(
+│   │   name='wait_for_seconds',
+│   │   description='\n等待指定的秒数。\n参数：seconds（整数）：等待的秒数\n返回：状态\n',
+│   │   args_schema={
+│   │   │   'properties': {'seconds': {'title': 'Seconds', 'type': 'integer'}},
+│   │   │   'required': ['seconds'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93100>
+│   ),
+│   StructuredTool(
+│   │   name='create_network',
+│   │   description='\n创建一个新的 Docker 网络。\n参数：\n    network_name（字符串）：网络名称\n    is_internal（布尔值）：是否为内部网络\n    subnet（字符串）：子网，例如 "172.20.0.0/16"\n    ip_range（字符串）：IP 地址范围，例如 "172.20.10.0/24"，可选\n    gateway（字符串）：网关地址，例如 "172.20.0.1"，可选\n返回：网络创建结果和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'network_name': {'title': 'Network Name', 'type': 'string'},
+│   │   │   │   'is_internal': {'title': 'Is Internal', 'type': 'boolean'},
+│   │   │   │   'subnet': {'title': 'Subnet', 'type': 'string'},
+│   │   │   │   'ip_range': {'title': 'Ip Range', 'type': 'string'},
+│   │   │   │   'gateway': {'title': 'Gateway', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['network_name', 'is_internal', 'subnet', 'ip_range', 'gateway'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92f20>
+│   ),
+│   StructuredTool(
+│   │   name='delete_network',
+│   │   description='\n删除指定的 Docker 网络。\n参数：network_name（字符串）：网络名称\n返回：删除结果和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {'network_name': {'title': 'Network Name', 'type': 'string'}},
+│   │   │   'required': ['network_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92d40>
+│   ),
+│   StructuredTool(
+│   │   name='list_networks',
+│   │   description='\n列出所有 Docker 网络。\n参数：无\n返回：所有网络的详细信息和 status\n',
+│   │   args_schema={'properties': {}, 'type': 'object'},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8180>
+│   ),
+│   StructuredTool(
+│   │   name='network_info',
+│   │   description='\n获取指定 Docker 网络的信息。\n参数：network_name（字符串）：网络名称\n返回：网络详细信息和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {'network_name': {'title': 'Network Name', 'type': 'string'}},
+│   │   │   'required': ['network_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8f40>
+│   ),
+│   StructuredTool(
+│   │   name='connect_network',
+│   │   description='\n将容器连接到指定网络。\n参数：\n    network_name（字符串）：网络名称\n    container_name（字符串）：容器名称\n    ipv4_address（字符串）：容器的IPv4地址，可选\n    如果不提供IPv4地址，则使用Docker自动分配的地址。\n返回：连接结果和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'network_name': {'title': 'Network Name', 'type': 'string'},
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
+│   │   │   │   'ipv4_address': {'default': '', 'title': 'Ipv4 Address', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['network_name', 'container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8d60>
+│   ),
+│   StructuredTool(
+│   │   name='disconnect_network',
+│   │   description='\n将容器从指定网络断开连接。\n参数：\n    network_name（字符串）：网络名称\n    container_name（字符串）：容器名称\n返回：断开结果和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'network_name': {'title': 'Network Name', 'type': 'string'},
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['network_name', 'container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db98a0>
+│   )
+]

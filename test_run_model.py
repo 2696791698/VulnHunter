@@ -6,17 +6,36 @@ from deepagents.backends import LocalShellBackend
 from langchain_openai import ChatOpenAI
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langsmith import traceable
+from rich.console import Console
+from rich.pretty import pprint
+from langchain.tools import tool
+from tree_utils import show_tree
+import docker
+import logging
 
 load_dotenv()
 
-PROJECT_ROOT = "/home/houning/Projects/dataset/"
+PROJECT_ROOT = "/home/houning/Projects/dataset/qwq"
 
-async def agent():
+logger = logging.getLogger(__name__)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+)
+
+def show_directory_tree() -> str:
+    """
+    列出项目的目录树结构
+    """
+    return show_tree(PROJECT_ROOT)
+
+async def main():
     model = ChatOpenAI(
-        model="gpt-5.4",
+        model="gpt-5.5",
         api_key=os.getenv("OPENAI_API_KEY"),
         base_url=os.getenv("OPENAI_BASE_URL"),
-        reasoning_effort="low",
+        reasoning_effort="high",
         streaming=True,
         stream_usage=True,
         max_retries=3
@@ -24,47 +43,122 @@ async def agent():
 
     client = MultiServerMCPClient(
         {
-            "CodeBadger": {
-                "transport": "http",
-                "url": "http://127.0.0.1:4242/mcp",
-            },
-            "ql-mcp": {
-                "transport": "stdio",
-                "command": "npx",
-                "args": ["-y", "codeql-development-mcp-server"],
+            # "CodeBadger": {
+            #     "transport": "http",
+            #     "url": "http://127.0.0.1:4242/mcp",
+            # },
+            # "CodeQL": {
+            #     "transport": "stdio",
+            #     "command": "codeql-development-mcp-server-schema-fixed",
+            #     "args": [],
+            # },
+            # "Semgrep": {
+            #     "transport": "stdio",
+            #     "command": "semgrep",
+            #     "args": ["mcp"],
+            #     "env": {
+            #         **os.environ,
+            #         "PS1": "$ ",
+            #         "USE_SEMGREP_RPC": "false",
+            #     },
+            # },
+            "docker-mcp": {
+                "transport": "sse",
+                "url": "http://127.0.0.1:19000/sse",
             },
         }
     )
 
     mcp_tools = await client.get_tools()
 
+    blocked_tools = {
+        "semgrep_findings",
+        "semgrep_scan_supply_chain",
+
+        "codeql_test_extract",
+        "codeql_test_run",
+        "codeql_test_accept",
+        "codeql_resolve_tests",
+        "codeql_resolve_qlref",
+        "codeql_resolve_queries",
+        "codeql_resolve_files",
+        "codeql_resolve_packs",
+        "codeql_resolve_library-path",
+        "codeql_resolve_metadata",
+        "codeql_pack_ls",
+        "codeql_query_format",
+        "codeql_generate_query-help",
+        "codeql_generate_log-summary",
+
+        "codeql_lsp_completion",
+        "codeql_lsp_definition",
+        "codeql_lsp_references",
+        "codeql_lsp_document_symbols",
+        "codeql_lsp_diagnostics",
+
+        "validate_codeql_query",
+        "create_codeql_query",
+        "find_codeql_query_files",
+        "profile_codeql_query",
+        "profile_codeql_query_from_logs",
+        "list_mrva_run_results",
+        "register_database",
+        "search_ql_code",
+        "quick_evaluate",
+        "find_class_position",
+        "find_predicate_position",
+        "list_codeql_databases",
+        "list_query_run_results",
+
+        "sarif_extract_rule",
+        "sarif_list_rules",
+        "sarif_rule_to_markdown",
+        "sarif_compare_alerts",
+        "sarif_diff_by_commits",
+        "sarif_diff_runs",
+        "sarif_store",
+        "sarif_deduplicate_rules",
+
+        "query_results_cache_lookup",
+        "query_results_cache_retrieve",
+        "query_results_cache_clear",
+        "query_results_cache_compare",
+
+        "annotation_create",
+        "annotation_get",
+        "annotation_list",
+        "annotation_update",
+        "annotation_delete",
+        "annotation_search",
+
+        "session_end",
+        "session_get",
+        "session_list",
+        "session_update_state",
+        "session_get_call_history",
+        "session_get_test_history",
+        "session_get_score_history",
+        "session_calculate_current_score",
+        "sessions_compare",
+        "sessions_aggregate",
+        "sessions_export",
+    }
+
+    mcp_tools = [tool for tool in mcp_tools if tool.name not in blocked_tools]
+
+    with open(f"./mcp_tools_list.txt", "w", encoding="utf-8") as f:
+        console = Console(file=f)
+        pprint(mcp_tools, console=console)
+
     system_prompt = """
-你是一名专业的静态代码安全审计员
-
-任务目标：
-- 对给定审计目录中的代码进行静态安全审计
-- 判断该审计目录中是否存在安全漏洞
-- 你的最终目标是输出唯一的审计结论标签
-
-行为约束：
-- 优先调用代码审计工具进行辅助
-- 只允许读取审计目录中的文件和子目录
-- 不允许修改、创建、删除、重命名任何文件或目录
-- 不允许执行任何具有写操作、副作用或破坏性的命令
-- 不允许访问审计目录之外的任何路径
-- 不允许编造未读取到的代码内容
-- 必须基于实际读取到的代码内容作出判断
-
-最终输出规则：
-- 最终只能输出以下两个标签之一：vulnerable 或 non-vulnerable
-- 必须且只能输出一个标签
-- 不允许输出任何其他内容，包括但不限于：解释、分析过程、标点、空格、换行、前后缀、代码块
-- 如果确认存在安全漏洞，输出：vulnerable
-- 如果确认不存在安全漏洞，输出：non-vulnerable
-- 除上述两个标签外，禁止输出其它任何内容
 """.strip()
 
-    prompt = f"""
+    user_prompt = """
+你现在的任务是在 anaconda-container 的环境中, 检查能否正常运行目标项目
+目标项目在本地的目录: /home/houning/Projects/dataset/qwq
+目标项目在容器内映射的目录: /workspace
+语言: python
+请先调用 show_directory_tree 工具快速了解目标项目的目录结构
 """.strip()
 
     # 声明 Subagents
@@ -98,19 +192,67 @@ async def agent():
 
     agent = create_deep_agent(
         model=model,
-        tools=[*mcp_tools],
+        tools=[show_directory_tree, *mcp_tools],
         # system_prompt=system_prompt,
-        # backend=LocalShellBackend(root_dir=".", virtual_mode=False),
+        backend=LocalShellBackend(root_dir=PROJECT_ROOT, virtual_mode=False),
         # subagents=subagents
     )
 
     result = await agent.ainvoke({
         "messages": [
-            {"role": "user", "content": "你好, 你现在可以使用哪些工具"}
+            {"role": "user", "content": user_prompt}
         ]
     })
 
     print(result["messages"][-1].content)
 
 if __name__ == "__main__":
-    asyncio.run(agent())
+    client = docker.from_env()
+    container = None
+
+    try:
+        logger.info("正在启动Docker容器...")
+        container = client.containers.run(
+            image="mcr.microsoft.com/devcontainers/anaconda:3",
+            command="sleep infinity",
+            detach=True,
+            name="anaconda-container",
+            auto_remove=False,
+            volumes={
+                PROJECT_ROOT: {
+                    "bind": "/workspace",
+                    "mode": "rw",
+                }
+            },
+            working_dir="/workspace",
+        )
+        logger.info("启动成功!")
+
+        asyncio.run(main())
+
+    except Exception:
+        logger.exception("agent执行失败")
+
+    finally:
+        if container is not None:
+            logger.info("开始清理Docker容器")
+            try:
+                logger.info("正在停止Docker容器...")
+                container.stop(timeout=20)
+                container.reload()
+
+                if container.status == "exited":
+                    logger.info("停止成功!")
+                else:
+                    logger.warning(f"容器停止后状态异常: {container.status}")
+
+            except Exception as e:
+                logger.exception("停止容器失败")
+
+            try:
+                logger.info("正在移除Docker容器...")
+                container.remove(force=True)
+                logger.info("移除成功!")
+
+            except Exception as e:
+                logger.exception("移除容器失败")
