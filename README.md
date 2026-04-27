@@ -4,7 +4,8 @@
 
 # 基础环境
 
-- **Python** 3.10+ (推荐使用 3.13)
+- **Linux or WSL**（推荐使用Ubuntu-24.04）
+- **Python** 3.10+（推荐使用 3.13）
 - **Node.js** v25.6.0 或更高版本
 - **uv**
 - **Docker**
@@ -14,7 +15,7 @@
 
 ## 工具准备
 
-> CodeQL 和 codebadger 需使用本仓库中提供的修改后的适配版本
+> CodeQL 和 codebadger 需使用本仓库中提供的修改后的版本
 >
 > 本项目共需配置四种MCP工具，分别为：codebadger，CodeQL，Semgrep，docker-mcp，其中 docker-mcp 还需要运行配套的 docker-manager
 
@@ -274,7 +275,13 @@ python extract_pyvul_dataset.py --cwe CWE-79 --require-ghsa --start 1 --limit 10
 uv sync
 ```
 
-### 2. 环境变量
+### 2. 拉取 Docker 镜像
+
+```bash
+docker pull mcr.microsoft.com/devcontainers/anaconda:3
+```
+
+### 3. 环境变量
 
 ```
 # .env
@@ -291,21 +298,25 @@ LANGSMITH_API_KEY=
 LANGSMITH_PROJECT=
 ```
 
-### 3. 审计单个项目
+### 4. 审计单个项目（检测环境是否配置完整）
 
 ```
 
 ```
 
+### 5. 跑测评
 
+```
+
+```
 
 # 踩过的坑
 
-- 强烈建议在linux环境下运行本项目，windows环境则使用WSL（大模型喜欢使用linux风格的路径，而windows下跑的codebadger则会要求使用windows风格的路径，导致路径不匹配报错）
+- 强烈建议在Linux环境下运行本项目，Windows环境则使用WSL（大模型喜欢使用Linux风格的路径，而Windows下跑的codebadger则会要求使用Windows风格的路径，导致路径不匹配报错）
 
-- 如果你的系统是windows且安装了docker desktop，请上网查询教程，禁止docker desktop接管WSL里的docker，否则你以为在WSL启动容器实际上还是在windows里跑的，会触发上一条提到的bug
+- 如果你的系统是Windows且安装了Docker Desktop，请上网查询教程，禁止Docker Desktop接管WSL里的Docker，否则你以为在WSL启动容器实际上还是在Windows里跑的，会触发上一条报错
 
-- 如果你的系统是windows且使用了如Clash Verge这种代理软件并使用了TUN模式，请把WSL网络模式调整成mirror，并使用`wsl --update --pre-release`把wsl更新到最新的预发行版本来解决诸如如下的报错：
+- 如果你的系统是Windows且使用了如Clash Verge这种代理软件并开启了TUN模式，请把WSL网络模式调整成Mirrored，并使用 `wsl --update --pre-release` 把WSL更新到最新的预发行版本来解决诸如以下的报错：
 
   ```
   wsl: 出现了内部错误。 
@@ -317,9 +328,9 @@ LANGSMITH_PROJECT=
 
 # Q&A
 
-Q：为什么代码中要禁用那么多工具
+Q：为什么agent中要禁用那么多工具
 
-A：因为那些工具非常容易会导致工具报错使整个agent停止并且他们都是与代码审计无关的工具，禁用并不会影响审计效果
+A：因为这些工具非常容易会引起报错导致整个agent停止，并且他们都是与代码审计无关的工具，禁用它们并不会影响最终的审计效果
 
 # 致谢
 
