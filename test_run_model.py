@@ -32,13 +32,14 @@ def show_directory_tree() -> str:
 
 async def main():
     model = ChatOpenAI(
-        model="gpt-5.5",
-        api_key=os.getenv("OPENAI_API_KEY"),
-        base_url=os.getenv("OPENAI_BASE_URL"),
-        reasoning_effort="high",
+        model="deepseek-v4-pro",
+        api_key=os.getenv("DeepSeek_API_KEY"),
+        base_url=os.getenv("DeepSeek_BASE_URL"),
+        reasoning_effort="max",
+        extra_body={"thinking": {"type": "enabled"}},
         streaming=True,
         stream_usage=True,
-        max_retries=3
+        max_retries=3,
     )
 
     client = MultiServerMCPClient(
@@ -200,7 +201,7 @@ async def main():
 
     result = await agent.ainvoke({
         "messages": [
-            {"role": "user", "content": user_prompt}
+            {"role": "user", "content": "你好"}
         ]
     })
 
@@ -235,7 +236,7 @@ if __name__ == "__main__":
 
     finally:
         if container is not None:
-            logger.info("开始清理Docker容器")
+            logger.info("开始清理Docker容器...")
             try:
                 logger.info("正在停止Docker容器...")
                 container.stop(timeout=20)

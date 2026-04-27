@@ -1,0 +1,290 @@
+[
+│   StructuredTool(
+│   │   name='pull_image',
+│   │   description='\n从指定的远程地址拉取镜像。\n参数：image_name（字符串）：镜像名称\n返回：镜像详细信息和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {'image_name': {'title': 'Image Name', 'type': 'string'}},
+│   │   │   'required': ['image_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631a160>
+│   ),
+│   StructuredTool(
+│   │   name='list_images',
+│   │   description='\n列出所有镜像。\n参数：无\n返回：镜像详细信息和 status\n',
+│   │   args_schema={'properties': {}, 'type': 'object'},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631b2e0>
+│   ),
+│   StructuredTool(
+│   │   name='create_container',
+│   │   description='\n创建容器。\n参数：image_name（字符串）：镜像名称\ncontainer_name（字符串）：容器名称\ncmd（字符串）：容器启动命令\nadd_caps（列表）：添加的capabilities\nhost_name（字符串）：主机名\nports_map（列表）：端口映射（例如：["8080:8080"]）\n返回：容器详细信息和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'image_name': {'title': 'Image Name', 'type': 'string'},
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
+│   │   │   │   'cmd': {'default': '', 'title': 'Cmd', 'type': 'string'},
+│   │   │   │   'add_caps': {
+│   │   │   │   │   'default': [],
+│   │   │   │   │   'items': {'type': 'string'},
+│   │   │   │   │   'title': 'Add Caps',
+│   │   │   │   │   'type': 'array'
+│   │   │   │   },
+│   │   │   │   'host_name': {'default': '', 'title': 'Host Name', 'type': 'string'},
+│   │   │   │   'ports_map': {
+│   │   │   │   │   'default': [],
+│   │   │   │   │   'items': {'type': 'string'},
+│   │   │   │   │   'title': 'Ports Map',
+│   │   │   │   │   'type': 'array'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['image_name', 'container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631a980>
+│   ),
+│   StructuredTool(
+│   │   name='run_container_by_compose',
+│   │   description='\n根据compose文件运行容器。\n参数：compose_file（字符串）：compose文件内容\nother_files（json字符串）：其他文件内容（包括Dockerfile或启动必需的脚本等），键名为文件名字符串，键值为文件内容字符串，没有则填空字符串\n返回：容器详细信息和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'compose_file': {'title': 'Compose File', 'type': 'string'},
+│   │   │   │   'other_files': {
+│   │   │   │   │   'default': '{}',
+│   │   │   │   │   'title': 'Other Files',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['compose_file'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631a340>
+│   ),
+│   StructuredTool(
+│   │   name='fetch_container_logs',
+│   │   description='\n获取容器日志。\n参数：container_name（字符串）：容器名称\n返回：日志和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631af20>
+│   ),
+│   StructuredTool(
+│   │   name='stop_container',
+│   │   description='\n停止容器。\n参数：container_name（字符串）：容器名称\n返回：状态\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194b80>
+│   ),
+│   StructuredTool(
+│   │   name='start_container',
+│   │   description='\n启动容器。\n参数：container_name（字符串）：容器名称\n返回：状态\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6195940>
+│   ),
+│   StructuredTool(
+│   │   name='restart_container',
+│   │   description='\n重启容器。\n参数：container_name（字符串）：容器名称\n返回：状态\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194ea0>
+│   ),
+│   StructuredTool(
+│   │   name='remove_container',
+│   │   description='\n删除容器。\n参数：container_name（字符串）：容器名称\n返回：状态\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6195440>
+│   ),
+│   StructuredTool(
+│   │   name='fetch_container_info',
+│   │   description='\n获取容器信息。\n参数：container_name（字符串）：容器名称\n返回：容器详细信息和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6195760>
+│   ),
+│   StructuredTool(
+│   │   name='create_exec_session',
+│   │   description='\n创建一个新的交互式 shell 会话。推荐使用。\n参数：container_name（字符串）：容器名称\n返回：包含 exec_session_id 的响应和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6195800>
+│   ),
+│   StructuredTool(
+│   │   name='execute_command_in_session',
+│   │   description='\n在已存在的 shell 会话中执行命令。推荐使用。\n参数：container_name（字符串）：容器名称\ncmd（字符串）：要执行的命令\nexec_session_id（字符串）：会话ID（由 create_exec_session 返回）\n返回：命令输出和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
+│   │   │   │   'cmd': {'title': 'Cmd', 'type': 'string'},
+│   │   │   │   'exec_session_id': {'title': 'Exec Session Id', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['container_name', 'cmd', 'exec_session_id'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b61951c0>
+│   ),
+│   StructuredTool(
+│   │   name='close_exec_session',
+│   │   description='\n关闭交互式 shell 会话。\n参数：container_name（字符串）：容器名称\nexec_session_id（字符串）：会话ID（由 create_exec_session 返回）\n返回：状态\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
+│   │   │   │   'exec_session_id': {'title': 'Exec Session Id', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['container_name', 'exec_session_id'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194f40>
+│   ),
+│   StructuredTool(
+│   │   name='get_more_session_output',
+│   │   description='\n获取更多的交互式 shell 会话输出。当你认为仍有输出未被获取时，可以调用此接口。\n参数：exec_session_id（字符串）：会话ID（由 create_exec_session 返回）\ncontainer_name（字符串）：容器名称\n返回：会话输出\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
+│   │   │   │   'exec_session_id': {'title': 'Exec Session Id', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['container_name', 'exec_session_id'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194fe0>
+│   ),
+│   StructuredTool(
+│   │   name='wait_for_seconds',
+│   │   description='\n等待指定的秒数。\n参数：seconds（整数）：等待的秒数\n返回：状态\n',
+│   │   args_schema={
+│   │   │   'properties': {'seconds': {'title': 'Seconds', 'type': 'integer'}},
+│   │   │   'required': ['seconds'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b61958a0>
+│   ),
+│   StructuredTool(
+│   │   name='create_network',
+│   │   description='\n创建一个新的 Docker 网络。\n参数：\n    network_name（字符串）：网络名称\n    is_internal（布尔值）：是否为内部网络\n    subnet（字符串）：子网，例如 "172.20.0.0/16"\n    ip_range（字符串）：IP 地址范围，例如 "172.20.10.0/24"，可选\n    gateway（字符串）：网关地址，例如 "172.20.0.1"，可选\n返回：网络创建结果和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'network_name': {'title': 'Network Name', 'type': 'string'},
+│   │   │   │   'is_internal': {'title': 'Is Internal', 'type': 'boolean'},
+│   │   │   │   'subnet': {'title': 'Subnet', 'type': 'string'},
+│   │   │   │   'ip_range': {'title': 'Ip Range', 'type': 'string'},
+│   │   │   │   'gateway': {'title': 'Gateway', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['network_name', 'is_internal', 'subnet', 'ip_range', 'gateway'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b61953a0>
+│   ),
+│   StructuredTool(
+│   │   name='delete_network',
+│   │   description='\n删除指定的 Docker 网络。\n参数：network_name（字符串）：网络名称\n返回：删除结果和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {'network_name': {'title': 'Network Name', 'type': 'string'}},
+│   │   │   'required': ['network_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6195620>
+│   ),
+│   StructuredTool(
+│   │   name='list_networks',
+│   │   description='\n列出所有 Docker 网络。\n参数：无\n返回：所有网络的详细信息和 status\n',
+│   │   args_schema={'properties': {}, 'type': 'object'},
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b61959e0>
+│   ),
+│   StructuredTool(
+│   │   name='network_info',
+│   │   description='\n获取指定 Docker 网络的信息。\n参数：network_name（字符串）：网络名称\n返回：网络详细信息和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {'network_name': {'title': 'Network Name', 'type': 'string'}},
+│   │   │   'required': ['network_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6195a80>
+│   ),
+│   StructuredTool(
+│   │   name='connect_network',
+│   │   description='\n将容器连接到指定网络。\n参数：\n    network_name（字符串）：网络名称\n    container_name（字符串）：容器名称\n    ipv4_address（字符串）：容器的IPv4地址，可选\n    如果不提供IPv4地址，则使用Docker自动分配的地址。\n返回：连接结果和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'network_name': {'title': 'Network Name', 'type': 'string'},
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
+│   │   │   │   'ipv4_address': {
+│   │   │   │   │   'default': '',
+│   │   │   │   │   'title': 'Ipv4 Address',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   }
+│   │   │   },
+│   │   │   'required': ['network_name', 'container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6195b20>
+│   ),
+│   StructuredTool(
+│   │   name='disconnect_network',
+│   │   description='\n将容器从指定网络断开连接。\n参数：\n    network_name（字符串）：网络名称\n    container_name（字符串）：容器名称\n返回：断开结果和 status\n',
+│   │   args_schema={
+│   │   │   'properties': {
+│   │   │   │   'network_name': {'title': 'Network Name', 'type': 'string'},
+│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'}
+│   │   │   },
+│   │   │   'required': ['network_name', 'container_name'],
+│   │   │   'type': 'object'
+│   │   },
+│   │   response_format='content_and_artifact',
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6195bc0>
+│   )
+]

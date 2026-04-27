@@ -5,7 +5,10 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'source_type': {'description': "Either 'local' or 'github'", 'type': 'string'},
+│   │   │   │   'source_type': {
+│   │   │   │   │   'description': "Either 'local' or 'github'",
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'source_path': {
 │   │   │   │   │   'description': 'For local: absolute path to source directory. For github: full GitHub URL (e.g., https://github.com/user/repo)',
 │   │   │   │   │   'type': 'string'
@@ -30,7 +33,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158ee6a20>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631b740>
 │   ),
 │   StructuredTool(
 │   │   name='get_cpg_status',
@@ -38,14 +41,17 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The hash identifier of the codebase', 'type': 'string'}
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The hash identifier of the codebase',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x72415933ac00>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631bc40>
 │   ),
 │   StructuredTool(
 │   │   name='remove_cpg',
@@ -53,7 +59,10 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The hash identifier of the codebase', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The hash identifier of the codebase',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'delete_files': {
 │   │   │   │   │   'default': False,
 │   │   │   │   │   'description': 'If True, permanently delete CPG and source files',
@@ -65,7 +74,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92480>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631a5c0>
 │   ),
 │   StructuredTool(
 │   │   name='list_methods',
@@ -73,7 +82,10 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'name_pattern': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
@@ -100,14 +112,18 @@
 │   │   │   │   │   'type': 'integer'
 │   │   │   │   },
 │   │   │   │   'page': {'default': 1, 'description': 'Page number', 'type': 'integer'},
-│   │   │   │   'page_size': {'default': 100, 'description': 'Number of results per page', 'type': 'integer'}
+│   │   │   │   'page_size': {
+│   │   │   │   │   'default': 100,
+│   │   │   │   │   'description': 'Number of results per page',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d931a0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631b600>
 │   ),
 │   StructuredTool(
 │   │   name='list_files',
@@ -115,13 +131,20 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'local_path': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
 │   │   │   │   │   'description': 'Optional path inside the codebase to list (relative to source root or absolute).'
 │   │   │   │   },
-│   │   │   │   'page': {'default': 1, 'description': 'Page number (1-indexed)', 'type': 'integer'},
+│   │   │   │   'page': {
+│   │   │   │   │   'default': 1,
+│   │   │   │   │   'description': 'Page number (1-indexed)',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
 │   │   │   │   'page_size': {
 │   │   │   │   │   'default': 100,
 │   │   │   │   │   'description': 'Number of files per page (default 100)',
@@ -133,7 +156,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8ae0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631a020>
 │   ),
 │   StructuredTool(
 │   │   name='get_method_source',
@@ -141,8 +164,14 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
-│   │   │   │   'method_name': {'description': 'Name of the method (can be regex pattern)', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
+│   │   │   │   'method_name': {
+│   │   │   │   │   'description': 'Name of the method (can be regex pattern)',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'filename': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
@@ -154,7 +183,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8c20>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631bec0>
 │   ),
 │   StructuredTool(
 │   │   name='list_calls',
@@ -162,7 +191,10 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'caller_pattern': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
@@ -179,14 +211,18 @@
 │   │   │   │   │   'type': 'integer'
 │   │   │   │   },
 │   │   │   │   'page': {'default': 1, 'description': 'Page number', 'type': 'integer'},
-│   │   │   │   'page_size': {'default': 100, 'description': 'Number of results per page', 'type': 'integer'}
+│   │   │   │   'page_size': {
+│   │   │   │   │   'default': 100,
+│   │   │   │   │   'description': 'Number of results per page',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db84a0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631bce0>
 │   ),
 │   StructuredTool(
 │   │   name='get_call_graph',
@@ -194,7 +230,10 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'method_name': {
 │   │   │   │   │   'description': 'Name of the method to analyze (can be regex)',
 │   │   │   │   │   'type': 'string'
@@ -215,7 +254,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9260>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631a2a0>
 │   ),
 │   StructuredTool(
 │   │   name='list_parameters',
@@ -223,15 +262,21 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
-│   │   │   │   'method_name': {'description': 'Name of the method (can be regex pattern)', 'type': 'string'}
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
+│   │   │   │   'method_name': {
+│   │   │   │   │   'description': 'Name of the method (can be regex pattern)',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash', 'method_name'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9300>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631a480>
 │   ),
 │   StructuredTool(
 │   │   name='get_codebase_summary',
@@ -239,14 +284,17 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'}
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9760>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631b9c0>
 │   ),
 │   StructuredTool(
 │   │   name='get_code_snippet',
@@ -254,20 +302,29 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'filename': {
 │   │   │   │   │   'description': 'Name of the file to retrieve code from (relative to source root)',
 │   │   │   │   │   'type': 'string'
 │   │   │   │   },
-│   │   │   │   'start_line': {'description': 'Starting line number (1-indexed)', 'type': 'integer'},
-│   │   │   │   'end_line': {'description': 'Ending line number (1-indexed, inclusive)', 'type': 'integer'}
+│   │   │   │   'start_line': {
+│   │   │   │   │   'description': 'Starting line number (1-indexed)',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'end_line': {
+│   │   │   │   │   'description': 'Ending line number (1-indexed, inclusive)',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash', 'filename', 'start_line', 'end_line'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db89a0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6319f80>
 │   ),
 │   StructuredTool(
 │   │   name='run_cpgql_query',
@@ -275,8 +332,14 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
-│   │   │   │   'query': {'description': 'The CPGQL query string to execute', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
+│   │   │   │   'query': {
+│   │   │   │   │   'description': 'The CPGQL query string to execute',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'timeout': {
 │   │   │   │   │   'anyOf': [{'type': 'integer'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
@@ -293,7 +356,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8e00>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631b880>
 │   ),
 │   StructuredTool(
 │   │   name='find_bounds_checks',
@@ -301,7 +364,10 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'buffer_access_location': {
 │   │   │   │   │   'description': "Location of buffer access in format 'filename:line' (e.g., 'parser.c:3393')",
 │   │   │   │   │   'type': 'string'
@@ -312,7 +378,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8040>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194040>
 │   ),
 │   StructuredTool(
 │   │   name='get_cpgql_syntax_help',
@@ -320,7 +386,7 @@
 │   │   args_schema={'additionalProperties': False, 'properties': {}, 'type': 'object'},
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9620>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194180>
 │   ),
 │   StructuredTool(
 │   │   name='get_cfg',
@@ -328,8 +394,14 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
-│   │   │   │   'method_name': {'description': 'Name of the method (can be regex pattern)', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
+│   │   │   │   'method_name': {
+│   │   │   │   │   'description': 'Name of the method (can be regex pattern)',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'max_nodes': {
 │   │   │   │   │   'default': 100,
 │   │   │   │   │   'description': 'Maximum CFG nodes to return (for large methods)',
@@ -341,7 +413,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db93a0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194220>
 │   ),
 │   StructuredTool(
 │   │   name='get_type_definition',
@@ -349,19 +421,26 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'type_name': {
 │   │   │   │   │   'description': "Type name pattern (regex, e.g., '.*Buffer.*')",
 │   │   │   │   │   'type': 'string'
 │   │   │   │   },
-│   │   │   │   'limit': {'default': 10, 'description': 'Maximum types to return', 'type': 'integer'}
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 10,
+│   │   │   │   │   'description': 'Maximum types to return',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash', 'type_name'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9440>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b61942c0>
 │   ),
 │   StructuredTool(
 │   │   name='get_macro_expansion',
@@ -369,8 +448,14 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
-│   │   │   │   'filename': {'description': 'Filename to search (partial match)', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
+│   │   │   │   'filename': {
+│   │   │   │   │   'description': 'Filename to search (partial match)',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'line_number': {
 │   │   │   │   │   'anyOf': [{'type': 'integer'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
@@ -382,7 +467,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8900>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194360>
 │   ),
 │   StructuredTool(
 │   │   name='discover_fixed_vulnerabilities',
@@ -390,7 +475,10 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'limit': {
 │   │   │   │   │   'default': 500,
 │   │   │   │   │   'description': 'Maximum number of commits to analyze',
@@ -407,7 +495,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9580>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194400>
 │   ),
 │   StructuredTool(
 │   │   name='find_taint_sources',
@@ -415,7 +503,10 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'language': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
@@ -442,7 +533,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8fe0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b61944a0>
 │   ),
 │   StructuredTool(
 │   │   name='find_taint_sinks',
@@ -450,7 +541,10 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'language': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
@@ -477,7 +571,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9120>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194540>
 │   ),
 │   StructuredTool(
 │   │   name='find_taint_flows',
@@ -485,7 +579,10 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'source_location': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
@@ -506,7 +603,11 @@
 │   │   │   │   │   'default': None,
 │   │   │   │   │   'description': '(Manual mode) Node ID from find_taint_sinks output'
 │   │   │   │   },
-│   │   │   │   'max_results': {'default': 20, 'description': 'Maximum flows to return', 'type': 'integer'},
+│   │   │   │   'max_results': {
+│   │   │   │   │   'default': 20,
+│   │   │   │   │   'description': 'Maximum flows to return',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
 │   │   │   │   'timeout': {
 │   │   │   │   │   'default': 120,
 │   │   │   │   │   'description': 'Query timeout in seconds (default 120 for manual, 300 for auto)',
@@ -563,7 +664,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db94e0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b61945e0>
 │   ),
 │   StructuredTool(
 │   │   name='get_program_slice',
@@ -571,7 +672,10 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'location': {
 │   │   │   │   │   'description': "'filename:line' or 'filename:line:call_name'. Example: 'main.c:42' or 'main.c:42:memcpy'",
 │   │   │   │   │   'type': 'string'
@@ -602,7 +706,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8b80>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194680>
 │   ),
 │   StructuredTool(
 │   │   name='get_variable_flow',
@@ -620,7 +724,7 @@
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db85e0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194720>
 │   ),
 │   StructuredTool(
 │   │   name='find_use_after_free',
@@ -628,21 +732,32 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'filename': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
 │   │   │   │   │   'description': 'Optional filename regex to filter results'
 │   │   │   │   },
-│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
-│   │   │   │   'timeout': {'default': 300, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 100,
+│   │   │   │   │   'description': 'Maximum results to return',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'timeout': {
+│   │   │   │   │   'default': 300,
+│   │   │   │   │   'description': 'Query timeout in seconds',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9b20>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b61947c0>
 │   ),
 │   StructuredTool(
 │   │   name='find_double_free',
@@ -650,21 +765,32 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'filename': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
 │   │   │   │   │   'description': 'Optional filename regex to filter results'
 │   │   │   │   },
-│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
-│   │   │   │   'timeout': {'default': 300, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 100,
+│   │   │   │   │   'description': 'Maximum results to return',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'timeout': {
+│   │   │   │   │   'default': 300,
+│   │   │   │   │   'description': 'Query timeout in seconds',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9bc0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194860>
 │   ),
 │   StructuredTool(
 │   │   name='find_null_pointer_deref',
@@ -672,21 +798,32 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'filename': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
 │   │   │   │   │   'description': 'Optional filename regex to filter results'
 │   │   │   │   },
-│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
-│   │   │   │   'timeout': {'default': 300, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 100,
+│   │   │   │   │   'description': 'Maximum results to return',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'timeout': {
+│   │   │   │   │   'default': 300,
+│   │   │   │   │   'description': 'Query timeout in seconds',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9c60>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194900>
 │   ),
 │   StructuredTool(
 │   │   name='find_integer_overflow',
@@ -694,21 +831,32 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'filename': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
 │   │   │   │   │   'description': 'Optional filename regex to filter results'
 │   │   │   │   },
-│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
-│   │   │   │   'timeout': {'default': 300, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 100,
+│   │   │   │   │   'description': 'Maximum results to return',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'timeout': {
+│   │   │   │   │   'default': 300,
+│   │   │   │   │   'description': 'Query timeout in seconds',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9d00>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b61949a0>
 │   ),
 │   StructuredTool(
 │   │   name='find_format_string_vulns',
@@ -716,21 +864,32 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'filename': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
 │   │   │   │   │   'description': 'Optional filename regex to filter results'
 │   │   │   │   },
-│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
-│   │   │   │   'timeout': {'default': 120, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 100,
+│   │   │   │   │   'description': 'Maximum results to return',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'timeout': {
+│   │   │   │   │   'default': 120,
+│   │   │   │   │   'description': 'Query timeout in seconds',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9da0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194a40>
 │   ),
 │   StructuredTool(
 │   │   name='find_heap_overflow',
@@ -738,21 +897,32 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'filename': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
 │   │   │   │   │   'description': 'Optional filename regex to filter results'
 │   │   │   │   },
-│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
-│   │   │   │   'timeout': {'default': 240, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 100,
+│   │   │   │   │   'description': 'Maximum results to return',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'timeout': {
+│   │   │   │   │   'default': 240,
+│   │   │   │   │   'description': 'Query timeout in seconds',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9e40>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6194ae0>
 │   ),
 │   StructuredTool(
 │   │   name='find_stack_overflow',
@@ -760,21 +930,32 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'filename': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
 │   │   │   │   │   'description': 'Optional filename regex to filter results'
 │   │   │   │   },
-│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
-│   │   │   │   'timeout': {'default': 240, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 100,
+│   │   │   │   │   'description': 'Maximum results to return',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'timeout': {
+│   │   │   │   │   'default': 240,
+│   │   │   │   │   'description': 'Query timeout in seconds',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158f1fe20>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b62b7920>
 │   ),
 │   StructuredTool(
 │   │   name='find_toctou',
@@ -782,21 +963,32 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'filename': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
 │   │   │   │   │   'description': 'Optional filename regex to filter results'
 │   │   │   │   },
-│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
-│   │   │   │   'timeout': {'default': 240, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 100,
+│   │   │   │   │   'description': 'Maximum results to return',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'timeout': {
+│   │   │   │   │   'default': 240,
+│   │   │   │   │   'description': 'Query timeout in seconds',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93240>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631a200>
 │   ),
 │   StructuredTool(
 │   │   name='find_uninitialized_reads',
@@ -804,21 +996,32 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'The codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'The codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'filename': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
 │   │   │   │   │   'description': 'Optional filename regex to filter results'
 │   │   │   │   },
-│   │   │   │   'limit': {'default': 100, 'description': 'Maximum results to return', 'type': 'integer'},
-│   │   │   │   'timeout': {'default': 240, 'description': 'Query timeout in seconds', 'type': 'integer'}
+│   │   │   │   'limit': {
+│   │   │   │   │   'default': 100,
+│   │   │   │   │   'description': 'Maximum results to return',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   },
+│   │   │   │   'timeout': {
+│   │   │   │   │   'default': 240,
+│   │   │   │   │   'description': 'Query timeout in seconds',
+│   │   │   │   │   'type': 'integer'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['codebase_hash'],
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={'_meta': {'fastmcp': {'tags': []}}},
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92fc0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631bd80>
 │   ),
 │   StructuredTool(
 │   │   name='find_command_injection_sinks',
@@ -826,7 +1029,10 @@
 │   │   args_schema={
 │   │   │   'additionalProperties': False,
 │   │   │   'properties': {
-│   │   │   │   'codebase_hash': {'description': 'Codebase hash from generate_cpg', 'type': 'string'},
+│   │   │   │   'codebase_hash': {
+│   │   │   │   │   'description': 'Codebase hash from generate_cpg',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'language': {
 │   │   │   │   │   'anyOf': [{'type': 'string'}, {'type': 'null'}],
 │   │   │   │   │   'default': None,
@@ -849,10 +1055,20 @@
 │   │   │   'type': 'object'
 │   │   },
 │   │   metadata={
-│   │   │   '_meta': {'fastmcp': {'tags': ['CWE-78', 'command-injection', 'injection', 'security', 'taint']}}
+│   │   │   '_meta': {
+│   │   │   │   'fastmcp': {
+│   │   │   │   │   'tags': [
+│   │   │   │   │   │   'CWE-78',
+│   │   │   │   │   │   'command-injection',
+│   │   │   │   │   │   'injection',
+│   │   │   │   │   │   'security',
+│   │   │   │   │   │   'taint'
+│   │   │   │   │   ]
+│   │   │   │   }
+│   │   │   }
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92de0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631bba0>
 │   ),
 │   StructuredTool(
 │   │   name='codeql_bqrs_decode',
@@ -881,7 +1097,7 @@
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93060>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631a660>
 │   ),
 │   StructuredTool(
 │   │   name='codeql_bqrs_info',
@@ -901,7 +1117,7 @@
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93ba0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631a700>
 │   ),
 │   StructuredTool(
 │   │   name='codeql_bqrs_interpret',
@@ -912,7 +1128,14 @@
 │   │   │   │   'file': {'type': 'string', 'description': 'The BQRS file to interpret'},
 │   │   │   │   'format': {
 │   │   │   │   │   'type': 'string',
-│   │   │   │   │   'enum': ['csv', 'sarif-latest', 'sarifv2.1.0', 'graphtext', 'dgml', 'dot'],
+│   │   │   │   │   'enum': [
+│   │   │   │   │   │   'csv',
+│   │   │   │   │   │   'sarif-latest',
+│   │   │   │   │   │   'sarifv2.1.0',
+│   │   │   │   │   │   'graphtext',
+│   │   │   │   │   │   'dgml',
+│   │   │   │   │   │   'dot'
+│   │   │   │   │   ],
 │   │   │   │   │   'description': 'Output format: csv (comma-separated), sarif-latest/sarifv2.1.0 (SARIF), graphtext/dgml/dot (graph formats, only for @kind graph queries)'
 │   │   │   │   },
 │   │   │   │   'output': {'type': 'string', 'description': 'Output file path'},
@@ -977,7 +1200,7 @@
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93560>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b626e520>
 │   ),
 │   StructuredTool(
 │   │   name='codeql_database_analyze',
@@ -985,8 +1208,14 @@
 │   │   args_schema={
 │   │   │   'type': 'object',
 │   │   │   'properties': {
-│   │   │   │   'database': {'type': 'string', 'description': 'Path to the CodeQL database directory.'},
-│   │   │   │   'queries': {'type': 'string', 'description': 'Query, query suite, or query pack to analyze.'},
+│   │   │   │   'database': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Path to the CodeQL database directory.'
+│   │   │   │   },
+│   │   │   │   'queries': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Query, query suite, or query pack to analyze.'
+│   │   │   │   },
 │   │   │   │   'format': {
 │   │   │   │   │   'type': 'string',
 │   │   │   │   │   'enum': ['csv', 'json', 'sarif-latest', 'sarifv2.1.0'],
@@ -1006,7 +1235,7 @@
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92b60>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b626e5c0>
 │   ),
 │   StructuredTool(
 │   │   name='codeql_database_create',
@@ -1035,14 +1264,17 @@
 │   │   │   │   │   'type': 'string',
 │   │   │   │   │   'description': 'Build command only for compiled languages with build-mode=manual. Omit for Python/JavaScript or build-mode=none.'
 │   │   │   │   },
-│   │   │   │   'overwrite': {'type': 'boolean', 'description': 'Overwrite existing database if it exists'}
+│   │   │   │   'overwrite': {
+│   │   │   │   │   'type': 'boolean',
+│   │   │   │   │   'description': 'Overwrite existing database if it exists'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['database', 'language', 'source-root'],
 │   │   │   'additionalProperties': False,
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dba2a0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b68c36a0>
 │   ),
 │   StructuredTool(
 │   │   name='codeql_pack_install',
@@ -1054,14 +1286,20 @@
 │   │   │   │   │   'type': 'string',
 │   │   │   │   │   'description': 'Directory containing qlpack.yml (default: current)'
 │   │   │   │   },
-│   │   │   │   'force': {'type': 'boolean', 'description': 'Force reinstall of dependencies'},
-│   │   │   │   'no-strict-mode': {'type': 'boolean', 'description': 'Allow non-strict dependency resolution'}
+│   │   │   │   'force': {
+│   │   │   │   │   'type': 'boolean',
+│   │   │   │   │   'description': 'Force reinstall of dependencies'
+│   │   │   │   },
+│   │   │   │   'no-strict-mode': {
+│   │   │   │   │   'type': 'boolean',
+│   │   │   │   │   'description': 'Allow non-strict dependency resolution'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'additionalProperties': False,
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dba3e0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6195260>
 │   ),
 │   StructuredTool(
 │   │   name='codeql_query_compile',
@@ -1084,7 +1322,7 @@
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dba5c0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6195300>
 │   ),
 │   StructuredTool(
 │   │   name='codeql_query_run',
@@ -1096,14 +1334,17 @@
 │   │   │   │   │   'type': 'string',
 │   │   │   │   │   'description': 'Path to a .ql file to run. Do not pass queryName, queryLanguage, queryPack, sourceFiles, sourceFunction, or targetFunction with this mode.'
 │   │   │   │   },
-│   │   │   │   'database': {'type': 'string', 'description': 'Path to the CodeQL database directory.'}
+│   │   │   │   'database': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Path to the CodeQL database directory.'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['query', 'database'],
 │   │   │   'additionalProperties': False,
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dba700>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b61954e0>
 │   ),
 │   StructuredTool(
 │   │   name='codeql_resolve_database',
@@ -1111,7 +1352,10 @@
 │   │   args_schema={
 │   │   │   'type': 'object',
 │   │   │   'properties': {
-│   │   │   │   'database': {'type': 'string', 'description': 'Database path to resolve'},
+│   │   │   │   'database': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Database path to resolve'
+│   │   │   │   },
 │   │   │   │   'format': {
 │   │   │   │   │   'type': 'string',
 │   │   │   │   │   'enum': ['text', 'json', 'betterjson'],
@@ -1123,7 +1367,7 @@
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dba7a0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6195580>
 │   ),
 │   StructuredTool(
 │   │   name='codeql_resolve_languages',
@@ -1141,7 +1385,7 @@
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dba8e0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b61956c0>
 │   ),
 │   StructuredTool(
 │   │   name='read_database_source',
@@ -1149,7 +1393,10 @@
 │   │   args_schema={
 │   │   │   'type': 'object',
 │   │   │   'properties': {
-│   │   │   │   'databasePath': {'type': 'string', 'description': 'Path to the CodeQL database directory'},
+│   │   │   │   'databasePath': {
+│   │   │   │   │   'type': 'string',
+│   │   │   │   │   'description': 'Path to the CodeQL database directory'
+│   │   │   │   },
 │   │   │   │   'endLine': {
 │   │   │   │   │   'type': 'integer',
 │   │   │   │   │   'exclusiveMinimum': 0,
@@ -1179,7 +1426,7 @@
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dbb100>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6195ee0>
 │   ),
 │   StructuredTool(
 │   │   name='audit_store_findings',
@@ -1194,7 +1441,10 @@
 │   │   │   │   │   'items': {
 │   │   │   │   │   │   'type': 'object',
 │   │   │   │   │   │   'properties': {
-│   │   │   │   │   │   │   'sourceLocation': {'type': 'string', 'description': 'File path of the finding.'},
+│   │   │   │   │   │   │   'sourceLocation': {
+│   │   │   │   │   │   │   │   'type': 'string',
+│   │   │   │   │   │   │   │   'description': 'File path of the finding.'
+│   │   │   │   │   │   │   },
 │   │   │   │   │   │   │   'line': {
 │   │   │   │   │   │   │   │   'type': 'integer',
 │   │   │   │   │   │   │   │   'minimum': 1,
@@ -1204,7 +1454,10 @@
 │   │   │   │   │   │   │   │   'type': 'string',
 │   │   │   │   │   │   │   │   'description': 'Type of the source (e.g. "RemoteFlowSource").'
 │   │   │   │   │   │   │   },
-│   │   │   │   │   │   │   'description': {'type': 'string', 'description': 'Human-readable description.'}
+│   │   │   │   │   │   │   'description': {
+│   │   │   │   │   │   │   │   'type': 'string',
+│   │   │   │   │   │   │   │   'description': 'Human-readable description.'
+│   │   │   │   │   │   │   }
 │   │   │   │   │   │   },
 │   │   │   │   │   │   'required': ['sourceLocation', 'line', 'sourceType'],
 │   │   │   │   │   │   'additionalProperties': False
@@ -1217,7 +1470,7 @@
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dbb9c0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b61967a0>
 │   ),
 │   StructuredTool(
 │   │   name='audit_list_findings',
@@ -1239,7 +1492,7 @@
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dbba60>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6196840>
 │   ),
 │   StructuredTool(
 │   │   name='audit_add_notes',
@@ -1276,7 +1529,7 @@
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dbbb00>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b61968e0>
 │   ),
 │   StructuredTool(
 │   │   name='audit_clear_repo',
@@ -1292,21 +1545,29 @@
 │   │   │   '$schema': 'http://json-schema.org/draft-07/schema#'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158dbbba0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b6196980>
 │   ),
 │   StructuredTool(
 │   │   name='semgrep_rule_schema',
 │   │   description='\n    Get the schema for a Semgrep rule\n\n    Use this tool when you need to:\n      - get the schema required to write a Semgrep rule\n      - need to see what fields are available for a Semgrep rule\n      - verify what fields are available for a Semgrep rule\n      - verify the syntax for a Semgrep rule is correct\n    ',
-│   │   args_schema={'properties': {}, 'title': 'semgrep_rule_schemaArguments', 'type': 'object'},
+│   │   args_schema={
+│   │   │   'properties': {},
+│   │   │   'title': 'semgrep_rule_schemaArguments',
+│   │   │   'type': 'object'
+│   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d936a0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631a3e0>
 │   ),
 │   StructuredTool(
 │   │   name='get_supported_languages',
 │   │   description='\n    Returns a list of supported languages by Semgrep\n\n    Only use this tool if you are not sure what languages Semgrep supports.\n    ',
-│   │   args_schema={'properties': {}, 'title': 'get_supported_languagesArguments', 'type': 'object'},
+│   │   args_schema={
+│   │   │   'properties': {},
+│   │   │   'title': 'get_supported_languagesArguments',
+│   │   │   'type': 'object'
+│   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93a60>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631aac0>
 │   ),
 │   StructuredTool(
 │   │   name='semgrep_scan_with_custom_rule',
@@ -1315,7 +1576,11 @@
 │   │   │   '$defs': {
 │   │   │   │   'CodeFile': {
 │   │   │   │   │   'properties': {
-│   │   │   │   │   │   'path': {'description': 'Path of the code file', 'title': 'Path', 'type': 'string'},
+│   │   │   │   │   │   'path': {
+│   │   │   │   │   │   │   'description': 'Path of the code file',
+│   │   │   │   │   │   │   'title': 'Path',
+│   │   │   │   │   │   │   'type': 'string'
+│   │   │   │   │   │   },
 │   │   │   │   │   │   'content': {
 │   │   │   │   │   │   │   'description': 'Content of the code file',
 │   │   │   │   │   │   │   'title': 'Content',
@@ -1334,14 +1599,18 @@
 │   │   │   │   │   'title': 'Code Files',
 │   │   │   │   │   'type': 'array'
 │   │   │   │   },
-│   │   │   │   'rule': {'description': 'Semgrep YAML rule string', 'title': 'Rule', 'type': 'string'}
+│   │   │   │   'rule': {
+│   │   │   │   │   'description': 'Semgrep YAML rule string',
+│   │   │   │   │   'title': 'Rule',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   }
 │   │   │   },
 │   │   │   'required': ['code_files', 'rule'],
 │   │   │   'title': 'semgrep_scan_with_custom_ruleArguments',
 │   │   │   'type': 'object'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93ce0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631b380>
 │   ),
 │   StructuredTool(
 │   │   name='semgrep_scan',
@@ -1374,14 +1643,18 @@
 │   │   │   'type': 'object'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93880>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631ab60>
 │   ),
 │   StructuredTool(
 │   │   name='get_abstract_syntax_tree',
 │   │   description='\n    Returns the Abstract Syntax Tree (AST) for the provided code file in JSON format\n\n    Use this tool when you need to:\n      - get the Abstract Syntax Tree (AST) for the provided code file      - get the AST of a file\n      - understand the structure of the code in a more granular way\n      - see what a parser sees in the code\n    ',
 │   │   args_schema={
 │   │   │   'properties': {
-│   │   │   │   'code': {'description': 'The code to get the AST for', 'title': 'Code', 'type': 'string'},
+│   │   │   │   'code': {
+│   │   │   │   │   'description': 'The code to get the AST for',
+│   │   │   │   │   'title': 'Code',
+│   │   │   │   │   'type': 'string'
+│   │   │   │   },
 │   │   │   │   'language': {
 │   │   │   │   │   'description': 'The programming language of the code',
 │   │   │   │   │   'title': 'Language',
@@ -1393,267 +1666,6 @@
 │   │   │   'type': 'object'
 │   │   },
 │   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158cbc7c0>
-│   ),
-│   StructuredTool(
-│   │   name='pull_image',
-│   │   description='\n从指定的远程地址拉取镜像。\n参数：image_name（字符串）：镜像名称\n返回：镜像详细信息和 status\n',
-│   │   args_schema={
-│   │   │   'properties': {'image_name': {'title': 'Image Name', 'type': 'string'}},
-│   │   │   'required': ['image_name'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92520>
-│   ),
-│   StructuredTool(
-│   │   name='list_images',
-│   │   description='\n列出所有镜像。\n参数：无\n返回：镜像详细信息和 status\n',
-│   │   args_schema={'properties': {}, 'type': 'object'},
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d932e0>
-│   ),
-│   StructuredTool(
-│   │   name='create_container',
-│   │   description='\n创建容器。\n参数：image_name（字符串）：镜像名称\ncontainer_name（字符串）：容器名称\ncmd（字符串）：容器启动命令\nadd_caps（列表）：添加的capabilities\nhost_name（字符串）：主机名\nports_map（列表）：端口映射（例如：["8080:8080"]）\n返回：容器详细信息和 status\n',
-│   │   args_schema={
-│   │   │   'properties': {
-│   │   │   │   'image_name': {'title': 'Image Name', 'type': 'string'},
-│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
-│   │   │   │   'cmd': {'default': '', 'title': 'Cmd', 'type': 'string'},
-│   │   │   │   'add_caps': {'default': [], 'items': {'type': 'string'}, 'title': 'Add Caps', 'type': 'array'},
-│   │   │   │   'host_name': {'default': '', 'title': 'Host Name', 'type': 'string'},
-│   │   │   │   'ports_map': {
-│   │   │   │   │   'default': [],
-│   │   │   │   │   'items': {'type': 'string'},
-│   │   │   │   │   'title': 'Ports Map',
-│   │   │   │   │   'type': 'array'
-│   │   │   │   }
-│   │   │   },
-│   │   │   'required': ['image_name', 'container_name'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92660>
-│   ),
-│   StructuredTool(
-│   │   name='run_container_by_compose',
-│   │   description='\n根据compose文件运行容器。\n参数：compose_file（字符串）：compose文件内容\nother_files（json字符串）：其他文件内容（包括Dockerfile或启动必需的脚本等），键名为文件名字符串，键值为文件内容字符串，没有则填空字符串\n返回：容器详细信息和 status\n',
-│   │   args_schema={
-│   │   │   'properties': {
-│   │   │   │   'compose_file': {'title': 'Compose File', 'type': 'string'},
-│   │   │   │   'other_files': {'default': '{}', 'title': 'Other Files', 'type': 'string'}
-│   │   │   },
-│   │   │   'required': ['compose_file'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8680>
-│   ),
-│   StructuredTool(
-│   │   name='fetch_container_logs',
-│   │   description='\n获取容器日志。\n参数：container_name（字符串）：容器名称\n返回：日志和 status\n',
-│   │   args_schema={
-│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
-│   │   │   'required': ['container_name'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8360>
-│   ),
-│   StructuredTool(
-│   │   name='stop_container',
-│   │   description='\n停止容器。\n参数：container_name（字符串）：容器名称\n返回：状态\n',
-│   │   args_schema={
-│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
-│   │   │   'required': ['container_name'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db80e0>
-│   ),
-│   StructuredTool(
-│   │   name='start_container',
-│   │   description='\n启动容器。\n参数：container_name（字符串）：容器名称\n返回：状态\n',
-│   │   args_schema={
-│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
-│   │   │   'required': ['container_name'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8720>
-│   ),
-│   StructuredTool(
-│   │   name='restart_container',
-│   │   description='\n重启容器。\n参数：container_name（字符串）：容器名称\n返回：状态\n',
-│   │   args_schema={
-│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
-│   │   │   'required': ['container_name'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8ea0>
-│   ),
-│   StructuredTool(
-│   │   name='remove_container',
-│   │   description='\n删除容器。\n参数：container_name（字符串）：容器名称\n返回：状态\n',
-│   │   args_schema={
-│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
-│   │   │   'required': ['container_name'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db91c0>
-│   ),
-│   StructuredTool(
-│   │   name='fetch_container_info',
-│   │   description='\n获取容器信息。\n参数：container_name（字符串）：容器名称\n返回：容器详细信息和 status\n',
-│   │   args_schema={
-│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
-│   │   │   'required': ['container_name'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8cc0>
-│   ),
-│   StructuredTool(
-│   │   name='create_exec_session',
-│   │   description='\n创建一个新的交互式 shell 会话。推荐使用。\n参数：container_name（字符串）：容器名称\n返回：包含 exec_session_id 的响应和 status\n',
-│   │   args_schema={
-│   │   │   'properties': {'container_name': {'title': 'Container Name', 'type': 'string'}},
-│   │   │   'required': ['container_name'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db87c0>
-│   ),
-│   StructuredTool(
-│   │   name='execute_command_in_session',
-│   │   description='\n在已存在的 shell 会话中执行命令。推荐使用。\n参数：container_name（字符串）：容器名称\ncmd（字符串）：要执行的命令\nexec_session_id（字符串）：会话ID（由 create_exec_session 返回）\n返回：命令输出和 status\n',
-│   │   args_schema={
-│   │   │   'properties': {
-│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
-│   │   │   │   'cmd': {'title': 'Cmd', 'type': 'string'},
-│   │   │   │   'exec_session_id': {'title': 'Exec Session Id', 'type': 'string'}
-│   │   │   },
-│   │   │   'required': ['container_name', 'cmd', 'exec_session_id'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db96c0>
-│   ),
-│   StructuredTool(
-│   │   name='close_exec_session',
-│   │   description='\n关闭交互式 shell 会话。\n参数：container_name（字符串）：容器名称\nexec_session_id（字符串）：会话ID（由 create_exec_session 返回）\n返回：状态\n',
-│   │   args_schema={
-│   │   │   'properties': {
-│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
-│   │   │   │   'exec_session_id': {'title': 'Exec Session Id', 'type': 'string'}
-│   │   │   },
-│   │   │   'required': ['container_name', 'exec_session_id'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8540>
-│   ),
-│   StructuredTool(
-│   │   name='get_more_session_output',
-│   │   description='\n获取更多的交互式 shell 会话输出。当你认为仍有输出未被获取时，可以调用此接口。\n参数：exec_session_id（字符串）：会话ID（由 create_exec_session 返回）\ncontainer_name（字符串）：容器名称\n返回：会话输出\n',
-│   │   args_schema={
-│   │   │   'properties': {
-│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
-│   │   │   │   'exec_session_id': {'title': 'Exec Session Id', 'type': 'string'}
-│   │   │   },
-│   │   │   'required': ['container_name', 'exec_session_id'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db9a80>
-│   ),
-│   StructuredTool(
-│   │   name='wait_for_seconds',
-│   │   description='\n等待指定的秒数。\n参数：seconds（整数）：等待的秒数\n返回：状态\n',
-│   │   args_schema={
-│   │   │   'properties': {'seconds': {'title': 'Seconds', 'type': 'integer'}},
-│   │   │   'required': ['seconds'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d93100>
-│   ),
-│   StructuredTool(
-│   │   name='create_network',
-│   │   description='\n创建一个新的 Docker 网络。\n参数：\n    network_name（字符串）：网络名称\n    is_internal（布尔值）：是否为内部网络\n    subnet（字符串）：子网，例如 "172.20.0.0/16"\n    ip_range（字符串）：IP 地址范围，例如 "172.20.10.0/24"，可选\n    gateway（字符串）：网关地址，例如 "172.20.0.1"，可选\n返回：网络创建结果和 status\n',
-│   │   args_schema={
-│   │   │   'properties': {
-│   │   │   │   'network_name': {'title': 'Network Name', 'type': 'string'},
-│   │   │   │   'is_internal': {'title': 'Is Internal', 'type': 'boolean'},
-│   │   │   │   'subnet': {'title': 'Subnet', 'type': 'string'},
-│   │   │   │   'ip_range': {'title': 'Ip Range', 'type': 'string'},
-│   │   │   │   'gateway': {'title': 'Gateway', 'type': 'string'}
-│   │   │   },
-│   │   │   'required': ['network_name', 'is_internal', 'subnet', 'ip_range', 'gateway'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92f20>
-│   ),
-│   StructuredTool(
-│   │   name='delete_network',
-│   │   description='\n删除指定的 Docker 网络。\n参数：network_name（字符串）：网络名称\n返回：删除结果和 status\n',
-│   │   args_schema={
-│   │   │   'properties': {'network_name': {'title': 'Network Name', 'type': 'string'}},
-│   │   │   'required': ['network_name'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158d92d40>
-│   ),
-│   StructuredTool(
-│   │   name='list_networks',
-│   │   description='\n列出所有 Docker 网络。\n参数：无\n返回：所有网络的详细信息和 status\n',
-│   │   args_schema={'properties': {}, 'type': 'object'},
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8180>
-│   ),
-│   StructuredTool(
-│   │   name='network_info',
-│   │   description='\n获取指定 Docker 网络的信息。\n参数：network_name（字符串）：网络名称\n返回：网络详细信息和 status\n',
-│   │   args_schema={
-│   │   │   'properties': {'network_name': {'title': 'Network Name', 'type': 'string'}},
-│   │   │   'required': ['network_name'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8f40>
-│   ),
-│   StructuredTool(
-│   │   name='connect_network',
-│   │   description='\n将容器连接到指定网络。\n参数：\n    network_name（字符串）：网络名称\n    container_name（字符串）：容器名称\n    ipv4_address（字符串）：容器的IPv4地址，可选\n    如果不提供IPv4地址，则使用Docker自动分配的地址。\n返回：连接结果和 status\n',
-│   │   args_schema={
-│   │   │   'properties': {
-│   │   │   │   'network_name': {'title': 'Network Name', 'type': 'string'},
-│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'},
-│   │   │   │   'ipv4_address': {'default': '', 'title': 'Ipv4 Address', 'type': 'string'}
-│   │   │   },
-│   │   │   'required': ['network_name', 'container_name'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db8d60>
-│   ),
-│   StructuredTool(
-│   │   name='disconnect_network',
-│   │   description='\n将容器从指定网络断开连接。\n参数：\n    network_name（字符串）：网络名称\n    container_name（字符串）：容器名称\n返回：断开结果和 status\n',
-│   │   args_schema={
-│   │   │   'properties': {
-│   │   │   │   'network_name': {'title': 'Network Name', 'type': 'string'},
-│   │   │   │   'container_name': {'title': 'Container Name', 'type': 'string'}
-│   │   │   },
-│   │   │   'required': ['network_name', 'container_name'],
-│   │   │   'type': 'object'
-│   │   },
-│   │   response_format='content_and_artifact',
-│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x724158db98a0>
+│   │   coroutine=<function convert_mcp_tool_to_langchain_tool.<locals>.call_tool at 0x7848b631b1a0>
 │   )
 ]

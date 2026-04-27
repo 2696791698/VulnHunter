@@ -248,10 +248,11 @@ def build_blackboard_middleware() -> list:
 
 def build_model() -> ChatOpenAI:
     return ChatOpenAI(
-        model="gpt-5.5",
+        model="gpt-5.4",
         api_key=os.getenv("OPENAI_API_KEY"),
         base_url=os.getenv("OPENAI_BASE_URL"),
         reasoning_effort="xhigh",
+        # extra_body={"thinking": {"type": "disabled"}},
         streaming=True,
         stream_usage=True,
         max_retries=3,
@@ -267,6 +268,12 @@ async def get_docker_tools():
             },
         }
     )
+
+    tools = await client.get_tools()
+
+    with open(f"./docker_tools_list.txt", "w", encoding="utf-8") as f:
+        console = Console(file=f)
+        pprint(tools, console=console)
 
     return await client.get_tools()
 
@@ -292,10 +299,6 @@ async def get_analysis_tools():
                     "PS1": "$ ",
                     "USE_SEMGREP_RPC": "false",
                 },
-            },
-            "docker-mcp": {
-                "transport": "sse",
-                "url": "http://127.0.0.1:19000/sse",
             },
         }
     )
@@ -377,14 +380,14 @@ async def get_analysis_tools():
 
     tools = [tool for tool in tools if tool.name not in blocked_tools]
 
-    with open(f"./mcp_tools_list.txt", "w", encoding="utf-8") as f:
+    with open(f"./analysis_tools_list.txt", "w", encoding="utf-8") as f:
         console = Console(file=f)
         pprint(tools, console=console)
 
     return tools
 
 
-async def build_deep_audit_agent(model: ChatOpenAI):
+async def build_audit_agent(model: ChatOpenAI):
     analysis_tools = await get_analysis_tools()
     docker_tools = await get_docker_tools()
 
@@ -404,10 +407,9 @@ async def build_deep_audit_agent(model: ChatOpenAI):
 - 只进行与当前漏洞假设直接相关的最小必要操作
 - 给出可复现步骤与关键证据
 - 不要把 “未复现” 写成 “漏洞不存在”
+- 任务完成后, 无论是否成功，必须调用 append_blackboard 工具写入 “已确认事实/已排除假设/当前结论”. 
 
-同时你是 blackboard 的唯一写入者, 且只允许 “追加写”, 没有改写历史条目的权限. 
-当你拿到 “已确认事实/已排除假设/当前结论” 后, 必须调用 append_blackboard 工具写入. 
-调用要求:
+append_blackboard 调用要求:
 - facts 传本轮已确认事实列表（至少 1 条, 且每条必须以 '- ' 开头）
 - evidence 传证据数组（kind, ref, quote）
 
@@ -456,15 +458,16 @@ async def build_deep_audit_agent(model: ChatOpenAI):
         middleware=build_blackboard_middleware(),
     )
 
-async def audit_agent() -> dict[str, Any]:
+async def run_audit_agent() -> dict[str, Any]:
     BLACKBOARD_STORE.reset(INITIAL_BLACKBOARD)
     model = build_model()
-    agent = await build_deep_audit_agent(model)
+    agent = await build_audit_agent(model)
     user_prompt = f"""
 目标项目在本地的目录: /home/houning/Projects/dataset/qwq
 目标项目在容器内映射的目录: /workspace
 语言: python
 请先调用 show_directory_tree 工具快速了解目标项目的目录结构, 并积极调用提供的静态分析工具辅助审计
+调用 semgrep_scan_with_custom_rule 前，必须先确保 rule 符合 semgrep_rule_schema
 """.strip()
     return await agent.ainvoke(
         {
@@ -472,14 +475,15 @@ async def audit_agent() -> dict[str, Any]:
             "messages": [
                 HumanMessage(
                     content=user_prompt
+                    #content="调用executor，让它使用append_blackboard工具随便写入一条内容"
                 )
             ],
         }
     )
 
 
-async def main() -> None:
-    result = await audit_agent()
+async def query_audit_agent() -> None:
+    result = await run_audit_agent()
     with open(f"./out.txt", "w", encoding="utf-8") as f:
         print(result["messages"][-1].content, file=f)
 
@@ -506,14 +510,14 @@ if __name__ == "__main__":
         )
         logger.info("启动成功!")
 
-        asyncio.run(main())
+        asyncio.run(query_audit_agent())
 
     except Exception:
         logger.exception("agent执行失败")
 
     finally:
         if container is not None:
-            logger.info("开始清理Docker容器")
+            logger.info("开始清理Docker容器...")
             try:
                 logger.info("正在停止Docker容器...")
                 container.stop(timeout=20)
