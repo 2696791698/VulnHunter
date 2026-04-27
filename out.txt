@@ -1,105 +1,70 @@
 vulnerable
 
-- 漏洞类型：拒绝服务（任意同权限进程终止）
-- 影响范围：使用 `background=True` / `long_callback`，且后台管理器为 `DiskcacheManager` 的 Dash 应用
+漏洞结论：
+- Dash 长回调接口存在访问控制缺失/会话未绑定问题。
+- 服务端信任客户端提供的 `oldJob` / `cancelJob` / `cacheKey`，可导致：
+  1. 终止其他用户的长任务（可用性影响）
+  2. 跨客户端获取长回调结果（机密性影响，尤其在结果已生成且尚未被合法客户端取走，或启用 `cache_by` 持久缓存时）
 
-复现步骤
+关键证据：
 
-1. 准备一个使用 `DiskcacheManager` 的最小 Dash 应用，例如：
-   ```python
-   import time, diskcache
-   from dash import Dash, html, Input, Output
-   from dash.long_callback import DiskcacheManager
+1. 服务端直接信任查询参数
+- `dash/_callback.py:344-357`
+  - `cache_key = flask.request.args.get("cacheKey")`
+  - `job_id = flask.request.args.get("job")`
+  - `old_job = flask.request.args.getlist("oldJob")`
+  - 对每个 `oldJob` 直接执行 `callback_manager.terminate_job(job)`
+- `dash/_callback.py:412-414`
+  - `output_value = callback_manager.get_result(cache_key, job_id)`
+  - `job_running = callback_manager.job_running(job_id)`
 
-   cache = diskcache.Cache("./cache")
-   app = Dash(__name__, background_callback_manager=DiskcacheManager(cache))
-   app.layout = html.Div([html.Button("Run", id="btn"), html.Div(id="out")])
+2. 内置 manager 取结果时按 `key` 查，不校验 `job` / 客户端身份
+- `dash/long_callback/managers/diskcache_manager.py:139-156`
+- `dash/long_callback/managers/celery_manager.py:107-125`
+- 这两处都是先按 `key` 读取结果，`job` 只用于后续 terminate / running 检查，不参与授权判断。
 
-   @app.callback(
-       Output("out", "children"),
-       Input("btn", "n_clicks"),
-       background=True,
-       prevent_initial_call=True,
-   )
-   def work(_):
-       time.sleep(30)
-       return "done"
-   ```
+3. `cacheKey` 与客户端会话无关，只由函数源码和输入决定
+- `dash/long_callback/managers/__init__.py:54-76`
+- `build_cache_key()` 仅使用 `fn_source`、输入参数、可选 `cache_by()` 值计算 SHA1；没有 session/user 参与。
 
-2. 记录一个与 Dash 进程同权限的目标进程 PID。
+4. 动态验证已确认
+- 检查 A：`client1 -> POST /_dash-update-component?oldJob=424242`
+  - 返回 `200`
+  - `manager.terminated == ["424242"]`
+- 检查 B：两个独立 `test_client`，相同回调 + 相同输入 `shared`
+  - 都得到相同 `cacheKey`
+  - `2cd371557332c79962e7428b2ec8407f90ea0155`
+- 检查 C：当结果存放在该 `cacheKey` 下时，`client2` 仅提供 `cacheKey`、不提供 `job`
+  - 返回 `200`
+  - `out.children == "victim-secret"`
+  - `get_result` 调用中 `job == null`
 
-3. 先访问一次 `/`，让回调路由注册完成。
+复现步骤：
 
-4. 直接伪造请求，不带 `X-CSRFToken`，向：
-   ```
-   POST /_dash-update-component?oldJob=<目标PID>
-   Content-Type: application/json
-   ```
-   发送类似 JSON：
-   ```json
-   {
-     "output": "out.children",
-     "outputs": {"id": "out", "property": "children"},
-     "inputs": [{"id": "btn", "property": "n_clicks", "value": 1}],
-     "state": [],
-     "changedPropIds": ["btn.n_clicks"]
-   }
-   ```
+1. 准备一个使用 `background=True` 的长回调应用，例如：
+   - 输入组件：`dcc.Input(id="input", value="shared")`
+   - 输出组件：`html.Div(id="out")`
 
-5. 服务端会把 `oldJob` 直接交给 `DiskcacheManager.terminate_job()`；该函数把它当作 PID，并杀死该进程及其子进程。
+2. 验证任意取消：
+   - 向 `/_dash-update-component?oldJob=424242` 发送合法长回调 POST 请求
+   - 观察服务端会把 `"424242"` 直接传给 `terminate_job`
 
-关键证据
+3. 验证跨客户端共享 `cacheKey`：
+   - 用两个独立客户端，对同一长回调、同一输入值 `shared` 发起请求
+   - 比较返回的 `cacheKey`
+   - 结果相同：`2cd371557332c79962e7428b2ec8407f90ea0155`
 
-1. 服务器直接信任查询参数中的 job 值  
-   `dash/_callback.py`
-   ```python
-   cache_key = flask.request.args.get("cacheKey")
-   job_id = flask.request.args.get("job")
-   old_job = flask.request.args.getlist("oldJob")
-   ...
-   if old_job:
-       for job in old_job:
-           callback_manager.terminate_job(job)
-   ```
+4. 验证跨客户端取结果：
+   - 当该 `cacheKey` 对应结果已存在后
+   - 第二个客户端直接请求：
+     - `POST /_dash-update-component?cacheKey=2cd371557332c79962e7428b2ec8407f90ea0155`
+     - 不提供 `job`
+   - 服务端仍返回该结果
 
-2. 取消回调同样直接信任 `cancelJob`  
-   `dash/dash.py`
-   ```python
-   job_ids = flask.request.args.getlist("cancelJob")
-   ...
-   if job_ids:
-       for job_id in job_ids:
-           executor.terminate_job(job_id)
-   ```
+漏洞本质：
+- 长回调结果与任务控制参数是“客户端可构造”的；
+- 服务端没有把 `job/cacheKey` 绑定到当前客户端/会话；
+- 内置 manager 又按 `cacheKey` 直接取结果，因此形成跨会话任务控制和结果读取。
 
-3. `DiskcacheManager` 将 job 解释为 PID 并杀进程  
-   `dash/long_callback/managers/diskcache_manager.py`
-   ```python
-   def terminate_job(self, job):
-       ...
-       job = int(job)
-       ...
-       if psutil.pid_exists(job):
-           process = psutil.Process(job)
-           for proc in process.children(recursive=True):
-               proc.kill()
-           process.kill()
-   ```
-
-4. 动态验证已确认两段链路都成立  
-   - 伪造 `POST /_dash-update-component?oldJob=424242` 后，服务端 manager 收到攻击者指定值：
-     - `fake_manager.terminated == ["424242"]`
-     - 未携带 `X-CSRFToken` 仍返回 `200`
-   - 对真实 `DiskcacheManager.terminate_job()` 的验证中，受控子进程：
-     - 调用前 `poll() == None`
-     - 调用后 `poll() == 0`
-     - 说明进程已被成功终止
-
-结论
-
-该项目存在可利用漏洞：攻击者可通过伪造 `/_dash-update-component?...oldJob=<pid>`（以及同类 `cancelJob`）请求，在使用 `DiskcacheManager` 的 Dash 应用中终止任意同权限进程，造成 DoS。
-
-审计中遇到的问题
-
-- `get_program_slice` 在 Python 场景按 `file:line:call` 定位失败，未能给出有效切片。
-- `get_variable_flow` 返回了占位样式字符串（`"\n" + result + "\n"`），结果不可用。
+审计过程中遇到的问题：
+- 容器内源码树缺少部分生成组件资源，直接构造完整测试 app 时初始化会失败；动态验证时只能使用“内联 Python + 进程内最小 monkeypatch”绕过，不影响本漏洞结论。

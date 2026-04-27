@@ -28,7 +28,7 @@ from rich.pretty import pprint
 import docker
 import logging
 
-PROJECT_ROOT = "/home/houning/Projects/dataset/qwq"
+PROJECT_ROOT = ""
 INITIAL_BLACKBOARD = """- 初始化: 尚无已确认事实"""
 
 load_dotenv()
@@ -387,7 +387,7 @@ async def get_analysis_tools():
     return tools
 
 
-async def build_audit_agent(model: ChatOpenAI):
+async def create_audit_agent(model: ChatOpenAI):
     analysis_tools = await get_analysis_tools()
     docker_tools = await get_docker_tools()
 
@@ -458,12 +458,12 @@ append_blackboard 调用要求:
         middleware=build_blackboard_middleware(),
     )
 
-async def run_audit_agent() -> dict[str, Any]:
+async def invoke_audit_agent() -> dict[str, Any]:
     BLACKBOARD_STORE.reset(INITIAL_BLACKBOARD)
     model = build_model()
-    agent = await build_audit_agent(model)
+    agent = await create_audit_agent(model)
     user_prompt = f"""
-目标项目在本地的目录: /home/houning/Projects/dataset/qwq
+目标项目在本地的目录: { PROJECT_ROOT }
 目标项目在容器内映射的目录: /workspace
 语言: python
 请先调用 show_directory_tree 工具快速了解目标项目的目录结构, 并积极调用提供的静态分析工具辅助审计
@@ -482,13 +482,13 @@ async def run_audit_agent() -> dict[str, Any]:
     )
 
 
-async def query_audit_agent() -> None:
-    result = await run_audit_agent()
+async def run_audit_agent() -> None:
+    result = await invoke_audit_agent()
     with open(f"./out.txt", "w", encoding="utf-8") as f:
         print(result["messages"][-1].content, file=f)
 
 
-if __name__ == "__main__":
+def run() -> None:
     client = docker.from_env()
     container = None
 
@@ -510,7 +510,7 @@ if __name__ == "__main__":
         )
         logger.info("启动成功!")
 
-        asyncio.run(query_audit_agent())
+        asyncio.run(run_audit_agent())
 
     except Exception:
         logger.exception("agent执行失败")
@@ -538,3 +538,6 @@ if __name__ == "__main__":
 
             except Exception as e:
                 logger.exception("移除容器失败")
+
+if __name__ == "__main__":
+    run()
