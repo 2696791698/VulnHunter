@@ -283,15 +283,22 @@ docker pull mcr.microsoft.com/devcontainers/anaconda:3
 
 ### 3. 环境变量
 
+> 本项目使用的环境变量均需在根目录下的.env文件中配置，可以参考.env.example
+
 ```
-# .env
+# 要使用的模型的名称
+MODEL_NAME=
 # OpenAI 或兼容 OpenAI API 服务的 API Key
 OPENAI_API_KEY=
 # API 基础地址
 OPENAI_BASE_URL=
+# CodeBadger 服务的URL, 如: http://127.0.0.1:4242/mcp
+CodeBadger_URL=
+# Docker MCP 服务的URL, 如: http://127.0.0.1:19000/sse
+Docker_MCP_URL=
 
-# 是否开启 LangSmith 追踪, 表示记录 LangChain / LangGraph / Deep Agents 的运行链路
-LANGSMITH_TRACING=true/false
+# 是否开启 LangSmith 追踪(true/false), 表示记录 LangChain / LangGraph / Deep Agents 的运行链路
+LANGSMITH_TRACING=
 # 用于把追踪数据上传到你的 LangSmith 账号
 LANGSMITH_API_KEY=
 # LangSmith 项目名, 追踪记录会归档到这个项目下
@@ -304,30 +311,45 @@ LANGSMITH_PROJECT=
 uv run check_environment.py
 ```
 
-### 5. 运行单个样例（检测环境是否配置完整）
+### 5. 运行单个样例（检测环境是否配置正确）
 
 ```bash
+# 需在代码 audit_agent.PROJECT_ROOT = "" 中填写待审计的项目路径内容
 uv run run_one_sample.py
 ```
 
-### 6. 开始测评
+## 测评
+
+### 1. 开始测评
+
+> 模型在审计过程中可能会改动项目文件，故每次测评前需保证数据集为原始状态
+>
+> 测评程序会把结果输出到同级目录下的 manifest_vulnhunter.csv 和 manifest_base.csv
 
 ```bash
 # run with the VulnHunter
 uv run benchmark_vulnhunter.py
-# run with the basic-tool agent
-uv run benchmark_basic_tool.py
+# run with the base agent
+uv run benchmark_base.py
 ```
 
-> 测评程序会把结果输出到同级目录下的
+### 2. 生成指标
+
+```bash
+uv run generate metrics.py
+```
+
+# 说明
+
+项目里的 base agent 是指只提供 `write_todos` `read_file` `write_file` `edit_file` `ls` `glob` `grep` `task` 这些 Deep Agents 内置的基础工具的 agent
 
 # 防踩坑
 
-- 强烈建议在Linux环境下运行本项目，Windows环境则使用WSL（大模型喜欢使用Linux风格的路径，而Windows下跑的codebadger则会要求使用Windows风格的路径，导致路径不匹配报错）
+- 强烈建议在 Linux 环境下运行本项目，Windows 环境则使用 WSL（大模型喜欢使用 Linux 风格的路径，而 Windows 下跑的 codebadger 则会要求使用 Windows 风格的路径，导致路径不匹配报错）
 
-- 如果你的系统是Windows且安装了Docker Desktop，请上网查询教程，禁止Docker Desktop接管WSL里的Docker，否则你以为在WSL启动容器实际上还是在Windows里跑的，会触发上一条报错
+- 如果你的系统是 Windows 且安装了 Docker Desktop，请上网查询教程，禁止 Docker Desktop 接管WSL里的Docker，否则你以为在 WSL 启动容器实际上还是在 Windows 里跑的，会触发上一条报错
 
-- 如果你的系统是Windows且使用了如Clash Verge这种代理软件并开启了TUN模式，请把WSL网络模式调整成Mirrored，并使用 `wsl --update --pre-release` 把WSL更新到最新的预发行版本来解决诸如以下的报错：
+- 如果你的系统是 Windows 且使用了如 Clash Verge 这种代理软件并开启了TUN模式，请把 WSL 网络模式调整成 Mirrored，并使用 `wsl --update --pre-release` 把 WSL 更新到最新的预发行版本来解决诸如以下的报错：
 
   ```
   wsl: 出现了内部错误。 

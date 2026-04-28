@@ -1,4 +1,6 @@
-import audit_agent_runner
+import audit_agent
 
-audit_agent_runner.PROJECT_ROOT = "/home/houning/Projects/dataset/qwq"
-audit_agent_runner.run()
+audit_agent.PROJECT_ROOT = ""
+result = audit_agent.run()
+
+print(result)

@@ -3,3 +3,4 @@ tmp/
 .venv/
 /out
 /out.txt
+/dataset

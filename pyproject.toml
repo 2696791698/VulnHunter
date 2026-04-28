@@ -12,6 +12,9 @@ dependencies = [
     "langchain-mcp-adapters>=0.2.2",
     "langchain-openai>=1.1.16",
     "langsmith>=0.7.33",
+    "matplotlib>=3.10.9",
     "pandas>=3.0.2",
     "rich>=15.0.0",
+    "seaborn>=0.13.2",
+    "tqdm>=4.67.3",
 ]

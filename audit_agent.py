@@ -248,11 +248,10 @@ def build_blackboard_middleware() -> list:
 
 def build_model() -> ChatOpenAI:
     return ChatOpenAI(
-        model="gpt-5.4",
+        model=os.getenv("MODEL_NAME"),
         api_key=os.getenv("OPENAI_API_KEY"),
         base_url=os.getenv("OPENAI_BASE_URL"),
         reasoning_effort="xhigh",
-        # extra_body={"thinking": {"type": "disabled"}},
         streaming=True,
         stream_usage=True,
         max_retries=3,
@@ -425,7 +424,7 @@ append_blackboard 调用要求:
     }
 
     system_prompt = """
-你是一名专业的代码安全审计员. 
+你是一名专业的代码安全审计员.
 
 任务目标:
 - 对给定项目目录中的代码进行静态安全审计
@@ -444,10 +443,9 @@ append_blackboard 调用要求:
 - 只在有明确结论时才结束审计, 不要在不确定时结束审计并输出 non-vulnerable
 
 最终输出规则:
-- 如果判断存在漏洞, 请输出 vulnerable 并给出复现步骤和关键证据
-- 如果判断不存在漏洞, 请直接输出 non-vulnerable
+- 如果判断存在漏洞, 请严格输出 vulnerable 并给出可复现的步骤和关键证据
+- 如果判断不存在漏洞, 请严格输出 non-vulnerable
 - 只允许输出以上两种指标, 不要输出 uncertain 或 inconclusive 等模糊结论
-- 如有请说明你在审计过程中遇到的问题, 有助于我完善agent环境
 """.strip()
 
     return create_deep_agent(
@@ -486,6 +484,7 @@ async def run_audit_agent() -> None:
     result = await invoke_audit_agent()
     with open(f"./out.txt", "w", encoding="utf-8") as f:
         print(result["messages"][-1].content, file=f)
+    return result
 
 
 def run() -> None:
@@ -510,7 +509,7 @@ def run() -> None:
         )
         logger.info("启动成功!")
 
-        asyncio.run(run_audit_agent())
+        result = asyncio.run(run_audit_agent())
 
     except Exception:
         logger.exception("agent执行失败")
@@ -538,6 +537,8 @@ def run() -> None:
 
             except Exception as e:
                 logger.exception("移除容器失败")
+
+    return result
 
 if __name__ == "__main__":
     run()
