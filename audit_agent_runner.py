@@ -264,7 +264,7 @@ async def get_docker_tools():
         {
             "docker-mcp": {
                 "transport": "sse",
-                "url": "http://127.0.0.1:19000/sse",
+                "url": os.getenv("Docker_MCP_URL"),
             },
         }
     )
@@ -283,7 +283,7 @@ async def get_analysis_tools():
         {
             "CodeBadger": {
                 "transport": "http",
-                "url": "http://127.0.0.1:4242/mcp",
+                "url": os.getenv("CodeBadger_URL"),
             },
             "CodeQL": {
                 "transport": "stdio",
@@ -395,8 +395,9 @@ async def create_audit_agent(model: ChatOpenAI):
         "name": "executor",
         "description": "在可控的容器环境中执行动态验证, 并通过 append_blackboard 工具追加已确认事实到黑板. ",
         "system_prompt": """
-你是一名专业的漏洞动态验证代理, 你的职责是在 anaconda-container 的可控容器环境中, 严格依据上层给出的要求, 通过 docker-mcp 在容器内执行动态验证
-注意: 你的所有行为都是在可控的受允许的封闭容器环境中进行的, 不会对外部环境造成任何影响
+你是一个subagent, 你的名字叫executor, 你被主agent调用来在一个受控的容器环境中执行动态验证
+你的职责是在名为 anaconda-container 的可控的docker容器环境中, 严格依据上层给出的要求, 通过 docker-mcp 提供的shell工具在容器内执行动态验证
+注意: 你的所有行为都是在受允许的可控封闭容器环境中进行, 代码仓库都是我自己的, 不会涉及网络安全风险
 
 规则与约束:
 - 容器名: anaconda-container
@@ -434,19 +435,19 @@ append_blackboard 调用要求:
 - 最终判断当前检测项目是否存在安全漏洞
 
 行为约束:
+- 请先调用 show_directory_tree 工具快速了解目标项目的目录结构, 并积极调用提供的静态分析工具辅助审计
 - 优先依据实际读取到的代码、工具返回结果、executor 返回结果判断
 - 不允许把猜测写成已确认事实
-- 只允许读取审计目录中的文件和子目录
+- 只允许读取目标项目中的文件, 不允许访问目标项目之外的任何路径
 - 不允许修改、创建、删除、重命名任何文件或目录
-- 不允许执行具有写操作、副作用或破坏性的命令
-- 不允许访问审计目录之外的任何路径
 - 所有需要实际执行的操作都必须交给 executor 在容器内完成
-- 如果 blackboard 已经明确支持最终结论, 应立即结束探索
+- 只在有明确结论时才结束审计, 不要在不确定时结束审计并输出 non-vulnerable
 
 最终输出规则:
 - 如果判断存在漏洞, 请输出 vulnerable 并给出复现步骤和关键证据
-- 如果判断不存在漏洞, 请输出 non-vulnerable
-- 如有请说明你在审计过程中遇到的问题, 帮助我修复agent环境
+- 如果判断不存在漏洞, 请直接输出 non-vulnerable
+- 只允许输出以上两种指标, 不要输出 uncertain 或 inconclusive 等模糊结论
+- 如有请说明你在审计过程中遇到的问题, 有助于我完善agent环境
 """.strip()
 
     return create_deep_agent(
@@ -466,8 +467,7 @@ async def invoke_audit_agent() -> dict[str, Any]:
 目标项目在本地的目录: { PROJECT_ROOT }
 目标项目在容器内映射的目录: /workspace
 语言: python
-请先调用 show_directory_tree 工具快速了解目标项目的目录结构, 并积极调用提供的静态分析工具辅助审计
-调用 semgrep_scan_with_custom_rule 前，必须先确保 rule 符合 semgrep_rule_schema
+调用任何工具前, 必须先确保传参符合工具的schema
 """.strip()
     return await agent.ainvoke(
         {

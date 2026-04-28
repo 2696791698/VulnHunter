@@ -298,19 +298,30 @@ LANGSMITH_API_KEY=
 LANGSMITH_PROJECT=
 ```
 
-### 4. 审计单个项目（检测环境是否配置完整）
+### 4. 运行环境检测脚本
 
+```bash
+uv run check_environment.py
 ```
 
+### 5. 运行单个样例（检测环境是否配置完整）
+
+```bash
+uv run run_one_sample.py
 ```
 
-### 5. 跑测评
+### 6. 开始测评
 
+```bash
+# run with the VulnHunter
+uv run benchmark_vulnhunter.py
+# run with the basic-tool agent
+uv run benchmark_basic_tool.py
 ```
 
-```
+> 测评程序会把结果输出到同级目录下的
 
-# 踩过的坑
+# 防踩坑
 
 - 强烈建议在Linux环境下运行本项目，Windows环境则使用WSL（大模型喜欢使用Linux风格的路径，而Windows下跑的codebadger则会要求使用Windows风格的路径，导致路径不匹配报错）
 
