@@ -4,3 +4,7 @@ tmp/
 /out
 /out.txt
 /dataset
+/manifest_vulnhunter.csv
+/manifest_base.csv
+/docker_tools_list.txt
+/analysis_tools_list
