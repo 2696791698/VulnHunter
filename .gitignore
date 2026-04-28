@@ -8,3 +8,5 @@ tmp/
 /manifest_base.csv
 /docker_tools_list.txt
 /analysis_tools_list
+/.pyvul_cache
+/__pycache__
