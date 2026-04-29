@@ -4,7 +4,7 @@
 
 # 架构图
 
-![Architecture Diagram](https://github.com/2696791698/VulnHunter/blob/main/Architecture Diagram.svg)
+![Architecture Diagram](./Architecture%20Diagram.svg)
 
 # 基础环境
 
