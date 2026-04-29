@@ -1,8 +1,7 @@
 .env
-tmp/
-.venv/
+/tmp
+/.venv
 /out
-/out.txt
 /dataset
 /manifest_vulnhunter.csv
 /manifest_base.csv

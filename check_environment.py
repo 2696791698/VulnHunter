@@ -5,7 +5,7 @@ from deepagents import create_deep_agent
 from langchain_openai import ChatOpenAI
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
-load_dotenv()
+load_dotenv(override=True)
 
 
 async def check_codebadger():

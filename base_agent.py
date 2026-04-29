@@ -3,22 +3,14 @@ import os
 from dotenv import load_dotenv
 from deepagents import create_deep_agent
 from deepagents.backends import FilesystemBackend
-from langchain_openai import ChatOpenAI
+from create_model import create_model
 
-load_dotenv()
+load_dotenv(override=True)
 
-PROJECT_ROOT = "./dataset/CWE-79_0020_plone_plone.namedfile_GHSA-jj7c-jrv4-c65x/Alpha"
+PROJECT_ROOT = ""
 
 async def main():
-    model = ChatOpenAI(
-        model=os.getenv("MODEL_NAME"),
-        api_key=os.getenv("OPENAI_API_KEY"),
-        base_url=os.getenv("OPENAI_BASE_URL"),
-        reasoning_effort="low",
-        streaming=True,
-        stream_usage=True,
-        max_retries=3,
-    )
+    model = create_model()
 
     system_prompt = """
 你是一名专业的代码安全审计员.

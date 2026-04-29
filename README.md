@@ -4,7 +4,7 @@
 
 # 基础环境
 
-- **Linux or WSL**（推荐使用Ubuntu-24.04）
+- **Linux or WSL**（推荐使用 Ubuntu-24.04）
 - **Python** 3.10+（推荐使用 3.13）
 - **Node.js** v25.6.0 或更高版本
 - **uv**
@@ -68,12 +68,12 @@ npm install -g ./codeql-development-mcp-server-schema-fixed-2.25.2-schema-fixed.
 
 `extract_pyvul_dataset.py`
 
-该脚本会从 PyVul 的 GitHub advisory commit 链接里提取样例。每个样例会导出成两个完整项目版本：
+这个脚本会从 PyVul 的 GitHub advisory commit 链接里提取样例。每个样例会导出成两个完整项目版本：
 
 - `Alpha`：修复前版本，也就是修复 commit 的父版本。
 - `Beta`：修复后版本，也就是修复 commit 本身。
 
-输出目录格式：
+输出目录格式大概是：
 
 ```text
 dataset/
@@ -83,7 +83,7 @@ dataset/
     meta.json
 ```
 
-项目名格式为：
+默认项目名格式为：
 
 ```text
 CWE编号_样例序号_GitHubOwner_仓库名_漏洞编号
@@ -94,6 +94,9 @@ CWE编号_样例序号_GitHubOwner_仓库名_漏洞编号
 ```text
 CWE-79_0001_plotly_dash_GHSA-547x-748v-vp6p
 ```
+
+> 如果要给大模型做测试，避免目录名直接暴露 CWE，可以使用 `--numbered-names` 改成按编号命名。
+>
 
 ### 运行前准备
 
@@ -118,7 +121,7 @@ pip install tqdm
 python extract_pyvul_dataset.py --count-only
 ```
 
-输出：
+输出里重点看：
 
 ```text
 [info] total extractable candidate samples: 1599
@@ -126,7 +129,7 @@ python extract_pyvul_dataset.py --count-only
 
 这里的 `1599` 就是当前元数据里可以候选提取的样例总数。
 
-提取全部样例
+### 提取全部样例
 
 ```powershell
 python extract_pyvul_dataset.py
@@ -138,8 +141,7 @@ python extract_pyvul_dataset.py
 ./dataset
 ```
 
-> 注意：全部提取会 clone 很多 GitHub 仓库，耗时和占用空间都会比较大。
->
+注意：全部提取会 clone 很多 GitHub 仓库，耗时和占用空间都会比较大。
 
 ### 提取指定范围
 
@@ -159,6 +161,30 @@ python extract_pyvul_dataset.py --start 20 --end 30
 
 会提取第 `20, 21, ..., 30` 个样例，一共 11 个。
 
+### 按编号命名项目目录
+
+比如只提取第 20 个到第 30 个样例，并把项目目录命名成 `case_20` 到 `case_30`：
+
+```powershell
+python extract_pyvul_dataset.py --start 20 --end 30 --numbered-names
+```
+
+输出目录会变成：
+
+```text
+dataset/
+  case_20/
+    Alpha/
+    Beta/
+    meta.json
+  case_21/
+    Alpha/
+    Beta/
+    meta.json
+```
+
+注意：`--numbered-names` 只改变项目目录名。`meta.json` 和 `cases_index.jsonl` 里仍然会保留 CWE、仓库地址、commit 等元信息；如果要避免提示模型答案，不要把这些元文件作为模型输入。
+
 ### 从某个位置开始提取固定数量
 
 比如从第 101 个样例开始，提取 50 个：
@@ -167,8 +193,7 @@ python extract_pyvul_dataset.py --start 20 --end 30
 python extract_pyvul_dataset.py --start 101 --limit 50
 ```
 
-> 注意：`--limit` 不能和 `--end` 同时使用。
->
+注意：`--limit` 不能和 `--end` 同时使用。
 
 ### 指定输出目录
 
@@ -250,22 +275,49 @@ python extract_pyvul_dataset.py --cwe CWE-79 --require-ghsa --start 1 --limit 10
 
 ### 常用参数说明
 
-| 参数                       | 作用                                         |
-| -------------------------- | -------------------------------------------- |
-| `--count-only`             | 只输出可提取样例数量，不真正提取项目         |
-| `--start N`                | 从第 N 个样例开始，默认是 1                  |
-| `--end N`                  | 提取到第 N 个样例，包含 N                    |
-| `--limit N`                | 从 `--start` 开始最多提取 N 个               |
-| `--output-dir DIR`         | 指定输出目录，默认是 `dataset`               |
-| `--cache-dir DIR`          | 指定缓存目录，默认是 `.pyvul_cache`          |
-| `--skip-existing`          | 已经有 `Alpha/Beta/meta.json` 的样例直接跳过 |
-| `--write-index`            | 写出 `cases_index.jsonl` 索引文件            |
-| `--force-refresh-metadata` | 重新下载 PyVul 元数据                        |
-| `--max-failures N`         | 失败 N 个样例后提前停止                      |
-| `--cwe CWE-79`             | 只提取指定 CWE                               |
-| `--require-cve`            | 只保留带 CVE 的样例                          |
-| `--require-ghsa`           | 只保留带 GHSA 的样例                         |
-| `--repo-contains TEXT`     | 只保留 owner/repo 中包含指定文本的样例       |
+| 参数                       | 作用                                            |
+| -------------------------- | ----------------------------------------------- |
+| `--count-only`             | 只输出可提取样例数量，不真正提取项目            |
+| `--start N`                | 从第 N 个样例开始，默认是 1                     |
+| `--end N`                  | 提取到第 N 个样例，包含 N                       |
+| `--limit N`                | 从 `--start` 开始最多提取 N 个                  |
+| `--output-dir DIR`         | 指定输出目录，默认是 `dataset`                  |
+| `--cache-dir DIR`          | 指定缓存目录，默认是 `.pyvul_cache`             |
+| `--skip-existing`          | 已经有 `Alpha/Beta/meta.json` 的样例直接跳过    |
+| `--numbered-names`         | 项目目录按 `case_样例编号` 命名，例如 `case_20` |
+| `--write-index`            | 写出 `cases_index.jsonl` 索引文件               |
+| `--force-refresh-metadata` | 重新下载 PyVul 元数据                           |
+| `--max-failures N`         | 失败 N 个样例后提前停止                         |
+| `--cwe CWE-79`             | 只提取指定 CWE                                  |
+| `--require-cve`            | 只保留带 CVE 的样例                             |
+| `--require-ghsa`           | 只保留带 GHSA 的样例                            |
+| `--repo-contains TEXT`     | 只保留 owner/repo 中包含指定文本的样例          |
+
+### 推荐用法
+
+第一次建议先只看数量：
+
+```powershell
+python extract_pyvul_dataset.py --count-only
+```
+
+然后小范围测试：
+
+```powershell
+python extract_pyvul_dataset.py --start 1 --end 3 --output-dir dataset_test
+```
+
+确认 `dataset_test` 里目录结构没问题后，再跑正式范围：
+
+```powershell
+python extract_pyvul_dataset.py --start 20 --end 30 --output-dir dataset --numbered-names
+```
+
+如果中途断了，重新运行时加：
+
+```powershell
+python extract_pyvul_dataset.py --start 20 --end 30 --output-dir dataset --numbered-names --skip-existing
+```
 
 ## Agent 配置
 
@@ -305,13 +357,17 @@ LANGSMITH_API_KEY=
 LANGSMITH_PROJECT=
 ```
 
-### 4. 运行环境检测脚本
+### 4. 配置模型信息
+
+请在 `create_model.py` 里配置，不同模型的需要的配置信息会略有不同，请自行查找各自模型官网的开发指南
+
+### 5. 运行环境检测脚本
 
 ```bash
 uv run check_environment.py
 ```
 
-### 5. 运行单个样例（检测环境是否配置正确）
+### 6. 运行单个样例（检测环境是否配置正确）
 
 ```bash
 # 需在代码 audit_agent.PROJECT_ROOT = "" 中填写待审计的项目路径内容

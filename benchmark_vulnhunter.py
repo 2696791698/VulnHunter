@@ -1,6 +1,7 @@
 from pathlib import Path
 import audit_agent
 import pandas as pd
+import os
 
 def iter_variant_paths(dataset_root: Path):
     for sample_dir in sorted(dataset_root.iterdir(), key=lambda p: p.name):
@@ -17,7 +18,7 @@ def main():
 
     rows = []
     for sample_name, variant_name in iter_variant_paths(dataset_root):
-        audit_agent.PROJECT_ROOT = f"./dataset/{sample_name}/{variant_name}"
+        audit_agent.PROJECT_ROOT = os.path.abspath(f"./dataset/{sample_name}/{variant_name}")
         result = audit_agent.run()
         result = result.strip().lower()
         label = 0 if "non-vulnerable" in result else 1

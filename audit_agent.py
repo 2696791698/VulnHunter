@@ -27,11 +27,12 @@ from rich.console import Console
 from rich.pretty import pprint
 import docker
 import logging
+from create_model import create_model
 
 PROJECT_ROOT = ""
 INITIAL_BLACKBOARD = """- 初始化: 尚无已确认事实"""
 
-load_dotenv()
+load_dotenv(override=True)
 
 logger = logging.getLogger(__name__)
 
@@ -246,18 +247,6 @@ def build_blackboard_middleware() -> list:
     ]
 
 
-def build_model() -> ChatOpenAI:
-    return ChatOpenAI(
-        model=os.getenv("MODEL_NAME"),
-        api_key=os.getenv("OPENAI_API_KEY"),
-        base_url=os.getenv("OPENAI_BASE_URL"),
-        reasoning_effort="xhigh",
-        streaming=True,
-        stream_usage=True,
-        max_retries=3,
-    )
-
-
 async def get_docker_tools():
     client = MultiServerMCPClient(
         {
@@ -459,7 +448,7 @@ append_blackboard 调用要求:
 
 async def invoke_audit_agent() -> dict[str, Any]:
     BLACKBOARD_STORE.reset(INITIAL_BLACKBOARD)
-    model = build_model()
+    model = create_model()
     agent = await create_audit_agent(model)
     user_prompt = f"""
 目标项目在本地的目录: { PROJECT_ROOT }
@@ -490,6 +479,8 @@ async def run_audit_agent() -> None:
 def run() -> None:
     client = docker.from_env()
     container = None
+
+    result = ""
 
     try:
         logger.info("正在启动Docker容器...")

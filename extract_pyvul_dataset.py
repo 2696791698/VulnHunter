@@ -1,3 +1,25 @@
+#!/usr/bin/env python3
+"""
+Extract PyVul samples into:
+
+dataset/
+  CWE-79_0001_plotly_dash_GHSA-547x-748v-vp6p/
+    Alpha/
+    Beta/
+    meta.json
+
+The script downloads PyVul metadata, clones repositories into a local cache,
+and exports two complete project snapshots per sample:
+  - Alpha: parent of fix commit
+  - Beta:  fix commit
+
+Usage:
+  python extract_pyvul_dataset.py --count-only
+  python extract_pyvul_dataset.py --start 20 --end 30
+  python extract_pyvul_dataset.py --start 20 --end 30 --numbered-names
+  python extract_pyvul_dataset.py --start 101 --limit 50 --output-dir my_dataset
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -212,7 +234,12 @@ def owner_and_repo(repo_url: str) -> tuple[str, str]:
     return parts[-2], parts[-1]
 
 
-def build_samples(metadata: dict[str, Any], *, filters: Filters) -> list[Sample]:
+def build_samples(
+    metadata: dict[str, Any],
+    *,
+    filters: Filters,
+    numbered_names: bool = False,
+) -> list[Sample]:
     samples: list[Sample] = []
 
     for cwe, report in iter_reports(metadata):
@@ -245,14 +272,17 @@ def build_samples(metadata: dict[str, Any], *, filters: Filters) -> list[Sample]
             if filters.repo_contains.lower() not in repo_text:
                 continue
         sample_index = len(samples) + 1
-        project_name = make_project_name(
-            sample_index=sample_index,
-            cwe=cwe,
-            owner=owner,
-            repo_name=repo_name,
-            advisory_id=advisory_id,
-            fix_commit=fix_commit,
-        )
+        if numbered_names:
+            project_name = f"case_{sample_index}"
+        else:
+            project_name = make_project_name(
+                sample_index=sample_index,
+                cwe=cwe,
+                owner=owner,
+                repo_name=repo_name,
+                advisory_id=advisory_id,
+                fix_commit=fix_commit,
+            )
 
         samples.append(
             Sample(
@@ -507,6 +537,11 @@ def parse_args() -> argparse.Namespace:
         help="Skip project directories that already contain Alpha/, Beta/, and meta.json.",
     )
     parser.add_argument(
+        "--numbered-names",
+        action="store_true",
+        help="Name output project directories as case_<sample_index> instead of CWE/repo/advisory names.",
+    )
+    parser.add_argument(
         "--max-failures",
         type=int,
         default=None,
@@ -597,7 +632,11 @@ def main() -> int:
         cwe=args.cwe,
         repo_contains=args.repo_contains,
     )
-    all_samples = build_samples(metadata, filters=filters)
+    all_samples = build_samples(
+        metadata,
+        filters=filters,
+        numbered_names=args.numbered_names,
+    )
 
     if not all_samples:
         print("[error] no valid samples found in PyVul metadata")
