@@ -2,6 +2,10 @@
 
 **VulnHunter** 是一款智能漏洞检测工具，旨在帮助安全专业人员分析并发现代码库中的安全风险。
 
+# 架构图
+
+![Architecture Diagram](https://github.com/2696791698/VulnHunter/blob/main/Architecture Diagram.svg)
+
 # 基础环境
 
 - **Linux or WSL**（推荐使用 Ubuntu-24.04）
@@ -359,7 +363,7 @@ LANGSMITH_PROJECT=
 
 ### 4. 配置模型信息
 
-请在 `create_model.py` 里配置，不同模型的需要的配置信息会略有不同，请自行查找各自模型官网的开发指南
+请在 `create_model.py` 里配置模型信息，不同模型的需要的配置项会略有不同，请自行查找各自模型官网的开发指南
 
 ### 5. 运行环境检测脚本
 
@@ -370,7 +374,7 @@ uv run check_environment.py
 ### 6. 运行单个样例（检测环境是否配置正确）
 
 ```bash
-# 需在代码 audit_agent.PROJECT_ROOT = "" 中填写待审计的项目路径内容
+# 需在代码 audit_agent.PROJECT_ROOT = "" 中补充待审计的项目路径内容
 uv run run_one_sample.py
 ```
 
@@ -397,7 +401,7 @@ uv run generate metrics.py
 
 # 说明
 
-项目里的 base agent 是指只提供 `write_todos` `read_file` `write_file` `edit_file` `ls` `glob` `grep` `task` 这些 Deep Agents 内置的基础工具的 agent
+项目里的 base agent 是指只提供 `write_todos` `read_file` `write_file` `edit_file` `ls` `glob` `grep` `task` 这些 Deep Agents 默认内置的基础工具（不包括 `execute`）的 agent
 
 # 防踩坑
 
