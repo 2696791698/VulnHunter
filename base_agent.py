@@ -1,5 +1,4 @@
 import asyncio
-import os
 from dotenv import load_dotenv
 from deepagents import create_deep_agent
 from deepagents.backends import FilesystemBackend

@@ -423,7 +423,7 @@ append_blackboard 调用要求:
 - 最终判断当前检测项目是否存在安全漏洞
 
 行为约束:
-- 请先调用 show_directory_tree 工具快速了解目标项目的目录结构, 并积极调用提供的静态分析工具辅助审计
+- 请积极调用提供的静态分析工具辅助审计
 - 优先依据实际读取到的代码、工具返回结果、executor 返回结果判断
 - 不允许把猜测写成已确认事实
 - 只允许读取目标项目中的文件, 不允许访问目标项目之外的任何路径
@@ -453,8 +453,10 @@ async def invoke_audit_agent() -> dict[str, Any]:
     user_prompt = f"""
 目标项目在本地的目录: { PROJECT_ROOT }
 目标项目在容器内映射的目录: /workspace
-语言: python
+项目语言: python
 调用任何工具前, 必须先确保传参符合工具的schema
+项目的目录结构如下:
+{ show_directory_tree() }
 """.strip()
     return await agent.ainvoke(
         {
