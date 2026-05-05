@@ -440,7 +440,7 @@ append_blackboard 调用要求:
     return create_deep_agent(
         model=model,
         system_prompt=system_prompt,
-        tools=[show_directory_tree, *analysis_tools],
+        tools=[*analysis_tools],
         backend=FilesystemBackend(root_dir=PROJECT_ROOT, virtual_mode=False),
         subagents=[executor],
         middleware=build_blackboard_middleware(),
