@@ -6,6 +6,7 @@
 /manifest_vulnhunter.csv
 /manifest_base.csv
 /docker_tools_list.txt
-/analysis_tools_list
+/analysis_tools_list.txt
 /.pyvul_cache
 /__pycache__
+/out.txt

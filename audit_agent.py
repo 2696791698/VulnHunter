@@ -475,7 +475,7 @@ async def run_audit_agent() -> None:
     result = await invoke_audit_agent()
     with open(f"./out.txt", "w", encoding="utf-8") as f:
         print(result["messages"][-1].content, file=f)
-    return result
+    return result["messages"][-1].content
 
 
 def run() -> None:
