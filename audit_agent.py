@@ -31,7 +31,7 @@ import docker
 import logging
 from create_model import create_model
 
-PROJECT_ROOT = "/home/houning/Projects/VulnHunter/dataset/case_1514/Beta"
+PROJECT_ROOT = ""
 INITIAL_BLACKBOARD = """- 初始化: 尚无已确认事实"""
 
 load_dotenv(override=True)
