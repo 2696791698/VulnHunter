@@ -2,6 +2,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import traceback
 from dataclasses import dataclass, field
 from dotenv import load_dotenv
 from collections.abc import Callable
@@ -13,6 +14,7 @@ from langchain.agents.middleware import (
     ModelRequest,
     ModelResponse,
     before_agent,
+    wrap_tool_call,
     wrap_model_call,
 )
 from langchain.tools import ToolRuntime, tool
@@ -29,7 +31,7 @@ import docker
 import logging
 from create_model import create_model
 
-PROJECT_ROOT = ""
+PROJECT_ROOT = "/home/houning/Projects/VulnHunter/dataset/case_1514/Beta"
 INITIAL_BLACKBOARD = """- 初始化: 尚无已确认事实"""
 
 load_dotenv(override=True)
@@ -247,6 +249,53 @@ def build_blackboard_middleware() -> list:
     ]
 
 
+def format_tool_error(tool_name: str, error: Exception) -> str:
+    """
+    把工具异常整理成模型可读的 ToolMessage 内容.
+    """
+    traceback_text = "".join(
+        traceback.format_exception(type(error), error, error.__traceback__)
+    ).strip()
+    if len(traceback_text) > 4000:
+        traceback_text = "...<traceback truncated>\n" + traceback_text[-4000:]
+
+    return (
+        f"Tool `{tool_name}` failed.\n"
+        f"Error type: {type(error).__name__}\n"
+        f"Error message: {error}\n\n"
+        f"Traceback:\n{traceback_text}\n\n"
+        "请根据这个错误调整工具参数、换用其他工具，或先收集缺失的前置条件后再继续。"
+    )
+
+
+def build_tool_error_middleware() -> list:
+    @wrap_tool_call
+    async def return_tool_errors_to_model(request, handler):
+        try:
+            return await handler(request)
+        except Exception as error:
+            tool_name = request.tool_call.get("name", "<unknown>")
+            tool_call_id = request.tool_call.get("id", "")
+            logger.warning(
+                "工具调用失败, 已作为 ToolMessage 返回给模型: %s",
+                tool_name,
+                exc_info=True,
+            )
+            return ToolMessage(
+                content=format_tool_error(tool_name, error),
+                tool_call_id=tool_call_id,
+            )
+
+    return [return_tool_errors_to_model]
+
+
+def build_audit_middleware() -> list:
+    return [
+        *build_tool_error_middleware(),
+        *build_blackboard_middleware(),
+    ]
+
+
 async def get_docker_tools():
     client = MultiServerMCPClient(
         {
@@ -443,7 +492,7 @@ append_blackboard 调用要求:
         tools=[*analysis_tools],
         backend=FilesystemBackend(root_dir=PROJECT_ROOT, virtual_mode=False),
         subagents=[executor],
-        middleware=build_blackboard_middleware(),
+        middleware=build_audit_middleware(),
     )
 
 async def invoke_audit_agent() -> dict[str, Any]:

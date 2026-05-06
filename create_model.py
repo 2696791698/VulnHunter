@@ -9,7 +9,7 @@ def create_model() -> ChatOpenAI:
         model=os.getenv("MODEL_NAME"),
         api_key=os.getenv("OPENAI_API_KEY"),
         base_url=os.getenv("OPENAI_BASE_URL"),
-        extra_body={"thinking": {"type": "enabled"}},
+        extra_body={"thinking": {"type": "disabled"}},
         # reasoning_effort="xhigh",
         streaming=True,
         stream_usage=True,
