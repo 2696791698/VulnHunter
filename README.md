@@ -13,7 +13,7 @@
 - **Node.js** v25.6.0 或更高版本
 - **uv**
 - **Docker**
-- **CodeQL CLI** - 必须安装并添加到 PATH 环境变量中（https://github.com/github/codeql-cli-binaries/releases）
+- **CodeQL CLI** - 必须安装并添加到 PATH 环境变量中 (https://github.com/github/codeql-cli-binaries/releases)
 
 # 快速开始
 
@@ -59,11 +59,11 @@ npm install -g ./codeql-development-mcp-server-schema-fixed-2.25.2-schema-fixed.
 
 ### Semgrep
 
-遵循官方文档安装即可（https://semgrep.dev/docs/mcp）
+遵循官方文档安装即可 (https://semgrep.dev/docs/mcp)
 
 ### docker-mcp
 
-遵循官方仓库安装即可（https://github.com/DullJZ/docker-mcp, https://github.com/DullJZ/docker-manager）
+遵循官方仓库安装即可 (https://github.com/DullJZ/docker-mcp, https://github.com/DullJZ/docker-manager)
 
 ## 数据集提取
 
