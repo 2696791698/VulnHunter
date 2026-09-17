@@ -10,3 +10,11 @@
 /.pyvul_cache
 /__pycache__
 /out.txt
+
+# 本地起的 docker-manager / docker-mcp（第三方代码与访问令牌，不入库）
+/docker-mcp/
+/docker-manager/
+
+# 桥接服务实时写入的日志（含运行细节与 token 用量，不入库）
+/agent_traces.jsonl*
+/audit_tasks.jsonl*

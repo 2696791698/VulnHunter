@@ -2,8 +2,9 @@ import os
 import asyncio
 from dotenv import load_dotenv
 from deepagents import create_deep_agent
-from langchain_openai import ChatOpenAI
 from langchain_mcp_adapters.client import MultiServerMCPClient
+
+from create_model import create_model
 
 load_dotenv(override=True)
 
@@ -33,7 +34,7 @@ async def check_codeql():
             {
                 "CodeQL": {
                     "transport": "stdio",
-                    "command": "codeql-development-mcp-server-schema-fixed",
+                    "command": "codeql-development-mcp-server",
                     "args": [],
                 },
             }
@@ -93,11 +94,9 @@ async def check_docker_mcp():
 
 async def check_model():
     try:
-        model = ChatOpenAI(
-            model=os.getenv("MODEL_NAME"),
-            api_key=os.getenv("OPENAI_API_KEY"),
-            base_url=os.getenv("OPENAI_BASE_URL"),
-        )
+        # 复用 agent 实际使用的模型工厂，否则这项检测验的是另一套配置
+        # （缺 extra_body / streaming / 网关要求的请求头等）。
+        model = create_model()
 
         agent = create_deep_agent(model=model)
 

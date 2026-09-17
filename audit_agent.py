@@ -25,6 +25,7 @@ from langgraph.types import Command
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from pydantic import BaseModel, Field, ConfigDict
 from tree_utils import show_tree
+from agent_tracing import tracing_callbacks
 from rich.console import Console
 from rich.pretty import pprint
 import docker
@@ -324,7 +325,7 @@ async def get_analysis_tools():
             },
             "CodeQL": {
                 "transport": "stdio",
-                "command": "codeql-development-mcp-server-schema-fixed",
+                "command": "codeql-development-mcp-server",
                 "args": [],
             },
             "Semgrep": {
@@ -516,7 +517,8 @@ async def invoke_audit_agent() -> dict[str, Any]:
                     #content="调用executor，让它使用append_blackboard工具随便写入一条内容"
                 )
             ],
-        }
+        },
+        config={"callbacks": tracing_callbacks()},
     )
 
 
@@ -527,7 +529,35 @@ async def run_audit_agent() -> None:
     return result["messages"][-1].content
 
 
-def run() -> None:
+CONTAINER_NAME = "anaconda-container"
+
+
+def remove_stale_container(client: docker.DockerClient) -> None:
+    """
+    清除上一次运行残留的同名容器.
+
+    容器只在 run() 的 finally 里清理, 进程被强杀时 (devcontainer 重启、服务被
+    kill -9) 那一步不会执行. Docker 的容器名在容器退出后依然算被占用, 残留的
+    容器会让后续每一次 containers.run 都以 409 Conflict 失败, 且不会自愈.
+
+    审计是单飞的 (固定容器名 + 固定 PROJECT_ROOT), 不存在并发使用同名容器的
+    情况, 所以这里可以强删.
+    """
+    try:
+        stale = client.containers.get(CONTAINER_NAME)
+    except docker.errors.NotFound:
+        return
+
+    logger.info("发现残留容器 %s (%s), 正在移除...", CONTAINER_NAME, stale.short_id)
+    try:
+        stale.remove(force=True)
+        logger.info("残留容器已移除. ")
+    except docker.errors.APIError:
+        # 不中断: 让紧随其后的 containers.run 报出 409, 那个报错更贴近实际原因.
+        logger.warning("残留容器移除失败, 本次创建可能因名字冲突而失败", exc_info=True)
+
+
+def run() -> str:
     client = docker.from_env()
     container = None
 
@@ -535,11 +565,12 @@ def run() -> None:
 
     try:
         logger.info("正在启动Docker容器...")
+        remove_stale_container(client)
         container = client.containers.run(
             image="mcr.microsoft.com/devcontainers/anaconda:3",
             command="sleep infinity",
             detach=True,
-            name="anaconda-container",
+            name=CONTAINER_NAME,
             auto_remove=False,
             volumes={
                 PROJECT_ROOT: {
@@ -554,7 +585,12 @@ def run() -> None:
         result = asyncio.run(run_audit_agent())
 
     except Exception:
+        # 记下完整 traceback, 然后原样抛给调用方. 只记不抛的话, 上层拿到的是空的
+        # 返回值, 只能报一句泛化的"agent 没有返回结论", 真实原因 (例如容器名
+        # 409 冲突) 就只剩这条日志里有了, 面板上完全看不出来.
+        # finally 里的容器清理不受影响, 异常抛出前会照常执行.
         logger.exception("agent执行失败")
+        raise
 
     finally:
         if container is not None:

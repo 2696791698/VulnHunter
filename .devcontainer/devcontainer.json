@@ -1,0 +1,51 @@
+{
+  "name": "VulnHunter (Docker-in-Docker)",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "CODEQL_VERSION": "v2.25.2"
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.13",
+      "installTools": true
+    },
+    "ghcr.io/devcontainers/features/node:2.1.0": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:4": {
+      "version": "latest",
+      "moby": true,
+      "dockerDashComposeVersion": "v2"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "privileged": true,
+  "overrideCommand": true,
+  "remoteUser": "vscode",
+  "containerEnv": {
+      "UV_PROJECT_ENVIRONMENT": "/home/vscode/.venv"
+  },
+  "forwardPorts": [5173, 8901],
+  "mounts": [
+    "source=vulnhunter-web-node_modules,target=${containerWorkspaceFolder}/web/node_modules,type=volume"
+  ],
+  "postCreateCommand": "bash ${containerWorkspaceFolder}/.devcontainer/post-create.sh",
+  "postStartCommand": "bash ${containerWorkspaceFolder}/.devcontainer/post-start.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-containers",
+        "docker.docker",
+        "charliermarsh.ruff"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/home/vscode/.venv/bin/python",
+        "git.ignoreLimitWarning": true
+      }
+    }
+  }
+}

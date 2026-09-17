@@ -54,7 +54,7 @@ uv run main.py
 #### 1. 通过 npm 安装
 
 ```bash
-npm install -g ./codeql-development-mcp-server-schema-fixed-2.25.2-schema-fixed.8.tgz
+npm install -g codeql-development-mcp-server@latest
 ```
 
 ### Semgrep
@@ -63,7 +63,45 @@ npm install -g ./codeql-development-mcp-server-schema-fixed-2.25.2-schema-fixed.
 
 ### docker-mcp
 
-遵循官方仓库安装即可 (https://github.com/DullJZ/docker-mcp, https://github.com/DullJZ/docker-manager)
+来自 [DullJZ/docker-mcp](https://github.com/DullJZ/docker-mcp) 与 [DullJZ/docker-manager](https://github.com/DullJZ/docker-manager)：
+`docker-manager` 把 Docker 操作包成 HTTP API，`docker-mcp` 再把它包成 MCP 服务，供 agent 的
+executor 子 agent 在容器里执行命令。
+
+两个都跑在 devcontainer 内部。先起 `docker-manager`（Go 写的 HTTP 服务，默认 15000）：
+
+```bash
+mkdir -p docker-manager && cd docker-manager
+wget https://raw.githubusercontent.com/DullJZ/docker-manager/refs/heads/main/docker-compose.yml
+echo "your_token" > tokens.txt
+docker compose up -d
+```
+
+> `docker-compose.yml` 里挂了 `./tokens.txt`，这个文件必须先存在 —— 否则 Docker 会在那个路径
+> 创建一个目录，容器起不来。
+
+再把 `docker-mcp` 拉下来，在 `docker.py` 顶部填上同一个地址和 token，然后起服务：
+
+```bash
+git clone https://github.com/DullJZ/docker-mcp.git docker-mcp
+# 编辑 docker-mcp/docker.py：
+#   base_url = 'http://127.0.0.1:15000'
+#   token    = 'your_token'
+cd docker-mcp
+UV_PROJECT_ENVIRONMENT=/home/vscode/.venvs/docker-mcp uv sync
+UV_PROJECT_ENVIRONMENT=/home/vscode/.venvs/docker-mcp uv run python main.py
+```
+
+`main.py` 里写死了 `app.run(transport="sse", port=19000)`，对应 `.env` 里的
+`Docker_MCP_URL=http://127.0.0.1:19000/sse`。
+
+两个注意点（都是这个 DinD 环境特有的）：
+
+- **venv 不能放在项目目录下。** 项目目录是 Windows 的 bind mount，不支持符号链接，`uv venv`
+  会报成功但建出一个没有 `python` 的 venv。所以上面用 `UV_PROJECT_ENVIRONMENT` 指到了
+  `/home/vscode/.venvs/docker-mcp`。
+- **`~/.docker/config.json` 里的 `credsStore` 会让所有 `docker pull` 失败**（那个助手是给宿主机
+  Docker Desktop 用的，在 DinD 里调用返回 255）。如果 pull 报 `error getting credentials`，
+  把该文件改成 `{}` 即可（原文件已备份为 `~/.docker/config.json.bak`）。
 
 ## 数据集提取
 
@@ -364,11 +402,38 @@ LANGSMITH_PROJECT=
 
 请在 `create_model.py` 里配置模型信息，不同模型的需要的配置项会略有不同，请自行查找各自模型官网的开发指南
 
+> 如果用 opencode zen 的 Go 网关（`OPENAI_BASE_URL=https://opencode.ai/zen/go/v1`），它要求每个对话带一个
+> `x-opencode-session` 头用于路由，缺了会返回 `MissingSessionID`。`create_model.py` 里已经处理了：
+> 指向该网关时自动为每次 `create_model()` 调用生成一个会话 id，一次审计共用一个。注意 base URL 要带
+> `/v1`，少了会打到网页上。
+
 ### 5. 运行环境检测脚本
 
 ```bash
 uv run check_environment.py
 ```
+
+同一批检测也可以在一个可视化面板里查看（Vite + Vue 3 + TS + shadcn-vue，位于 `web/`）：
+
+```bash
+cd web && npm install && npm run dev
+```
+
+面板默认使用内置的演示数据；如需展示真实检测结果，另开一个终端在仓库根目录启动桥接服务，
+再把页面右上角的「重新检测」点一次：
+
+```bash
+python -m pip install -r web/server/requirements.txt
+python web/server/main.py
+```
+
+桥接服务同时也是 agent 运行监控的收集端。`agent_tracing.py` 是一个 LangChain 回调处理器，
+把每次运行里的模型调用、工具调用、子 agent 作为 span 上报上去，面板的「Agent 监控」区块会
+按 LangSmith 的方式把它们渲染成瀑布图（耗时、输入输出、模型名、token 用量）。`audit_agent.py`
+里已经接好了，`base_agent.py` 想接的话在 `ainvoke` 时补上 `config={"callbacks": tracing_callbacks()}`
+即可。桥接服务没启动时上报会被直接丢弃，不影响 agent 本身。
+
+详见 [web/README.md](web/README.md)。
 
 ### 6. 运行单个样例（检测环境是否配置正确）
 
