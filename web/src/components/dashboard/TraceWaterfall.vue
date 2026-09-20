@@ -66,7 +66,13 @@ const rows = computed<Row[]>(() => {
 
   const out: Row[] = []
 
+  const seen = new Set<string>()
+
   function walk(span: Span, depth: number) {
+    if (seen.has(span.id))
+      return
+    seen.add(span.id)
+
     const from = Date.parse(span.startedAt)
     const to = span.endedAt ? Date.parse(span.endedAt) : now
     out.push({
@@ -81,8 +87,14 @@ const rows = computed<Row[]>(() => {
       walk(child, depth + 1)
   }
 
-  for (const root of children.get(null) ?? [])
-    walk(root, 0)
+  // A root is a span with no parent, or one whose parent is not in the trace.
+  // Data written before the tree was repaired has spans that never attached to
+  // a root at all, and walking only the parentless ones would render nothing.
+  const ids = new Set(spans.map(span => span.id))
+  for (const span of spans) {
+    if (span.parentId === null || !ids.has(span.parentId))
+      walk(span, 0)
+  }
 
   return out
 })

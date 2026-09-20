@@ -88,10 +88,22 @@ export interface TokenUsage {
 /** Lifecycle of an audit task: clone, then hand the checkout to the agent. */
 export type AuditStatus = 'queued' | 'cloning' | 'running' | 'done' | 'failed'
 
+/**
+ * What an audit covers. `project` is the whole checkout; `function` is a single
+ * function the caller names, which is why it also has to say where that
+ * function lives.
+ */
+export type AuditMode = 'project' | 'function'
+
 export interface AuditTask {
   id: string
   url: string
   commit: string
+  mode: AuditMode
+  /** Repo-relative path of the audited function's file; null in project mode. */
+  filePath: string | null
+  /** The function's source as submitted; null in project mode. */
+  functionCode: string | null
   status: AuditStatus
   createdAt: string
   startedAt: string | null
@@ -102,6 +114,15 @@ export interface AuditTask {
   verdict: string | null
   error: string | null
 }
+
+/**
+ * What `POST /api/audit/tasks` accepts, as a union rather than an optional-pair
+ * object: a function-level task without its target is not a shape the bridge
+ * can do anything with, so it is not a shape that can be built here.
+ */
+export type AuditSubmission =
+  | { url: string, commit: string, mode: 'project' }
+  | { url: string, commit: string, mode: 'function', filePath: string, functionCode: string }
 
 /** What the bridge reports about itself, for the "copy start command" action. */
 export interface BridgeInfo {

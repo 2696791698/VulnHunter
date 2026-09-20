@@ -22,7 +22,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { AUDIT_STATUS_LABELS, NO_DATA, elapsedLabel, formatDateTime, orNoData } from '@/lib/format'
+import { AUDIT_MODE_LABELS, AUDIT_STATUS_LABELS, NO_DATA, elapsedLabel, formatDateTime, orNoData } from '@/lib/format'
 
 const props = defineProps<{
   task: AuditTask | null
@@ -79,6 +79,22 @@ const STATUS_ICON = {
 
           <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
             <dt class="text-muted-foreground">
+              检测模式
+            </dt>
+            <dd class="text-xs">
+              {{ AUDIT_MODE_LABELS[task.mode] }}
+            </dd>
+
+            <template v-if="task.filePath">
+              <dt class="text-muted-foreground">
+                目标文件
+              </dt>
+              <dd class="truncate font-mono text-xs">
+                {{ task.filePath }}
+              </dd>
+            </template>
+
+            <dt class="text-muted-foreground">
               创建时间
             </dt>
             <dd class="font-mono text-xs tabular-nums">
@@ -107,6 +123,15 @@ const STATUS_ICON = {
               {{ task.error }}
             </AlertDescription>
           </Alert>
+
+          <div v-if="task.functionCode" class="flex flex-col gap-2">
+            <h3 class="text-sm font-medium">
+              函数代码
+            </h3>
+            <ScrollArea class="bg-muted max-h-72 rounded-lg">
+              <pre class="p-3 font-mono text-xs leading-relaxed break-words whitespace-pre-wrap">{{ task.functionCode }}</pre>
+            </ScrollArea>
+          </div>
 
           <div class="flex min-h-0 flex-1 flex-col gap-2">
             <h3 class="text-sm font-medium">

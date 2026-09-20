@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AuditTask } from '@/lib/types'
+import type { AuditMode, AuditSubmission, AuditTask } from '@/lib/types'
 import {
   CircleAlertIcon,
   CircleCheckIcon,
@@ -26,18 +26,46 @@ import { Input } from '@/components/ui/input'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
+import { Textarea } from '@/components/ui/textarea'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useAuditTasks } from '@/composables/useAuditTasks'
-import { AUDIT_STATUS_LABELS, NO_DATA, elapsedLabel, formatRelative, orNoData } from '@/lib/format'
+import {
+  AUDIT_MODE_LABELS,
+  AUDIT_STATUS_LABELS,
+  NO_DATA,
+  elapsedLabel,
+  formatRelative,
+  orNoData,
+} from '@/lib/format'
 
 const { tasks, loading, submit } = useAuditTasks()
 
-const form = reactive({ url: '', commit: '' })
+const form = reactive({
+  mode: 'project' as AuditMode,
+  url: '',
+  commit: '',
+  filePath: '',
+  functionCode: '',
+})
 const submitting = ref(false)
 const formError = ref<string | null>(null)
 
-const canSubmit = computed(() =>
-  form.url.trim().length > 0 && form.commit.trim().length > 0 && !submitting.value,
-)
+/** The group is `type="single"`, but switching away is not a state to allow. */
+function setMode(value: unknown) {
+  if (value === 'project' || value === 'function')
+    form.mode = value
+}
+
+// Only what the bridge cannot accept is checked here; the rules themselves (the
+// url and ref whitelists, the path shape, the code length) stay in the bridge,
+// whose message is what the form reports.
+const canSubmit = computed(() => {
+  if (submitting.value || !form.url.trim() || !form.commit.trim())
+    return false
+  if (form.mode === 'function')
+    return form.filePath.trim().length > 0 && form.functionCode.trim().length > 0
+  return true
+})
 
 const selected = ref<AuditTask | null>(null)
 const sheetOpen = ref(false)
@@ -55,13 +83,21 @@ async function onSubmit() {
   formError.value = null
   submitting.value = true
 
+  const url = form.url.trim()
+  const commit = form.commit.trim()
+  const payload: AuditSubmission = form.mode === 'function'
+    ? { url, commit, mode: 'function', filePath: form.filePath.trim(), functionCode: form.functionCode }
+    : { url, commit, mode: 'project' }
+
   try {
-    const rejection = await submit({ url: form.url.trim(), commit: form.commit.trim() })
+    const rejection = await submit(payload)
     if (rejection) {
       formError.value = rejection
       return
     }
     form.commit = ''
+    form.filePath = ''
+    form.functionCode = ''
   }
   finally {
     submitting.value = false
@@ -104,6 +140,26 @@ const STATUS_ICON = {
       <CardContent>
         <form @submit.prevent="onSubmit">
           <FieldGroup>
+            <Field>
+              <FieldLabel>检测模式</FieldLabel>
+              <ToggleGroup
+                :model-value="form.mode"
+                type="single"
+                variant="outline"
+                size="sm"
+                :disabled="submitting"
+                @update:model-value="setMode"
+              >
+                <ToggleGroupItem value="project">
+                  项目检测
+                </ToggleGroupItem>
+                <ToggleGroupItem value="function">
+                  函数检测
+                </ToggleGroupItem>
+              </ToggleGroup>
+              <FieldDescription>项目检测审查整个仓库；函数检测只审查你指出的那一个函数。</FieldDescription>
+            </Field>
+
             <Field :data-invalid="Boolean(formError)">
               <FieldLabel for="audit-url">
                 仓库地址
@@ -131,6 +187,38 @@ const STATUS_ICON = {
               />
               <FieldDescription>会以 detached HEAD 检出这个 commit。</FieldDescription>
             </Field>
+
+            <template v-if="form.mode === 'function'">
+              <Field :data-invalid="Boolean(formError)">
+                <FieldLabel for="audit-file-path">
+                  函数所在文件
+                </FieldLabel>
+                <Input
+                  id="audit-file-path"
+                  v-model="form.filePath"
+                  placeholder="src/package/module.py"
+                  autocomplete="off"
+                  class="font-mono"
+                  :aria-invalid="Boolean(formError)"
+                />
+                <FieldDescription>相对项目根目录的路径；检出后会在检出目录里找到它，找不到就直接报错。</FieldDescription>
+              </Field>
+
+              <Field :data-invalid="Boolean(formError)">
+                <FieldLabel for="audit-function-code">
+                  函数代码
+                </FieldLabel>
+                <Textarea
+                  id="audit-function-code"
+                  v-model="form.functionCode"
+                  placeholder="def handler(request):&#10;    ..."
+                  spellcheck="false"
+                  class="max-h-80 min-h-32 font-mono text-xs"
+                  :aria-invalid="Boolean(formError)"
+                />
+                <FieldDescription>把函数整段贴进来（含定义那一行），审查只针对这段代码。</FieldDescription>
+              </Field>
+            </template>
 
             <FieldError v-if="formError">
               {{ formError }}
@@ -182,6 +270,9 @@ const STATUS_ICON = {
                 <ItemTitle class="min-w-0 flex-1 truncate font-mono text-xs">
                   {{ task.url }}
                 </ItemTitle>
+                <Badge variant="secondary" class="shrink-0">
+                  {{ AUDIT_MODE_LABELS[task.mode] }}
+                </Badge>
                 <Badge variant="outline" class="shrink-0">
                   <component :is="STATUS_ICON[task.status]" :class="STATUS_TONE[task.status]" />
                   {{ AUDIT_STATUS_LABELS[task.status] }}
@@ -190,6 +281,10 @@ const STATUS_ICON = {
 
               <ItemDescription class="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs">
                 <span>@ {{ task.commit }}</span>
+                <template v-if="task.filePath">
+                  <span aria-hidden="true">·</span>
+                  <span class="min-w-0 max-w-64 truncate">{{ task.filePath }}</span>
+                </template>
                 <span aria-hidden="true">·</span>
                 <span>{{ formatRelative(task.createdAt) }}</span>
                 <template v-if="task.startedAt">

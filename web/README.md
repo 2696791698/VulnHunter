@@ -132,6 +132,30 @@ npm install && npm run dev -- --host 0.0.0.0
 填一个仓库地址和 commit，服务会把它拉取到专用检出目录，再交给 `audit_agent.py` 跑一次完整审查，
 结论回填到任务列表里。`POST /api/audit/tasks` 建任务，`GET /api/audit/tasks` 看列表。
 
+审查分两种**检测模式**，在表单顶部切换，两者共用同一条队列和同一套检出流程：
+
+| 模式 | 表单字段 | 交给 agent 的东西 |
+| --- | --- | --- |
+| 项目检测 | 仓库地址 + commit | 整个检出目录 |
+| 函数检测 | 再加函数所在文件、函数代码 | 整个检出目录 + 这一个函数的路径与源码 |
+
+函数检测不多克隆、也不另起容器：提示词末尾多一段目标函数（`audit_agent.py` 的
+`render_function_target()`），系统提示词里多一条范围约束（`FUNCTION_SCOPE_RULES`，只对这一个
+函数下结论）。代码**原样**进提示词，只去掉首尾的空行——函数自己的缩进属于提交内容的一部分。
+除代码外还给路径，是因为 agent 要读那个文件才拿得到参数来源和调用链，只给片段它只能对着片段猜。
+
+两个填空的校验都在桥接服务里：
+
+- **文件路径**必须是相对检出根目录的路径：不接受绝对路径、盘符和 `..` 路径段，字符集也收紧到
+  一套安全字符。它唯一被使用的地方是拼接检出目录，这些限制让这个拼接在构造上就出不去。
+- **函数代码**按字符数设上限（`MAX_FUNCTION_CODE_CHARS`，20000）。任务每变一次状态就把它整份
+  追加进 `audit_tasks.jsonl`，上限是为了让这份历史有个界。
+- 检出之后**验证路径存在**：找不到就把任务判失败并指名是哪个路径。路径是调用方给的，只有格式
+  保证、没有存在保证；路径错了 agent 读不到文件，只凭片段答题，不如直接报出来。
+
+`mode` 是函数检测上线后才有的字段；更早的任务在 `_public_task()` 里一律读作 `project`，旧记录
+不需要迁移。
+
 几个由 `audit_agent.run()` 的现状决定的设计：
 
 - **一次只跑一个。** `run()` 起的是固定名字的 `anaconda-container`，而且读模块级全局的
@@ -160,8 +184,26 @@ from agent_tracing import tracing_callbacks
 result = await agent.ainvoke(payload, config={"callbacks": tracing_callbacks()})
 ```
 
-它是纯 stdlib 实现、在后台线程里发送，桥接服务没起时事件直接丢弃，不会拖慢也不会打断 agent。
-`base_agent.py` 想接的话加同样两行即可。
+它是纯 stdlib 实现、在后台线程里发送，永远不会阻塞或打断 agent：批次按字节切分（默认 8 MB），
+发送失败重试三次，仍失败才丢弃并计数，最多每分钟告警一次（`BridgeTracer.stats()` 里的
+`dropped` 就是丢掉的条数）。`base_agent.py` 想接的话加同样两行即可。
+
+**载荷完整保真**：span 的输入输出原样上报，不做任何截断（早期的 6000 字符 / 60 项 / 6 层上限
+已经移除）。唯一的例外是循环引用的对象——它无法表示成 JSON，会被替换成 `<循环引用>` 标记。
+
+### 树形是怎么还原的
+
+父子关系不能只靠 `parent_run_id`。`LANGSMITH_TRACING=true` 时，langchain 会把每个 middleware 的
+`wrap_tool_call` / `wrap_model_call` 包进 `langsmith.traceable(...)`
+（见 `langchain/agents/factory.py`）。这层包装 run 只存在于 LangSmith 那一侧，我们的回调处理器
+收不到它，于是工具/模型调用报出的 `parentId` 指向一个不存在的节点——轨迹会碎成一堆单 span 的
+碎片，把 `MAX_TRACES` 的配额吃掉，真正的树反而被挤出去。
+
+LangGraph 会给**每个** run 打上 `langgraph_step` 和 `langgraph_checkpoint_ns`，包括工具/模型
+这些叶子节点，取值与它们所属的节点 run 完全一致。`agent_tracing.py` 的 `_resolve_parent()`
+在父节点未知时就改用这对元数据把 span 挂回它的节点，所以 **LangSmith 开着和关着得到的是同一棵树**
+（只有需要救助的 span 数量不同）。并行工具调用各自有独立的 `checkpoint_ns`，不会互相串。
+实在还原不了的 span 保持孤立，不会被挂到错误的位置上。
 
 agent 和桥接服务跑在同一个容器里，所以 `agent_tracing.py` 默认上报到 `127.0.0.1:8901`
 就能直接到达，不需要额外配置。
@@ -172,6 +214,13 @@ agent 和桥接服务跑在同一个容器里，所以 `agent_tracing.py` 默认
 | --- | --- | --- |
 | `AGENT_TRACE_URL` | `http://127.0.0.1:<BRIDGE_PORT>/api/agent/events` | 事件上报地址 |
 | `AGENT_TRACE_DISABLED` | 未设置 | 设为 `1` 完全关掉上报 |
+| `AGENT_TRACE_BATCH_BYTES` | `8388608` | 单批上报的字节上限（载荷整份保留后，不能只按条数切批） |
+| `AGENT_TRACE_POST_TIMEOUT_S` | `60` | 单次上报超时 |
+| `AGENT_TRACE_QUEUE_MAX` | `8192` | 待发队列上限，满了丢弃并计数（`put_nowait`，绝不阻塞 agent） |
+| `AGENT_TRACE_RUNS_MAX` | `50000` | run id 簿记上限（父子推导用） |
+| `AGENT_TRACE_MAX_MB` | `384` | 桥接内存里 span 的总预算（仅服务端） |
+| `AGENT_TRACE_JOURNAL_MAX_MB` | `512` | 日志轮转阈值（仅服务端） |
+| `AGENT_TRACE_REPLAY_MB` | `128` | 启动时回放的日志尾部上限（仅服务端） |
 | `BRIDGE_PORT` | `8901` | 桥接服务端口，三处共用 |
 
 > 默认端口本来是 8787，但它在不少 Windows 机器上落在系统保留的端口区间里（`netsh int ipv4
@@ -184,15 +233,22 @@ agent 和桥接服务跑在同一个容器里，所以 `agent_tracing.py` 默认
 
 | 数据 | 内存里的上限 | 日志 | 变量 |
 | --- | --- | --- | --- |
-| agent span 事件（轨迹 / token 用量） | 最近 50 条轨迹 | `agent_traces.jsonl` | `AGENT_TRACE_JOURNAL` |
+| agent span 事件（轨迹 / token 用量） | 384 MB 或 50 条轨迹，先到先算 | `agent_traces.jsonl` | `AGENT_TRACE_JOURNAL` |
 | 审查任务记录 | 最近 50 条任务 | `audit_tasks.jsonl` | `AUDIT_TASK_JOURNAL` |
+
+载荷现在整份保留，所以 span 存储按**字节**而不是条数设上限（`AGENT_TRACE_MAX_MB`，默认
+384 MB）：超预算时整条轨迹从旧到新淘汰；万一单次审计本身就超预算，就释放这条轨迹里最旧 span
+的载荷而保留 span 本身——树形和耗时不受影响，被释放的载荷会在详情里写明原因。token 用量另外
+存一份极小的每模型调用记录，不受淘汰影响；否则内存一收紧，概览的趋势图就会跟着断掉。
 
 环境检测不在这里：它只有当前这一次读数，留在桥接进程的内存里，没有日志，也没有
 `ENV_RUN_JOURNAL` 可配。
 
 写入方式是追加一行 JSON，然后 `write` + `flush`；日志超过 `AGENT_TRACE_JOURNAL_MAX_MB`（默认
-32 MB）时，启动阶段会把它移到 `.jsonl.1`（覆盖上一份）后重新开始，避免把无界增长的文件整个
-读进内存。日志落在项目目录下（已 gitignore）—— 那是容器重建后唯一还在的地方。
+512 MB）时轮转到 `.jsonl.1`（覆盖上一份）。轮转在**写入时**判断，不只在启动阶段——一次审计
+就能让文件涨几十 MB。启动时只回放日志尾部（`AGENT_TRACE_REPLAY_MB`，默认 128 MB），超出的
+部分本来也会被内存预算淘汰，读进来再扔掉没有意义。日志落在项目目录下（已 gitignore）
+—— 那是容器重建后唯一还在的地方。
 
 > 用的是 `flush`，**不是 `fsync`** —— 项目目录是 Windows bind mount，`fsync` 在那里会失败
 > （`git clone` 就是栽在这）。所以字节会立刻交给操作系统，进程崩溃不丢，但机器断电可能丢最后
@@ -209,7 +265,7 @@ agent 和桥接服务跑在同一个容器里，所以 `agent_tracing.py` 默认
 | --- | --- | --- |
 | `/overview` | 概览 | Token 用量（总计 + 四项分解）与按小时的使用趋势（各系列独立绘制） |
 | `/env-check` | 环境检查 | 「重新检测」按钮 + 检测概览（统计格 + 耗时构成条）+ 每项一张卡片，点开抽屉看原始输出 |
-| `/audit` | 漏洞审查 | 填仓库地址 + commit 发起审查任务；任务列表显示拉取/审查状态与结论 |
+| `/audit` | 漏洞审查 | 切换项目检测 / 函数检测后发起审查任务；任务列表显示拉取/审查状态与结论 |
 | `/agent` | Agent 监控 | 运行轨迹列表 + span 瀑布图 |
 
 根路径 `/` 重定向到 `/overview`，未知路径也回落到概览。侧边栏「依赖项」里的每一项都指向
@@ -227,7 +283,7 @@ web/
 │   │   └── AgentPage.vue
 │   ├── router/index.ts             # 路由表，页面对应的 chunk 懒加载
 │   ├── components/
-│   │   ├── ui/                     # shadcn-vue 组件（由 CLI 生成）
+│   │   ├── ui/                     # shadcn-vue 组件（由 CLI 生成；Textarea 照同一形状手写）
 │   │   ├── dashboard/              # 页面骨架，照 shadcn 的 dashboard-01 排版
 │   │   │   ├── AppSidebar.vue          # 侧边栏：品牌、导航、依赖项、页脚状态
 │   │   │   ├── NavMain.vue             # 主操作 + 五个页面的导航

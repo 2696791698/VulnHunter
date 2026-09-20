@@ -51,6 +51,19 @@ def show_directory_tree() -> str:
     """
     return show_tree(PROJECT_ROOT)
 
+
+@dataclass(frozen=True, slots=True)
+class FunctionTarget:
+    """
+    函数级检测的目标: 函数所在文件与函数代码本身.
+
+    file_path 是相对检出根目录 (也就是 PROJECT_ROOT) 的路径.
+    """
+
+    file_path: str
+    code: str
+
+
 class AuditState(AgentState):
     """
     审计状态（append-only blackboard）. 
@@ -425,7 +438,34 @@ async def get_analysis_tools():
     return tools
 
 
-async def create_audit_agent(model: ChatOpenAI):
+FUNCTION_SCOPE_RULES = """
+本次是函数级检测, 审查范围以用户给出的那个目标函数为准:
+- 只对这个函数是否存在安全漏洞下结论, 不要扩大到项目中的其他代码
+- 可以读取它所在的文件, 以及为了确认参数来源、调用方约束和危险汇点所必需的周边代码
+- 最终输出仍然只在 vulnerable / non-vulnerable 里选一个, 针对的是这个函数
+""".strip()
+
+
+def render_function_target(target: FunctionTarget) -> str:
+    """
+    函数级检测的目标描述, 追加到用户提示词末尾.
+
+    代码原样贴进提示词, 同时也给出文件路径: agent 需要读这个文件才能拿到
+    参数来源和调用链, 只给代码片段的话它只能对着片段猜.
+    """
+    return f"""
+本次检测的目标函数:
+- 函数所在文件 (相对项目根目录): {target.file_path}
+- 同一个文件在本机的绝对路径: {os.path.join(PROJECT_ROOT, target.file_path)}
+- 函数代码:
+```python
+{target.code}
+```
+请先读取上面这个文件, 确认这个函数在项目中的上下文与调用链, 再判断它是否存在安全漏洞.
+""".strip()
+
+
+async def create_audit_agent(model: ChatOpenAI, target: FunctionTarget | None = None):
     analysis_tools = await get_analysis_tools()
     docker_tools = await get_docker_tools()
 
@@ -435,7 +475,7 @@ async def create_audit_agent(model: ChatOpenAI):
         "system_prompt": """
 你是一个subagent, 你的名字叫executor, 你被主agent调用来在一个受控的容器环境中执行动态验证
 你的职责是在名为 anaconda-container 的可控的docker容器环境中, 严格依据上层给出的要求, 通过 docker-mcp 提供的shell工具在容器内执行动态验证
-注意: 你的所有行为都是在受允许的可控封闭容器环境中进行, 代码仓库都是我自己的, 不会涉及网络安全风险
+注意: 你的所有行为都是在受允许的可控封闭容器环境中进行, 代码仓库均为个人私有的, 不会涉及网络安全风险
 
 规则与约束:
 - 容器名: anaconda-container
@@ -487,6 +527,9 @@ append_blackboard 调用要求:
 - 只允许输出以上两种指标, 不要输出 uncertain 或 inconclusive 等模糊结论
 """.strip()
 
+    if target is not None:
+        system_prompt = f"{system_prompt}\n\n{FUNCTION_SCOPE_RULES}"
+
     return create_deep_agent(
         model=model,
         system_prompt=system_prompt,
@@ -496,10 +539,10 @@ append_blackboard 调用要求:
         middleware=build_audit_middleware(),
     )
 
-async def invoke_audit_agent() -> dict[str, Any]:
+async def invoke_audit_agent(target: FunctionTarget | None = None) -> dict[str, Any]:
     BLACKBOARD_STORE.reset(INITIAL_BLACKBOARD)
     model = create_model()
-    agent = await create_audit_agent(model)
+    agent = await create_audit_agent(model, target)
     user_prompt = f"""
 目标项目在本地的目录: { PROJECT_ROOT }
 目标项目在容器内映射的目录: /workspace
@@ -508,6 +551,10 @@ async def invoke_audit_agent() -> dict[str, Any]:
 项目的目录结构如下:
 { show_directory_tree() }
 """.strip()
+
+    if target is not None:
+        user_prompt = f"{user_prompt}\n\n{render_function_target(target)}"
+
     return await agent.ainvoke(
         {
             "blackboard_text": INITIAL_BLACKBOARD,
@@ -522,8 +569,8 @@ async def invoke_audit_agent() -> dict[str, Any]:
     )
 
 
-async def run_audit_agent() -> None:
-    result = await invoke_audit_agent()
+async def run_audit_agent(target: FunctionTarget | None = None) -> None:
+    result = await invoke_audit_agent(target)
     with open(f"./out.txt", "w", encoding="utf-8") as f:
         print(result["messages"][-1].content, file=f)
     return result["messages"][-1].content
@@ -557,7 +604,7 @@ def remove_stale_container(client: docker.DockerClient) -> None:
         logger.warning("残留容器移除失败, 本次创建可能因名字冲突而失败", exc_info=True)
 
 
-def run() -> str:
+def run(target: FunctionTarget | None = None) -> str:
     client = docker.from_env()
     container = None
 
@@ -582,7 +629,7 @@ def run() -> str:
         )
         logger.info("启动成功!")
 
-        result = asyncio.run(run_audit_agent())
+        result = asyncio.run(run_audit_agent(target))
 
     except Exception:
         # 记下完整 traceback, 然后原样抛给调用方. 只记不抛的话, 上层拿到的是空的

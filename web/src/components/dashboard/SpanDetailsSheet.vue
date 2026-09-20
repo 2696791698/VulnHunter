@@ -5,7 +5,6 @@ import { computed } from 'vue'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import {
   Sheet,
@@ -15,12 +14,15 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
+import PayloadViewer from '@/components/dashboard/PayloadViewer.vue'
 import { formatClock, formatDuration, formatTokens } from '@/lib/format'
 import { SPAN_KIND_LABELS, SPAN_STATUS_LABELS } from '@/lib/traces'
 
 const props = defineProps<{
   span: Span | null
   open: boolean
+  /** The span's payloads are being fetched. */
+  loading?: boolean
 }>()
 
 const emit = defineEmits<{ 'update:open': [value: boolean] }>()
@@ -28,6 +30,14 @@ const emit = defineEmits<{ 'update:open': [value: boolean] }>()
 const open = computed({
   get: () => props.open,
   set: value => emit('update:open', value),
+})
+
+/** Set by the bridge when a payload outgrew the in-memory budget. */
+const omitted = computed(() => {
+  const value = (props.span?.inputs ?? props.span?.outputs) as { omitted?: string } | null
+  return typeof value === 'object' && value !== null && typeof value.omitted === 'string'
+    ? value.omitted
+    : null
 })
 
 const duration = computed(() => {
@@ -49,17 +59,6 @@ const STATUS_ICON = {
   error: CircleAlertIcon,
   running: LoaderIcon,
 } as const
-
-function pretty(value: unknown): string {
-  if (value === null || value === undefined)
-    return '—'
-  try {
-    return JSON.stringify(value, null, 2)
-  }
-  catch {
-    return String(value)
-  }
-}
 </script>
 
 <template>
@@ -101,6 +100,16 @@ function pretty(value: unknown): string {
               {{ formatClock(span.startedAt) }}
             </dd>
 
+            <template v-if="span.graph?.node">
+              <dt class="text-muted-foreground">
+                节点
+              </dt>
+              <dd class="font-mono text-xs">
+                {{ span.graph.node }}
+                <span v-if="span.adopted" class="text-muted-foreground">· 由元数据归位</span>
+              </dd>
+            </template>
+
             <template v-if="span.model">
               <dt class="text-muted-foreground">
                 模型
@@ -128,22 +137,32 @@ function pretty(value: unknown): string {
             </AlertDescription>
           </Alert>
 
+          <Alert v-if="omitted">
+            <TriangleAlertIcon />
+            <AlertTitle>载荷已释放</AlertTitle>
+            <AlertDescription class="break-words">
+              {{ omitted }}
+            </AlertDescription>
+          </Alert>
+
           <div class="flex min-h-0 flex-1 flex-col gap-2">
-            <h3 class="text-sm font-medium">
-              输入
-            </h3>
-            <ScrollArea class="bg-muted max-h-56 rounded-lg">
-              <pre class="p-3 font-mono text-xs leading-relaxed break-all whitespace-pre-wrap">{{ pretty(span.inputs) }}</pre>
-            </ScrollArea>
+            <PayloadViewer :value="span.inputs" :loading="loading">
+              <template #label>
+                <h3 class="text-sm font-medium">
+                  输入
+                </h3>
+              </template>
+            </PayloadViewer>
           </div>
 
           <div class="flex min-h-0 flex-1 flex-col gap-2">
-            <h3 class="text-sm font-medium">
-              输出
-            </h3>
-            <ScrollArea class="bg-muted max-h-56 rounded-lg">
-              <pre class="p-3 font-mono text-xs leading-relaxed break-all whitespace-pre-wrap">{{ pretty(span.outputs) }}</pre>
-            </ScrollArea>
+            <PayloadViewer :value="span.outputs" :loading="loading">
+              <template #label>
+                <h3 class="text-sm font-medium">
+                  输出
+                </h3>
+              </template>
+            </PayloadViewer>
           </div>
         </div>
 

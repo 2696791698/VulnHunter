@@ -28,6 +28,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CHECK_SCRIPT = REPO_ROOT / "check_environment.py"
@@ -51,7 +52,17 @@ AUDIT_SCRIPT = REPO_ROOT / "audit_agent.py"
 # Only network transports, and only refs that cannot be mistaken for a git flag.
 URL_PATTERN = re.compile(r"^(https?://|git://|ssh://|git@)[^\s]+$")
 REF_PATTERN = re.compile(r"^[0-9A-Za-z._/-]{4,120}$")
-JOURNAL_MAX_BYTES = int(os.getenv("AGENT_TRACE_JOURNAL_MAX_MB", "32")) * 1024 * 1024
+# Spans are stored whole, so retention is measured in bytes rather than in
+# traces: a handful of audits is tens of megabytes each. This is the budget for
+# everything held in memory, and it evicts oldest-trace-first.
+JOURNAL_MAX_BYTES = int(os.getenv("AGENT_TRACE_JOURNAL_MAX_MB", "512")) * 1024 * 1024
+MAX_TRACE_BYTES = int(os.getenv("AGENT_TRACE_MAX_MB", "384")) * 1024 * 1024
+# At start-up only the tail of the journal is replayed, so a long-lived journal
+# does not turn into an unbounded start-up cost.
+REPLAY_MAX_BYTES = int(os.getenv("AGENT_TRACE_REPLAY_MB", "128")) * 1024 * 1024
+# One small record per model span, kept outside the byte budget above: the
+# token trend is a time series, and evicting traces must not erase its history.
+MAX_USAGE_SAMPLES = 20_000
 
 # Everything the dashboard shows about a check is defined here, in the backend,
 # and sent over the wire — the frontend renders it verbatim and has no copy of
@@ -273,6 +284,10 @@ app.add_middleware(
     allow_methods=["GET", "POST", "DELETE"],
     allow_headers=["*"],
 )
+# Added after CORS, so it is the outermost layer and compresses the trace
+# payloads too. Those are large by design now, and JSON this repetitive
+# compresses by roughly an order of magnitude.
+app.add_middleware(GZipMiddleware, minimum_size=1024)
 
 # The page reports the state of the environment as it is now, so there is
 # exactly one reading worth keeping: the one on screen. Nothing is written
@@ -334,10 +349,85 @@ MAX_TRACES = 50
 
 _spans: dict[str, dict] = {}
 _trace_order: list[str] = []
+# Payloads are kept whole, so retention is bounded by size as well as by count.
+_trace_bytes: dict[str, int] = {}
+_bytes_total = 0
+# Bumped on every applied event, so the dashboard can tell whether a trace it
+# is polling actually changed without refetching the payloads to find out.
+_revision: dict[str, int] = {}
+# One small record per model span. Deliberately outside the byte budget: the
+# token trend is a time series, and evicting traces must not erase its past.
+_usage_samples: list[dict] = []
 
 
 def _spans_of(trace_id: str) -> list[dict]:
     return [span for span in _spans.values() if span["traceId"] == trace_id]
+
+
+def _drop_trace(trace_id: str) -> None:
+    global _bytes_total
+    for key in [key for key, item in _spans.items() if item["traceId"] == trace_id]:
+        _bytes_total -= _spans[key].get("sizeBytes") or 0
+        del _spans[key]
+    _trace_bytes.pop(trace_id, None)
+    _revision.pop(trace_id, None)
+
+
+def _trim_payloads(trace_id: str) -> None:
+    """Releases the bodies inside one oversized trace, oldest span first.
+
+    The spans themselves stay, so the tree and the timings survive; only the
+    payloads are replaced, and they say so rather than pretending to be empty.
+    """
+    global _bytes_total
+    spans = sorted(_spans_of(trace_id), key=lambda span: span["startedAt"] or "")
+    for span in spans:
+        if _bytes_total <= MAX_TRACE_BYTES:
+            return
+        freed = span.get("sizeBytes") or 0
+        if not freed:
+            continue
+        replacement = {"omitted": f"载荷超出内存预算，已释放约 {freed // 1024} KB"}
+        span["inputs"] = replacement
+        span["outputs"] = replacement
+        span["sizeBytes"] = 0
+        _bytes_total -= freed
+        _trace_bytes[trace_id] = max(0, _trace_bytes.get(trace_id, 0) - freed)
+
+
+def _evict() -> None:
+    while len(_trace_order) > MAX_TRACES:
+        _drop_trace(_trace_order.pop(0))
+
+    while _bytes_total > MAX_TRACE_BYTES and _trace_order:
+        if len(_trace_order) == 1:
+            # A single audit larger than the whole budget: keep its shape.
+            _trim_payloads(_trace_order[0])
+            if _bytes_total > MAX_TRACE_BYTES:
+                _drop_trace(_trace_order.pop(0))
+            return
+        _drop_trace(_trace_order.pop(0))
+
+
+def _register_trace(trace_id: str) -> None:
+    if trace_id in _trace_bytes:
+        return
+    _trace_order.append(trace_id)
+    _trace_bytes[trace_id] = 0
+    _revision[trace_id] = 0
+    _evict()
+
+
+def _record_usage(span: dict) -> None:
+    usage = span.get("usage") or {}
+    if not usage.get("totalTokens"):
+        return
+    _usage_samples.append({
+        "startedAt": span.get("startedAt"),
+        "model": span.get("model"),
+        "usage": usage,
+    })
+    del _usage_samples[:-MAX_USAGE_SAMPLES]
 
 
 def _summarise(trace_id: str) -> dict | None:
@@ -366,10 +456,13 @@ def _summarise(trace_id: str) -> dict | None:
         "spanCount": len(spans),
         "errorCount": errors,
         "usage": usage if usage["totalTokens"] else None,
+        "revision": _revision.get(trace_id, 0),
+        "sizeBytes": _trace_bytes.get(trace_id, 0),
     }
 
 
 def _apply_event(event: dict) -> None:
+    global _bytes_total
     span_id = event.get("spanId")
     if not span_id:
         return
@@ -378,6 +471,7 @@ def _apply_event(event: dict) -> None:
 
     if kind == "span.start":
         trace_id = event.get("traceId") or span_id
+        size = int(event.get("sizeBytes") or 0)
         _spans[span_id] = {
             "id": span_id,
             "traceId": trace_id,
@@ -393,31 +487,46 @@ def _apply_event(event: dict) -> None:
             "model": event.get("model"),
             "usage": None,
             "tags": event.get("tags") or [],
+            # Which LangGraph node the span belongs to, and whether `parentId`
+            # had to be recovered from it. Kept so a trace can be diagnosed
+            # after the fact without re-running anything.
+            "graph": event.get("graph"),
+            "adopted": bool(event.get("adopted")),
+            "sizeBytes": size,
         }
-
-        if trace_id not in _trace_order:
-            _trace_order.append(trace_id)
-            while len(_trace_order) > MAX_TRACES:
-                dropped = _trace_order.pop(0)
-                for key in [key for key, span in _spans.items() if span["traceId"] == dropped]:
-                    del _spans[key]
+        _bytes_total += size
+        # Registered before the size is added: `_register_trace` uses presence in
+        # `_trace_bytes` to mean "already known", so the byte must come second.
+        _register_trace(trace_id)
+        _trace_bytes[trace_id] = _trace_bytes.get(trace_id, 0) + size
+        _revision[trace_id] = _revision.get(trace_id, 0) + 1
         return
 
     span = _spans.get(span_id)
     if span is None:
         return
 
+    trace_id = span["traceId"]
+
     if kind == "span.end":
         span["endedAt"] = event.get("endedAt")
         span["status"] = "ok"
         if "outputs" in event:
             span["outputs"] = event["outputs"]
+            size = int(event.get("sizeBytes") or 0)
+            span["sizeBytes"] = (span.get("sizeBytes") or 0) + size
+            _bytes_total += size
+            _trace_bytes[trace_id] = _trace_bytes.get(trace_id, 0) + size
         if event.get("usage"):
             span["usage"] = event["usage"]
+            _record_usage(span)
     elif kind == "span.error":
         span["endedAt"] = event.get("endedAt")
         span["status"] = "error"
         span["error"] = event.get("error")
+
+    _revision[trace_id] = _revision.get(trace_id, 0) + 1
+    _evict()
 
 
 def _journal_events(events: list[dict]) -> None:
@@ -427,31 +536,38 @@ def _journal_events(events: list[dict]) -> None:
     replays rather than loses them. `flush` hands the bytes to the OS right
     away; `fsync` is deliberately not used because it fails on the
     bind-mounted project directory this file lives in.
+
+    The size check happens here rather than only at start-up: an audit now adds
+    tens of megabytes, and the cap should bound the file while it is growing.
+    A rotation keeps one previous generation and overwrites it in turn.
     """
     try:
+        lines = [json.dumps(event, ensure_ascii=False, default=str) for event in events]
+        incoming = sum(len(line) + 1 for line in lines)
+        if JOURNAL.exists() and JOURNAL.stat().st_size + incoming > JOURNAL_MAX_BYTES:
+            JOURNAL.replace(JOURNAL.parent / f"{JOURNAL.name}.1")
+
         with JOURNAL.open("a", encoding="utf-8") as handle:
-            for event in events:
-                handle.write(json.dumps(event, ensure_ascii=False, default=str) + chr(10))
+            for line in lines:
+                handle.write(line + chr(10))
             handle.flush()
     except OSError:
         # Tracing is a side channel; it must never break ingestion.
         pass
 
 
-def _replay_journal() -> None:
-    """Rebuilds the in-memory store from the journal, once, at start-up."""
-    if not JOURNAL.exists():
-        return
-
+def _replay_file(path: Path) -> None:
     try:
-        if JOURNAL.stat().st_size > JOURNAL_MAX_BYTES:
-            # Move an oversized journal aside instead of replaying an unbounded
-            # file into memory. The previous generation is overwritten; the
-            # in-memory store only keeps MAX_TRACES anyway.
-            JOURNAL.replace(JOURNAL.parent / f"{JOURNAL.name}.1")
+        if not path.exists():
             return
-
-        with JOURNAL.open(encoding="utf-8") as handle:
+        size = path.stat().st_size
+        with path.open(encoding="utf-8") as handle:
+            if size > REPLAY_MAX_BYTES:
+                # Only the tail: the byte budget would evict the rest anyway,
+                # and reading gigabytes to discard them is not a start-up cost
+                # worth paying.
+                handle.seek(size - REPLAY_MAX_BYTES)
+                handle.readline()  # drop the partial line the seek landed in
             for line in handle:
                 line = line.strip()
                 if not line:
@@ -467,6 +583,14 @@ def _replay_journal() -> None:
         pass
 
 
+def _replay_journal() -> None:
+    """Rebuilds the in-memory store from the journal, once, at start-up."""
+    # Oldest first, so that eviction order across the rotation boundary is the
+    # same as it was while both were being written.
+    _replay_file(JOURNAL.parent / f"{JOURNAL.name}.1")
+    _replay_file(JOURNAL)
+
+
 _replay_journal()
 
 
@@ -474,7 +598,9 @@ _replay_journal()
 async def post_agent_events(events: list[dict]) -> dict:
     """Ingest a batch of span events from `agent_tracing.py`."""
     accepted = [event for event in events if isinstance(event, dict)]
-    _journal_events(accepted)
+    # Batches carry whole payloads now, so the journal write is real blocking
+    # I/O rather than a few kilobytes.
+    await asyncio.to_thread(_journal_events, accepted)
     for event in accepted:
         _apply_event(event)
     return {"accepted": len(events)}
@@ -482,24 +608,64 @@ async def post_agent_events(events: list[dict]) -> dict:
 
 @app.get("/api/agent/traces")
 async def get_agent_traces() -> dict:
-    """Trace summaries, newest first."""
+    """Trace summaries, newest first. Never carries payloads."""
     traces = [summary for trace_id in reversed(_trace_order) if (summary := _summarise(trace_id))]
     return {"traces": traces}
 
 
+def _public_span(span: dict, payloads: bool) -> dict:
+    if payloads:
+        return span
+    return {**span, "inputs": None, "outputs": None}
+
+
 @app.get("/api/agent/traces/{trace_id}")
-async def get_agent_trace(trace_id: str) -> dict:
+async def get_agent_trace(trace_id: str, payloads: bool = True) -> dict:
+    """One trace with all its spans.
+
+    `?payloads=false` returns the same tree without the bodies — that is what
+    the dashboard polls, so a running audit does not re-send megabytes every
+    few seconds. Payloads are then fetched one span at a time, on demand.
+    """
     summary = _summarise(trace_id)
     if summary is None:
         raise HTTPException(status_code=404, detail=f"未找到轨迹 {trace_id}")
-    return {**summary, "spans": _spans_of(trace_id)}
+    return {**summary, "spans": [_public_span(span, payloads) for span in _spans_of(trace_id)]}
+
+
+@app.get("/api/agent/traces/{trace_id}/spans/{span_id}")
+async def get_agent_span(trace_id: str, span_id: str) -> dict:
+    """A single span, with its payloads. The dashboard's detail view."""
+    span = _spans.get(span_id)
+    if span is None or span["traceId"] != trace_id:
+        raise HTTPException(status_code=404, detail=f"未找到 span {span_id}")
+    return span
 
 
 @app.delete("/api/agent/traces")
 async def clear_agent_traces() -> dict:
+    """Empties the store — in memory *and* on disk.
+
+    Clearing only memory used to look like it worked until the next restart,
+    when the journal was replayed and everything came back.
+    """
+    global _bytes_total
     _spans.clear()
     _trace_order.clear()
-    return {"cleared": True}
+    _trace_bytes.clear()
+    _revision.clear()
+    _usage_samples.clear()
+    _bytes_total = 0
+
+    removed = []
+    for path in (JOURNAL, JOURNAL.parent / f"{JOURNAL.name}.1"):
+        try:
+            path.unlink(missing_ok=True)
+            removed.append(str(path))
+        except OSError:
+            pass
+
+    return {"cleared": True, "journalRemoved": removed}
 
 
 # --------------------------------------------------------------------------- #
@@ -606,31 +772,30 @@ async def get_agent_usage(interval: str = DEFAULT_USAGE_INTERVAL) -> dict:
     chosen = next((item for item in USAGE_INTERVALS if item["value"] == interval), None)
     if chosen is None:
         raise HTTPException(status_code=400, detail=f"不支持的时间间隔 {interval}")
-    spans = [
-        span for span in _spans.values()
-        if span.get("kind") == "model" and span.get("usage")
-    ]
+    # A separate, tiny per-model-span history rather than a scan of `_spans`:
+    # the byte budget evicts traces, and the token trend should outlive them.
+    samples = [sample for sample in _usage_samples if sample.get("usage")]
     options = [{"value": item["value"], "label": item["label"]} for item in USAGE_INTERVALS]
 
-    if not spans:
+    if not samples:
         return {"totals": None, "models": [], "buckets": [], "interval": chosen["value"], "intervals": options}
 
     totals = _zero_usage()
     buckets: dict[str, dict] = {}
 
-    for span in spans:
-        usage = span["usage"]
+    for sample in samples:
+        usage = sample["usage"]
         _add_usage(totals, usage)
 
-        key = _usage_bucket(span.get("startedAt") or "", chosen["seconds"])
+        key = _usage_bucket(sample.get("startedAt") or "", chosen["seconds"])
         bucket = buckets.setdefault(key, {"key": key, "requests": 0, **_zero_usage()})
         bucket["requests"] += 1
         _add_usage(bucket, usage)
 
-    models = sorted({span["model"] for span in spans if span.get("model")})
+    models = sorted({sample["model"] for sample in samples if sample.get("model")})
 
     return {
-        "totals": _derive_usage(totals, len(spans)),
+        "totals": _derive_usage(totals, len(samples)),
         "models": models,
         "interval": chosen["value"],
         "intervals": options,
@@ -669,6 +834,17 @@ async def get_bridge_info() -> dict:
 # --------------------------------------------------------------------------- #
 
 MAX_TASKS = 50
+
+# A task audits either the whole checkout or one function in it. The function
+# mode additionally carries the file the function lives in, relative to the
+# checkout root, and the function's own source.
+AUDIT_MODES = ("project", "function")
+# The source is echoed into the task journal on every state change and replayed
+# at start-up, so it is bounded rather than accepted at whatever size it arrives.
+MAX_FUNCTION_CODE_CHARS = 20_000
+# `\w` is unicode-aware, so a filename with non-ASCII letters is still accepted;
+# what this keeps out is whitespace and shell metacharacters.
+FUNCTION_FILE_PATTERN = re.compile(r"^[\w.@+~/-]+$")
 
 _tasks: dict[str, dict] = {}
 _task_order: list[str] = []
@@ -765,6 +941,29 @@ def _clone(url: str, ref: str, target: Path) -> None:
     _git("-C", str(target), "checkout", "--detach", ref)
 
 
+def _validate_function_file(raw: str) -> str:
+    """The function's file, as a repo-relative path with forward slashes.
+
+    The path is handed to the agent and joined onto the checkout, so it is kept
+    inside the checkout by construction: no absolute paths, no `..` segments.
+    """
+    path = raw.strip().replace("\\", "/")
+    while path.startswith("./"):
+        path = path[2:]
+
+    if not path:
+        raise HTTPException(status_code=400, detail="函数所在的文件路径不能为空")
+    if path.startswith("/") or re.match(r"^[A-Za-z]:", path):
+        raise HTTPException(status_code=400, detail="文件路径必须是相对项目根目录的路径, 不能是绝对路径")
+    # Before the segment check: a path like `mod.py;ls /` also has a trailing
+    # empty segment, and the charset is the more useful thing to report there.
+    if not FUNCTION_FILE_PATTERN.match(path):
+        raise HTTPException(status_code=400, detail="文件路径只能包含字母、数字、汉字和 . _ - @ + ~ / 这些字符")
+    if any(part in ("", ".", "..") for part in path.split("/")):
+        raise HTTPException(status_code=400, detail="文件路径不能包含空的、. 或 .. 的路径段")
+    return path
+
+
 def _load_audit_module():
     global _audit_module
     if _audit_module is None:
@@ -792,7 +991,19 @@ def _run_task(task_id: str) -> None:
 
         module = _load_audit_module()
         module.PROJECT_ROOT = str(checkout)
-        verdict = (module.run() or "").strip()
+
+        target = None
+        if task.get("mode") == "function":
+            file_path = task["filePath"]
+            # The path is only known to be well-formed, not to exist: it is the
+            # caller who says where the function lives. When it is not in this
+            # commit the premise of the task is gone, and an agent that cannot
+            # read the file would answer from the snippet alone — say so instead.
+            if not (checkout / file_path).is_file():
+                raise RuntimeError(f"在 commit {task['commit']} 的检出目录里找不到 {file_path}")
+            target = module.FunctionTarget(file_path=file_path, code=task["functionCode"])
+
+        verdict = (module.run(target) or "").strip()
 
         if not verdict:
             raise RuntimeError("agent 没有返回结论，详见容器日志")
@@ -820,10 +1031,17 @@ def _update_task(task_id: str, **changes) -> dict:
 
 
 def _public_task(task: dict) -> dict:
-    return {
+    public = {
         key: task.get(key)
-        for key in ("id", "url", "commit", "status", "createdAt", "startedAt", "endedAt", "checkout", "verdict", "error")
+        for key in (
+            "id", "url", "commit", "mode", "filePath", "functionCode",
+            "status", "createdAt", "startedAt", "endedAt", "checkout", "verdict", "error",
+        )
     }
+    # `mode` arrived with function-level detection; every task journalled before
+    # it audited the whole checkout, which is what the default says.
+    public["mode"] = public["mode"] or "project"
+    return public
 
 
 def _audit_worker() -> None:
@@ -837,19 +1055,45 @@ def _audit_worker() -> None:
 
 @app.post("/api/audit/tasks")
 async def post_audit_task(payload: dict) -> dict:
-    """Queues a repository for auditing at a specific commit."""
+    """Queues a repository for auditing at a specific commit.
+
+    `mode: "function"` narrows the audit to one function and therefore also
+    requires `filePath` (relative to the checkout root) and `functionCode`.
+    """
     url = str(payload.get("url") or "").strip()
     commit = str(payload.get("commit") or "").strip()
+    mode = str(payload.get("mode") or "project").strip()
 
     if not URL_PATTERN.match(url):
         raise HTTPException(status_code=400, detail="仓库地址必须是 http(s)://、git://、ssh:// 或 git@ 形式的远程地址")
     if commit.startswith("-") or not REF_PATTERN.match(commit):
         raise HTTPException(status_code=400, detail="commit 必须是 4-120 位的分支名、标签或提交哈希")
+    if mode not in AUDIT_MODES:
+        raise HTTPException(status_code=400, detail="检测模式只能是项目检测或函数检测")
+
+    file_path = None
+    function_code = None
+
+    if mode == "function":
+        file_path = _validate_function_file(str(payload.get("filePath") or ""))
+        # Only the blank lines around the snippet go: the function's own leading
+        # indentation is part of what was submitted.
+        function_code = str(payload.get("functionCode") or "").replace("\r\n", "\n").strip("\n\r")
+        if not function_code.strip():
+            raise HTTPException(status_code=400, detail="函数代码不能为空")
+        if len(function_code) > MAX_FUNCTION_CODE_CHARS:
+            raise HTTPException(
+                status_code=400,
+                detail=f"函数代码最多 {MAX_FUNCTION_CODE_CHARS} 个字符, 当前 {len(function_code)} 个",
+            )
 
     task = {
         "id": f"audit-{int(time.time() * 1000)}",
         "url": url,
         "commit": commit,
+        "mode": mode,
+        "filePath": file_path,
+        "functionCode": function_code,
         "status": "queued",
         "createdAt": _now_iso(),
         "startedAt": None,

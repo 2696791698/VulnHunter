@@ -1,6 +1,6 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { BridgeError, createAuditTask, fetchAuditTasks } from '@/lib/api'
-import type { AuditStatus, AuditTask } from '@/lib/types'
+import type { AuditStatus, AuditSubmission, AuditTask } from '@/lib/types'
 
 const POLL_INTERVAL_MS = 4000
 
@@ -32,7 +32,7 @@ export function useAuditTasks() {
   }
 
   /** Returns null when the task was accepted, or the reason it was not. */
-  async function submit(payload: { url: string, commit: string }): Promise<string | null> {
+  async function submit(payload: AuditSubmission): Promise<string | null> {
     try {
       const task = await createAuditTask(payload)
       tasks.value = [task, ...tasks.value]

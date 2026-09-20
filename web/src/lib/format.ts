@@ -1,4 +1,4 @@
-import type { AuditStatus, CheckState, Source } from './types'
+import type { AuditMode, AuditStatus, CheckState, Source } from './types'
 
 /**
  * Shown wherever the backend reported nothing. The UI never guesses a value or
@@ -48,6 +48,17 @@ export function formatTokens(value: number | null | undefined): string {
   if (value < 1_000_000)
     return `${(value / 1000).toFixed(1)}k`
   return `${(value / 1_000_000).toFixed(1)}M`
+}
+
+/** Payload sizes, which run from bytes to megabytes. */
+export function formatBytes(value: number | null | undefined): string {
+  if (value === null || value === undefined)
+    return NO_DATA
+  if (value < 1024)
+    return `${value} B`
+  if (value < 1024 * 1024)
+    return `${(value / 1024).toFixed(1)} KB`
+  return `${(value / 1024 / 1024).toFixed(1)} MB`
 }
 
 export function formatDateTime(iso: string): string {
@@ -110,6 +121,12 @@ export const AUDIT_STATUS_LABELS: Record<AuditStatus, string> = {
   running: '审查中',
   done: '已完成',
   failed: '失败',
+}
+
+/** Vocabulary for what an audit covers. */
+export const AUDIT_MODE_LABELS: Record<AuditMode, string> = {
+  project: '项目检测',
+  function: '函数检测',
 }
 
 /**

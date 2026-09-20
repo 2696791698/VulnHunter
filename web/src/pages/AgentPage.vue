@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Span, SpanKind, TraceSummary } from '@/lib/traces'
+import type { SpanKind, TraceSummary } from '@/lib/traces'
 import {
   BlocksIcon,
   CircleAlertIcon,
@@ -37,11 +37,13 @@ const {
   detail,
   selectedId,
   selectedSpan,
+  spanLoading,
   source,
   loading,
   autoRefresh,
   hasTraces,
   select,
+  openSpan,
   refresh,
   clear,
   toggleAutoRefresh,
@@ -79,10 +81,6 @@ function traceDuration(trace: TraceSummary): number {
   const from = Date.parse(trace.startedAt)
   const to = trace.endedAt ? Date.parse(trace.endedAt) : Date.now()
   return to - from
-}
-
-function openSpan(span: Span) {
-  selectedSpan.value = span
 }
 
 const sourceLabel = computed(() =>
@@ -281,6 +279,6 @@ const sourceLabel = computed(() =>
       </Card>
     </div>
 
-    <SpanDetailsSheet v-model:open="spanSheetOpen" :span="selectedSpan" />
+    <SpanDetailsSheet v-model:open="spanSheetOpen" :span="selectedSpan" :loading="spanLoading" />
   </section>
 </template>

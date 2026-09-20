@@ -1,5 +1,5 @@
-import type { Trace, TraceSummary } from './traces'
-import type { AuditTask, BridgeInfo, EnvironmentReading, TokenUsage } from './types'
+import type { Span, Trace, TraceSummary } from './traces'
+import type { AuditSubmission, AuditTask, BridgeInfo, EnvironmentReading, TokenUsage } from './types'
 
 /**
  * Base URL of the optional Python bridge in `server/`. It is proxied by Vite in
@@ -10,6 +10,9 @@ const API_BASE = import.meta.env.VITE_API_BASE ?? '/api'
 /** The bridge may not be running — keep the probe short so the UI can say so. */
 const PROBE_TIMEOUT_MS = 2500
 const RUN_TIMEOUT_MS = 180_000
+/** Payloads are stored whole and a single span can be megabytes, so this is
+ * sized for a large body over a devcontainer port-forward, not for a probe. */
+const PAYLOAD_TIMEOUT_MS = 120_000
 
 /** The bridge answered, but with an error of its own (as opposed to not being
  * reachable at all, which surfaces as a plain `Error`). */
@@ -68,12 +71,26 @@ export function fetchTraces(): Promise<{ traces: TraceSummary[] }> {
   return request<{ traces: TraceSummary[] }>('/agent/traces')
 }
 
+/**
+ * One trace with its whole span tree, but without the payloads.
+ *
+ * The bodies are what make a trace megabytes, and polling re-reads this every
+ * few seconds; the details sheet fetches the one span it is showing instead.
+ */
 export function fetchTrace(id: string): Promise<Trace> {
-  return request<Trace>(`/agent/traces/${encodeURIComponent(id)}`)
+  return request<Trace>(`/agent/traces/${encodeURIComponent(id)}?payloads=false`, { timeoutMs: PAYLOAD_TIMEOUT_MS })
 }
 
-export function clearTraces(): Promise<{ cleared: boolean }> {
-  return request<{ cleared: boolean }>('/agent/traces', { method: 'DELETE' })
+/** One span, with its payloads. Loaded when a span is opened. */
+export function fetchSpan(traceId: string, spanId: string): Promise<Span> {
+  return request<Span>(
+    `/agent/traces/${encodeURIComponent(traceId)}/spans/${encodeURIComponent(spanId)}`,
+    { timeoutMs: PAYLOAD_TIMEOUT_MS },
+  )
+}
+
+export function clearTraces(): Promise<{ cleared: boolean, journalRemoved: string[] }> {
+  return request<{ cleared: boolean, journalRemoved: string[] }>('/agent/traces', { method: 'DELETE' })
 }
 
 /**
@@ -102,8 +119,8 @@ export function fetchAuditTasks(): Promise<{ tasks: AuditTask[] }> {
   return request<{ tasks: AuditTask[] }>('/audit/tasks')
 }
 
-/** Queues a repository for auditing at a specific commit. */
-export function createAuditTask(payload: { url: string, commit: string }): Promise<AuditTask> {
+/** Queues a repository for auditing at a specific commit, whole or one function. */
+export function createAuditTask(payload: AuditSubmission): Promise<AuditTask> {
   return request<AuditTask>('/audit/tasks', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
