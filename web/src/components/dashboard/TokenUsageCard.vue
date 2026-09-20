@@ -71,7 +71,7 @@ const tiles = computed<Tile[]>(() => {
           </div>
           <div class="flex flex-col gap-1">
             <p class="text-muted-foreground text-xs">
-              VulnHunter · 真实消耗 Tokens
+              总消耗的 Token 数
             </p>
             <p class="text-4xl leading-none font-semibold tabular-nums">
               {{ formatCount(totals?.totalTokens ?? 0) }}

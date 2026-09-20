@@ -89,7 +89,7 @@ const sourceLabel = computed(() =>
 </script>
 
 <template>
-  <section class="flex flex-col gap-4 px-4 md:gap-6 lg:px-6">
+  <section class="flex flex-col gap-4 px-4 md:gap-6 lg:px-6 xl:h-[calc(100svh-var(--header-height)-4rem)]">
     <div class="flex flex-col gap-1">
       <h2 class="text-lg font-semibold">
         Agent 监控
@@ -100,9 +100,12 @@ const sourceLabel = computed(() =>
       </p>
     </div>
 
-    <div class="grid gap-4 xl:grid-cols-[22rem_minmax(0,1fr)]">
-      <Card class="gap-0 overflow-hidden">
-        <CardHeader class="border-b pb-4">
+    <!-- At xl the two panels stop growing with their content: the grid takes the
+         height left over below the title and each panel scrolls on its own, so a
+         300-span trace never pushes the page into a second scrollbar. -->
+    <div class="grid min-h-0 flex-1 gap-4 xl:grid-cols-[22rem_minmax(0,1fr)] xl:grid-rows-1">
+      <Card class="min-h-0 gap-0 overflow-hidden">
+        <CardHeader class="shrink-0 border-b pb-4">
           <CardTitle>运行轨迹</CardTitle>
           <CardDescription>{{ sourceLabel }}</CardDescription>
           <CardAction>
@@ -158,7 +161,7 @@ const sourceLabel = computed(() =>
           </CardAction>
         </CardHeader>
 
-        <CardContent class="p-2">
+        <CardContent class="flex min-h-0 flex-1 flex-col p-2">
           <div v-if="loading" class="flex flex-col gap-2 p-2">
             <Skeleton v-for="n in 3" :key="n" class="h-12 rounded-lg" />
           </div>
@@ -177,7 +180,7 @@ const sourceLabel = computed(() =>
             </EmptyHeader>
           </Empty>
 
-          <ScrollArea v-else class="max-h-[60vh]">
+          <ScrollArea v-else class="max-h-[60vh] min-h-0 flex-1 xl:max-h-none">
             <div class="flex flex-col gap-0.5">
               <button
                 v-for="trace in traces"
@@ -217,8 +220,8 @@ const sourceLabel = computed(() =>
         </CardContent>
       </Card>
 
-      <Card class="gap-0 overflow-hidden">
-        <CardHeader class="border-b pb-4">
+      <Card class="min-h-0 gap-0 overflow-hidden">
+        <CardHeader class="shrink-0 border-b pb-4">
           <CardTitle class="truncate">
             {{ detail?.name ?? '轨迹详情' }}
           </CardTitle>
@@ -242,7 +245,7 @@ const sourceLabel = computed(() =>
           </CardAction>
         </CardHeader>
 
-        <CardContent class="p-3">
+        <CardContent class="flex min-h-0 flex-1 flex-col p-3">
           <Skeleton v-if="loading" class="h-64 rounded-lg" />
 
           <Empty v-else-if="!detail" class="min-h-64">
@@ -255,14 +258,15 @@ const sourceLabel = computed(() =>
             </EmptyHeader>
           </Empty>
 
-          <TraceWaterfall
-            v-else
-            :trace="detail"
-            :selected-span-id="selectedSpan?.id ?? null"
-            @select="openSpan"
-          />
+          <ScrollArea v-else class="max-h-[70vh] min-h-0 flex-1 xl:max-h-none">
+            <TraceWaterfall
+              :trace="detail"
+              :selected-span-id="selectedSpan?.id ?? null"
+              @select="openSpan"
+            />
+          </ScrollArea>
 
-          <div v-if="detail" class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-t pt-3">
+          <div v-if="detail" class="mt-3 flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-t pt-3">
             <span
               v-for="entry in KINDS"
               :key="entry.kind"
