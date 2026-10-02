@@ -18,8 +18,7 @@
 
 本项目的完成离不开以下项目：
 
-- [DREA](https://github.com/huhusmang/DREA)
-
+* [DREA](https://github.com/huhusmang/DREA)
 * [deepagents](https://github.com/langchain-ai/deepagents)
 * [codebadger](https://github.com/Lekssays/codebadger)
 * [codeql-development-mcp-server](https://github.com/advanced-security/codeql-development-mcp-server)
