@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="24.7.17">
+  <diagram name="VulnHunter 审计流程" id="vulnhunter-figure1">
+    <mxGraphModel dx="1200" dy="480" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="480" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="&lt;div style=&quot;font-size:20px;font-weight:700;color:#172B45&quot;&gt;任务输入&lt;/div&gt;&lt;div style=&quot;font-size:14px;color:#52647B;line-height:1.5&quot;&gt;仓库快照 + 目标函数&lt;/div&gt;" style="rounded=1;arcSize=16;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#F3F6FA;strokeColor=#90A2B8;strokeWidth=2;fontColor=#172B45;fontSize=18;fontFamily=Noto Sans SC;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="455" y="28" width="290" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="" style="rounded=1;arcSize=50;fillColor=#172B45;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="472" y="30" width="256" height="4" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="01" style="ellipse;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#172B45;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="705" y="31" width="32" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="&lt;div style=&quot;font-size:20px;font-weight:700;color:#172B45&quot;&gt;按需程序分析&lt;/div&gt;" style="rounded=1;arcSize=16;whiteSpace=wrap;html=1;align=center;verticalAlign=top;fillColor=#F4F7FB;strokeColor=#A8B8CC;strokeWidth=2;fontColor=#172B45;fontSize=18;fontFamily=Noto Sans SC;spacingTop=28;" vertex="1" parent="1">
+          <mxGeometry x="45" y="150" width="280" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="" style="rounded=1;arcSize=50;fillColor=#2E62AB;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="62" y="152" width="246" height="4" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="工具" style="ellipse;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#2E62AB;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="285" y="153" width="32" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="&lt;div style=&quot;font-size:20px;font-weight:700;color:#172B45&quot;&gt;主审计代理&lt;/div&gt;&lt;div style=&quot;font-size:14px;color:#52647B;line-height:1.5&quot;&gt;仓库探索 · 漏洞假设&lt;br&gt;制定动态验证计划&lt;/div&gt;" style="rounded=1;arcSize=16;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#EBF3FF;strokeColor=#6090CB;strokeWidth=2;fontColor=#172B45;fontSize=18;fontFamily=Noto Sans SC;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="445" y="150" width="310" height="124" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="" style="rounded=1;arcSize=50;fillColor=#2E62AB;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="462" y="152" width="276" height="4" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="02" style="ellipse;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#2E62AB;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="715" y="153" width="32" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="&lt;div style=&quot;font-size:20px;font-weight:700;color:#172B45&quot;&gt;执行代理&lt;/div&gt;&lt;div style=&quot;font-size:14px;color:#52647B;line-height:1.5&quot;&gt;任务专属 Docker 容器&lt;br&gt;构造输入并观察运行&lt;/div&gt;" style="rounded=1;arcSize=16;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF4E8;strokeColor=#D7A266;strokeWidth=2;fontColor=#172B45;fontSize=18;fontFamily=Noto Sans SC;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="865" y="150" width="290" height="124" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="" style="rounded=1;arcSize=50;fillColor=#B66A19;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="882" y="152" width="256" height="4" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="03" style="ellipse;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#B66A19;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1115" y="153" width="32" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="14" value="&lt;div style=&quot;font-size:20px;font-weight:700;color:#172B45&quot;&gt;追加式事实黑板&lt;/div&gt;&lt;div style=&quot;font-size:14px;color:#52647B;line-height:1.5&quot;&gt;事件去重 · 可选证据引用&lt;/div&gt;" style="rounded=1;arcSize=16;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#F3EEFB;strokeColor=#A28BC8;strokeWidth=2;fontColor=#172B45;fontSize=18;fontFamily=Noto Sans SC;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="865" y="340" width="290" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="15" value="" style="rounded=1;arcSize=50;fillColor=#7253A1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="882" y="342" width="256" height="4" as="geometry" />
+        </mxCell>
+        <mxCell id="16" value="04" style="ellipse;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#7253A1;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1115" y="343" width="32" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="17" value="&lt;div style=&quot;font-size:20px;font-weight:700;color:#172B45&quot;&gt;结构化结论与报告&lt;/div&gt;&lt;div style=&quot;font-size:14px;color:#52647B;line-height:1.5&quot;&gt;0/1 判定 · 阳性报告附证据&lt;/div&gt;" style="rounded=1;arcSize=16;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#EAF6F1;strokeColor=#72AA99;strokeWidth=2;fontColor=#172B45;fontSize=18;fontFamily=Noto Sans SC;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="445" y="340" width="310" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="18" value="" style="rounded=1;arcSize=50;fillColor=#287966;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="462" y="342" width="276" height="4" as="geometry" />
+        </mxCell>
+        <mxCell id="19" value="05" style="ellipse;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#287966;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="715" y="343" width="32" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="20" value="CodeQL" style="rounded=1;arcSize=12;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#D7E0EA;fontColor=#2E62AB;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="64" y="227" width="242" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="21" value="Semgrep" style="rounded=1;arcSize=12;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#D7E0EA;fontColor=#2E62AB;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="64" y="260" width="242" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="22" value="CodeBadger" style="rounded=1;arcSize=12;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#D7E0EA;fontColor=#2E62AB;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="64" y="293" width="242" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;strokeColor=#71839A;strokeWidth=2;dashed=0;endArrow=block;startArrow=none;fontSize=12;fontColor=#52647B;" edge="1" parent="1" source="2" target="8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="24" value="查询 / 线索" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;strokeColor=#71839A;strokeWidth=2;dashed=0;endArrow=block;startArrow=block;fontSize=12;fontColor=#52647B;" edge="1" parent="1" source="5" target="8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="25" value="验证计划" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;strokeColor=#71839A;strokeWidth=2;dashed=0;endArrow=block;startArrow=none;fontSize=12;fontColor=#52647B;" edge="1" parent="1" source="8" target="11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="26" value="事实与观察" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;strokeColor=#71839A;strokeWidth=2;dashed=0;endArrow=block;startArrow=none;fontSize=12;fontColor=#52647B;" edge="1" parent="1" source="11" target="14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="27" value="事实回读" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;strokeColor=#7253A1;strokeWidth=2;dashed=1;endArrow=block;startArrow=none;fontSize=12;fontColor=#52647B;" edge="1" parent="1" source="14" target="8">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="810" y="392" />
+              <mxPoint x="810" y="304" />
+              <mxPoint x="713" y="304" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="28" value="综合判断" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=0;strokeColor=#71839A;strokeWidth=2;dashed=0;endArrow=block;startArrow=none;fontSize=12;fontColor=#52647B;" edge="1" parent="1" source="8" target="17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

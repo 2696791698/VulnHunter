@@ -25,10 +25,22 @@ const router = createRouter({
       meta: { title: '漏洞审查' },
     },
     {
+      path: '/eval',
+      name: 'eval',
+      component: () => import('@/pages/EvalPage.vue'),
+      meta: { title: '数据集测评' },
+    },
+    {
       path: '/agent',
       name: 'agent',
       component: () => import('@/pages/AgentPage.vue'),
       meta: { title: 'Agent 监控' },
+    },
+    {
+      path: '/setting',
+      name: 'models',
+      component: () => import('@/pages/ModelPage.vue'),
+      meta: { title: '配置' },
     },
     { path: '/:pathMatch(.*)*', redirect: '/overview' },
   ],

@@ -51,12 +51,14 @@ const duration = computed(() => {
 const STATUS_TONE = {
   ok: 'text-status-good',
   error: 'text-status-critical',
+  interrupted: 'text-muted-foreground',
   running: 'text-muted-foreground',
 } as const
 
 const STATUS_ICON = {
   ok: CircleCheckIcon,
   error: CircleAlertIcon,
+  interrupted: TriangleAlertIcon,
   running: LoaderIcon,
 } as const
 </script>

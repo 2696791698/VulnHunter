@@ -1,0 +1,1825 @@
+[
+  {
+    "item_id": "00c73b6e",
+    "project_name": "gradio",
+    "cve_ids": [
+      "CVE-2021-43831"
+    ],
+    "cwe_ids": [
+      "CWE-22"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/gradio-app/gradio/commit/41bd3645bdb616e1248b2167ca83636a2653f781",
+    "file_path": "gradio/networking.py",
+    "commit_message": "secure path hotfix",
+    "code_before_len": 10,
+    "code_after_len": 9
+  },
+  {
+    "item_id": "0294b9f1",
+    "project_name": "fonttools",
+    "cve_ids": [
+      "CVE-2023-45139"
+    ],
+    "cwe_ids": [
+      "CWE-611"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/fonttools/fonttools/commit/9f61271dc1ca82ed91f529b130fe5dc5c9bf1f4c",
+    "file_path": "Lib/fontTools/subset/svg.py",
+    "commit_message": "subset: parse OT-SVG with resolve_entities=False\n\nto guard against XXE attacks as recommended in https://codeql.github.com/codeql-query-help/python/py-xxe/",
+    "code_before_len": 58,
+    "code_after_len": 61
+  },
+  {
+    "item_id": "03e97308",
+    "project_name": "cyberpanel",
+    "cve_ids": [
+      "CVE-2024-51567"
+    ],
+    "cwe_ids": [
+      "CWE-306"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/usmannasir/cyberpanel/commit/5b08cd6d53f4dbc2107ad9f555122ce8b0996515",
+    "file_path": "databases/views.py",
+    "commit_message": "bug fix: pre-auth",
+    "code_before_len": 38,
+    "code_after_len": 48
+  },
+  {
+    "item_id": "06fdf927",
+    "project_name": "kiwi",
+    "cve_ids": [
+      "CVE-2023-36809"
+    ],
+    "cwe_ids": [
+      "CWE-434",
+      "CWE-79"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/kiwitcms/kiwi/commit/195ea53eaaf360c19227c864cc0fe58910032c3c",
+    "file_path": "tcms/testplans/models.py",
+    "commit_message": "Sanitize test plan name in tree_view_html()",
+    "code_before_len": 100,
+    "code_after_len": 101
+  },
+  {
+    "item_id": "08926a1a",
+    "project_name": "Mobile-Security-Framework-MobSF",
+    "cve_ids": [
+      "CVE-2024-43399"
+    ],
+    "cwe_ids": [
+      "CWE-22",
+      "CWE-23"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/MobSF/Mobile-Security-Framework-MobSF/commit/cc625fe8430f3437a473e82aa2966d100a4dc883",
+    "file_path": "mobsf/StaticAnalyzer/views/common/shared_func.py",
+    "commit_message": "[SECURITY][HOTFIX] Fixes GHSA-4hh3-vj32-gr6j (#2421)\n\n* Fixes GHSA-4hh3-vj32-gr6j\r\n* update SECURITY.md\r\n* update dependencies",
+    "code_before_len": 49,
+    "code_after_len": 52
+  },
+  {
+    "item_id": "0a06f338",
+    "project_name": "Calendarinho",
+    "cve_ids": [
+      "CVE-2023-49281"
+    ],
+    "cwe_ids": [
+      "CWE-601"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/Cainor/Calendarinho/commit/c77defeb0103c1f7a4709799b8751aaeb0d09eed",
+    "file_path": "CalendarinhoApp/authentication.py",
+    "commit_message": "Full Fix for Open Redirect Issue #1",
+    "code_before_len": 26,
+    "code_after_len": 28
+  },
+  {
+    "item_id": "0bb1aef8",
+    "project_name": "tensorflow",
+    "cve_ids": [
+      "CVE-2022-35967",
+      "CVE-2022-35979"
+    ],
+    "cwe_ids": [
+      "CWE-20"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/tensorflow/tensorflow/commit/49b3824d83af706df0ad07e4e677d88659756d89",
+    "file_path": "tensorflow/python/kernel_tests/quantization_ops/quantization_ops_test.py",
+    "commit_message": "Add IsScalar (rank == 0) check to min/max input tensors for QuantizedAdd/Relu/Relu6 op.\n\nPiperOrigin-RevId: 461902847",
+    "code_before_len": 15,
+    "code_after_len": 16
+  },
+  {
+    "item_id": "0c8d2aef",
+    "project_name": "fides",
+    "cve_ids": [
+      "CVE-2023-37480"
+    ],
+    "cwe_ids": [
+      "CWE-400"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/ethyca/fides/commit/5aea738463960d81821c11ae7ade1d627a46bf32",
+    "file_path": "src/fides/api/service/connectors/saas/connector_registry_service.py",
+    "commit_message": "Merge pull request from GHSA-g95c-2jgm-hqc6\n\nCo-authored-by: Dave Quinlan <83430497+daveqnet@users.noreply.github.com>",
+    "code_before_len": 106,
+    "code_after_len": 109
+  },
+  {
+    "item_id": "0dc2e99d",
+    "project_name": "bot",
+    "cve_ids": [
+      "CVE-2021-41250"
+    ],
+    "cwe_ids": [
+      "CWE-20"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/python-discord/bot/commit/67390298852513d13e0213870e50fb3cff1424e0",
+    "file_path": "bot/exts/filters/filtering.py",
+    "commit_message": "Merge pull request from GHSA-j8c3-8x46-8pp6\n\n* Don't Exit Token Filtering Early On URLs\n\nThe token filtering function would exit early if it detected a URL\nwithin the message, but it made no extra checks to ensure there weren't\nother tokens within that message that would trigger it. This made\nsense when the filtering logic was written, but it's been modified since\nto introduce this bug.\n\nRegression tests included.\n\nSigned-off-by: Hassan Abouelela <hassan@hassanamr.com>\n\n* Links Advisory In Token Filter Tests\n\nAdds a link to the advisory with reasoning for the existence of the\n test.\n\nSigned-off-by: Hassan Abouelela <hassan@hassanamr.com>",
+    "code_before_len": 24,
+    "code_after_len": 24
+  },
+  {
+    "item_id": "0f0215bf",
+    "project_name": "calibre-web",
+    "cve_ids": [
+      "CVE-2022-0766",
+      "CVE-2022-0767"
+    ],
+    "cwe_ids": [
+      "CWE-918"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/janeczku/calibre-web/commit/965352c8d96c9eae7a6867ff76b0db137d04b0b8",
+    "file_path": "cps/helper.py",
+    "commit_message": "Don't allow redirects on cover uploads, catch more addresses which resolve to localhost",
+    "code_before_len": 20,
+    "code_after_len": 20
+  },
+  {
+    "item_id": "18e78647",
+    "project_name": "kitty",
+    "cve_ids": [
+      "CVE-2025-43929"
+    ],
+    "cwe_ids": [
+      "CWE-346"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/kovidgoyal/kitty/commit/ce5cfdd9caf44c538af800a07162e1f49bd53c35",
+    "file_path": "kitty/open_actions.py",
+    "commit_message": "kitty +open: Ask for confirmation when running executables\n\nWorkaround for badly designed program that try to open links in\nuntrusted documents that point to executables on the local system.\nThey should really not be doing that, but, since such programs do exist,\nlet's be safe by default.\n\nUsers that use better designed programs and want to disable the\nconfirmations can do so by writing their own launch-actions.conf",
+    "code_before_len": 36,
+    "code_after_len": 38
+  },
+  {
+    "item_id": "193c77fa",
+    "project_name": "apkleaks",
+    "cve_ids": [
+      "CVE-2021-21386"
+    ],
+    "cwe_ids": [
+      "CWE-78",
+      "CWE-88"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/dwisiswant0/apkleaks/commit/a966e781499ff6fd4eea66876d7532301b13a382",
+    "file_path": "apkleaks/apkleaks.py",
+    "commit_message": "Escapes decompiling arguments",
+    "code_before_len": 12,
+    "code_after_len": 13
+  },
+  {
+    "item_id": "1a1914c0",
+    "project_name": "guarddog",
+    "cve_ids": [
+      "CVE-2022-23530"
+    ],
+    "cwe_ids": [
+      "CWE-22"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/DataDog/guarddog/commit/37c7d0767ba28f4df46117d478f97652594c491c",
+    "file_path": "guarddog/scanners/package_scanner.py",
+    "commit_message": "Securely extract PyPI .tar.gz archives (#102)\n\n* Add Semgrep rule and run custom Semgrep rules in CI for SAST\r\n\r\n* Securely extract remote .tar.gz files",
+    "code_before_len": 16,
+    "code_after_len": 19
+  },
+  {
+    "item_id": "1b48a788",
+    "project_name": "joblib",
+    "cve_ids": [
+      "CVE-2022-21797"
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/joblib/joblib/commit/b90f10efeb670a2cc877fb88ebb3f2019189e059",
+    "file_path": "joblib/parallel.py",
+    "commit_message": "FIX make sure pre_dispatch cannot do arbitrary code execution (#1321)",
+    "code_before_len": 6,
+    "code_after_len": 116
+  },
+  {
+    "item_id": "1bdfa375",
+    "project_name": "Discord-Recon",
+    "cve_ids": [
+      "CVE-2024-21663"
+    ],
+    "cwe_ids": [
+      "CWE-20",
+      "CWE-77"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/DEMON1A/Discord-Recon/commit/f9cb0f67177f5e2f1022295ca8e641e47837ec7a",
+    "file_path": "app.py",
+    "commit_message": "Use CommandInjection protection on prips command",
+    "code_before_len": 17,
+    "code_after_len": 18
+  },
+  {
+    "item_id": "2082c6c6",
+    "project_name": "opcua-asyncio",
+    "cve_ids": [
+      "CVE-2023-26150"
+    ],
+    "cwe_ids": [
+      "CWE-287"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/FreeOpcUa/opcua-asyncio/commit/2be7ce80df05de8d6c6ae1ebce6fa2bb7147844a",
+    "file_path": "tests/test_crypto_connect.py",
+    "commit_message": "Revert \"releax test_secure_channel_key_expiration test\"\n\nThis reverts commit e02aed2909fbfd142059d30db0abb63947ab33f6.",
+    "code_before_len": 45,
+    "code_after_len": 45
+  },
+  {
+    "item_id": "233c9513",
+    "project_name": "dify",
+    "cve_ids": [
+      "CVE-2025-32790"
+    ],
+    "cwe_ids": [
+      "CWE-284"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/langgenius/dify/commit/59ad091e69736bc9dc1a3bace62ec0a232346246",
+    "file_path": "api/controllers/console/app/app.py",
+    "commit_message": "feat: add export permission (#5841)",
+    "code_before_len": 23,
+    "code_after_len": 11
+  },
+  {
+    "item_id": "24e78349",
+    "project_name": "iRedAdmin",
+    "cve_ids": [
+      "CVE-2024-47227"
+    ],
+    "cwe_ids": [
+      "CWE-79"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/iredmail/iRedAdmin/commit/3c72b438d412ea3ee0270f6956e19b1098c19191",
+    "file_path": "controllers/panel/log.py",
+    "commit_message": "Verify submit data and escape them.\nThanks Simone Quatrini for the report.\n\nNote: This doesn't affect iRedAdmin-Pro.",
+    "code_before_len": 69,
+    "code_after_len": 79
+  },
+  {
+    "item_id": "256a7c28",
+    "project_name": "gpt_academic",
+    "cve_ids": [
+      "CVE-2023-33979"
+    ],
+    "cwe_ids": [
+      "CWE-200"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/binary-husky/gpt_academic/commit/1dcc2873d2168ad2d3d70afcb453ac1695fbdf02",
+    "file_path": "main.py",
+    "commit_message": "修复Gradio配置泄露的问题",
+    "code_before_len": 198,
+    "code_after_len": 200
+  },
+  {
+    "item_id": "28f88073",
+    "project_name": "wsgidav",
+    "cve_ids": [
+      "CVE-2022-41905"
+    ],
+    "cwe_ids": [
+      "CWE-79"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/mar10/wsgidav/commit/e9606ab0f42f4c1a6611bc3c52de299b0aba7726",
+    "file_path": "wsgidav/dir_browser/_dir_browser.py",
+    "commit_message": "Merge pull request from GHSA-xx6g-jj35-pxjv",
+    "code_before_len": 30,
+    "code_after_len": 30
+  },
+  {
+    "item_id": "2b5e4ebf",
+    "project_name": "tensorflow",
+    "cve_ids": [
+      "CVE-2021-37668"
+    ],
+    "cwe_ids": [
+      "CWE-369"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/tensorflow/tensorflow/commit/a776040a5e7ebf76eeb7eb923bf1ae417dd4d233",
+    "file_path": "tensorflow/python/kernel_tests/array_ops_test.py",
+    "commit_message": "Disallow dims input of 0 in tf.raw_ops.UnravelIndex\n\nPiperOrigin-RevId: 384284198\nChange-Id: Ia1804ef1aec57b4d857ea507e6891bcccde18e9b",
+    "code_before_len": 8,
+    "code_after_len": 8
+  },
+  {
+    "item_id": "2d8d5c4c",
+    "project_name": "tensorflow",
+    "cve_ids": [
+      "CVE-2022-35990",
+      "CVE-2022-36005"
+    ],
+    "cwe_ids": [
+      "CWE-617"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/tensorflow/tensorflow/commit/f3cf67ac5705f4f04721d15e485e192bb319feed",
+    "file_path": "tensorflow/python/kernel_tests/quantization_ops/quantization_ops_test.py",
+    "commit_message": "Add IsScalar / IsVector (rank) checks to input min/max tensors for FakeQuantWithMinMaxVarsPerChannelGradientOp and FakeQuantWithMinMaxVarsGradientOp.\n\nPiperOrigin-RevId: 462542629",
+    "code_before_len": 15,
+    "code_after_len": 23
+  },
+  {
+    "item_id": "306f60dc",
+    "project_name": "mprweb",
+    "cve_ids": [
+      "CVE-2022-31185"
+    ],
+    "cwe_ids": [
+      "CWE-200"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/makedeb/mprweb/commit/d13e3f2f5a9c0b0f6782f35d837090732026ad77",
+    "file_path": "aurweb/routers/accounts.py",
+    "commit_message": "Redis and Hide Email Address fixes\n\nCloses #97.",
+    "code_before_len": 89,
+    "code_after_len": 95
+  },
+  {
+    "item_id": "36b71012",
+    "project_name": "flask-session-captcha",
+    "cve_ids": [
+      "CVE-2022-24880"
+    ],
+    "cwe_ids": [
+      "CWE-253",
+      "CWE-394",
+      "CWE-754"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/Tethik/flask-session-captcha/commit/2811ae23a38d33b620fb7a07de8837c6d65c13e4",
+    "file_path": "test_flask_session_captcha.py",
+    "commit_message": "add some extra tests to ensure False is returned",
+    "code_before_len": 11,
+    "code_after_len": 17
+  },
+  {
+    "item_id": "3b525f26",
+    "project_name": "mlflow",
+    "cve_ids": [
+      "CVE-2023-6709"
+    ],
+    "cwe_ids": [
+      "CWE-1336"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/mlflow/mlflow/commit/432b8ccf27fd3a76df4ba79bb1bec62118a85625",
+    "file_path": "mlflow/recipes/cards/__init__.py",
+    "commit_message": "Use `SandboxedEnvironment` when rendering cards (#10640)\n\nSigned-off-by: harupy <17039389+harupy@users.noreply.github.com>",
+    "code_before_len": 10,
+    "code_after_len": 11
+  },
+  {
+    "item_id": "3eff03b7",
+    "project_name": "ragflow",
+    "cve_ids": [
+      "CVE-2024-12450"
+    ],
+    "cwe_ids": [
+      "CWE-918"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/infiniflow/ragflow/commit/3faae0b2c2f8a26233ee1442ba04874b3406f6e9",
+    "file_path": "api/utils/web_utils.py",
+    "commit_message": "trival (#3325)\n\n### What problem does this PR solve?\r\n\r\n\r\n\r\n### Type of change\r\n\r\n\r\n- [x] Performance Improvement",
+    "code_before_len": 2,
+    "code_after_len": 2
+  },
+  {
+    "item_id": "3f154463",
+    "project_name": "scout",
+    "cve_ids": [
+      "CVE-2024-47531"
+    ],
+    "cwe_ids": [
+      "CWE-116"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/Clinical-Genomics/scout/commit/f59e50f8ea596e641da8a0e9c7a33c0696bcbea5",
+    "file_path": "scout/server/blueprints/panels/controllers.py",
+    "commit_message": "Fix regular expression check in new panel form (#4843)\n\n* Fix regular expression check in new panel form\r\n\r\n* Sanitize panel ID before exporting the file\r\n\r\n* Stricter check of ID of newly created gene panels to prevent file downloading vulnerability\r\n\r\n* Add again the new pattern in the HTML check\r\n\r\n* tiny fix in changelog\r\n\r\n---------\r\n\r\nCo-authored-by: Chiara Rasi <rasi.chiara@gmacil.com>",
+    "code_before_len": 17,
+    "code_after_len": 19
+  },
+  {
+    "item_id": "439a5d03",
+    "project_name": "horilla",
+    "cve_ids": [
+      "CVE-2025-47789"
+    ],
+    "cwe_ids": [
+      "CWE-601"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/horilla-opensource/horilla/commit/1c72404df6888bb23af73c767fdaee5e6679ebd6",
+    "file_path": "base/views.py",
+    "commit_message": "[FIX] BASE: Prevent open redirect vulnerability in login flow.Validated the 'next' parameter during user login to ensure only relative paths",
+    "code_before_len": 48,
+    "code_after_len": 54
+  },
+  {
+    "item_id": "491d4e03",
+    "project_name": "lms",
+    "cve_ids": [
+      "CVE-2025-59415"
+    ],
+    "cwe_ids": [
+      "CWE-79"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/frappe/lms/commit/ed162e254690772365d4d1365f176b59bc4db72d",
+    "file_path": "lms/lms/utils.py",
+    "commit_message": "fix: don't allow unnecessary attributes in profile bio",
+    "code_before_len": 39,
+    "code_after_len": 38
+  },
+  {
+    "item_id": "4b250f6b",
+    "project_name": "setuptools",
+    "cve_ids": [
+      "CVE-2025-47273"
+    ],
+    "cwe_ids": [
+      "CWE-22"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/pypa/setuptools/commit/250a6d17978f9f6ac3ac887091f2d32886fbbb0b",
+    "file_path": "setuptools/package_index.py",
+    "commit_message": "Add a check to ensure the name resolves relative to the tmpdir.\n\nCloses #4946",
+    "code_before_len": 20,
+    "code_after_len": 34
+  },
+  {
+    "item_id": "4f4ba85c",
+    "project_name": "PyDrive2",
+    "cve_ids": [
+      "CVE-2023-49297"
+    ],
+    "cwe_ids": [
+      "CWE-502"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/iterative/PyDrive2/commit/c57355dc2033ad90b7050d681b2c3ba548ff0004",
+    "file_path": "pydrive2/settings.py",
+    "commit_message": "Merge pull request from GHSA-v5f6-hjmf-9mc5",
+    "code_before_len": 13,
+    "code_after_len": 13
+  },
+  {
+    "item_id": "53090cd1",
+    "project_name": "tensorflow",
+    "cve_ids": [
+      "CVE-2021-41206"
+    ],
+    "cwe_ids": [
+      "CWE-354"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/tensorflow/tensorflow/commit/579261dcd446385831fe4f7457d802a59685121d",
+    "file_path": "tensorflow/python/kernel_tests/matrix_solve_op_test.py",
+    "commit_message": "Fix crash in MatrixSolve when inputs have different batch dimensions.\n\nBefore, the process would crash or certain elements would be silently ignored. Now an InvalidArgument is raised.\n\nPiperOrigin-RevId: 384844020\nChange-Id: Iba44417e383bdd0e1abc4012bfca83b2377dd335",
+    "code_before_len": 6,
+    "code_after_len": 12
+  },
+  {
+    "item_id": "533999b4",
+    "project_name": "django-openipam",
+    "cve_ids": [
+      "CVE-2022-4595"
+    ],
+    "cwe_ids": [
+      "CWE-707"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/openipam/django-openipam/commit/a6223a1150d60cd036106ba6a8e676c1bfc3cc85",
+    "file_path": "openipam/api/views/report.py",
+    "commit_message": "Exposed Hosts Improvements (#205)\n\n* Fixed XSS issue by rendering description as text. Also, drastically improved performance of exposed host report via a ridiculous sql query.\r\n\r\n* Run black & remove unused imports\r\n\r\n* Remove trailing whitespace\r\n\r\n* There was still a trailing whitespace trailing behind",
+    "code_before_len": 162,
+    "code_after_len": 43
+  },
+  {
+    "item_id": "54d21eb5",
+    "project_name": "web2py",
+    "cve_ids": [
+      "CVE-2022-33146"
+    ],
+    "cwe_ids": [
+      "CWE-601"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/web2py/web2py/commit/a181b855a43cb8b479d276b082cfcde385768451",
+    "file_path": "applications/admin/controllers/default.py",
+    "commit_message": "added validation of send attribute in admin",
+    "code_before_len": 40,
+    "code_after_len": 40
+  },
+  {
+    "item_id": "56b539a7",
+    "project_name": "django-helpdesk",
+    "cve_ids": [
+      "CVE-2021-3950"
+    ],
+    "cwe_ids": [
+      "CWE-79"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/django-helpdesk/django-helpdesk/commit/04483bdac3b5196737516398b5ce0383875a5c60",
+    "file_path": "helpdesk/lib.py",
+    "commit_message": "Add `att.full_clean()` before saving\n\nFix issue https://github.com/django-helpdesk/django-helpdesk/issues/983\r\nAlso, fix bug stored XSS disclosure: https://huntr.dev/bounties/4d7a5fdd-b2de-467a-ade0-3f2fb386638e/",
+    "code_before_len": 25,
+    "code_after_len": 26
+  },
+  {
+    "item_id": "5b054edf",
+    "project_name": "omero-web",
+    "cve_ids": [
+      "CVE-2021-41132"
+    ],
+    "cwe_ids": [
+      "CWE-116",
+      "CWE-79"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/ome/omero-web/commit/0168067accde5e635341b3c714b1d53ae92ba424",
+    "file_path": "omeroweb/webclient/views.py",
+    "commit_message": "Fix issues with inconsistency in input sanitisation leading to XSS vectors",
+    "code_before_len": 58,
+    "code_after_len": 58
+  },
+  {
+    "item_id": "5b0e19c8",
+    "project_name": "Calendarinho",
+    "cve_ids": [
+      "CVE-2023-49281"
+    ],
+    "cwe_ids": [
+      "CWE-601"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/Cainor/Calendarinho/commit/9a0174bef939565a76cbe7762996ecddca9ba55e",
+    "file_path": "CalendarinhoApp/authentication.py",
+    "commit_message": "Fix Open Redirect - Thanks to @7hj4",
+    "code_before_len": 25,
+    "code_after_len": 26
+  },
+  {
+    "item_id": "5eab33ca",
+    "project_name": "rengine",
+    "cve_ids": [
+      "CVE-2022-1813"
+    ],
+    "cwe_ids": [
+      "CWE-78"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/yogeshojha/rengine/commit/8277cec0f008a0451371a92e7e0bf082ab3f0c34",
+    "file_path": "web/reNgine/common_func.py",
+    "commit_message": "Fix command injection issue on detect cms",
+    "code_before_len": 42,
+    "code_after_len": 46
+  },
+  {
+    "item_id": "619844db",
+    "project_name": "django-helpdesk",
+    "cve_ids": [
+      "CVE-2021-3994"
+    ],
+    "cwe_ids": [
+      "CWE-79"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/django-helpdesk/django-helpdesk/commit/a22eb0673fe0b7784f99c6b5fd343b64a6700f06",
+    "file_path": "helpdesk/models.py",
+    "commit_message": "Update pattern",
+    "code_before_len": 26,
+    "code_after_len": 26
+  },
+  {
+    "item_id": "6738d628",
+    "project_name": "tmerc-cogs",
+    "cve_ids": [
+      "CVE-2021-37697"
+    ],
+    "cwe_ids": [
+      "CWE-306"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/tmercswims/tmerc-cogs/commit/d63c49b4cfc30c795336e4fff08cba3795e0fcc0",
+    "file_path": "welcome/welcome.py",
+    "commit_message": "fix(Welcome): only allow use of safe model attributes",
+    "code_before_len": 33,
+    "code_after_len": 40
+  },
+  {
+    "item_id": "6cd43b15",
+    "project_name": "flask-multipass",
+    "cve_ids": [
+      "CVE-2024-45399"
+    ],
+    "cwe_ids": [
+      "CWE-79"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/indico/flask-multipass/commit/0bdcf656d469e5f675cb56fd644d82fea3a97c2a",
+    "file_path": "flask_multipass/core.py",
+    "commit_message": "Validate scheme of next URL (#85)",
+    "code_before_len": 11,
+    "code_after_len": 13
+  },
+  {
+    "item_id": "6e3699a1",
+    "project_name": "pymatgen",
+    "cve_ids": [
+      "CVE-2024-23346"
+    ],
+    "cwe_ids": [
+      "CWE-77"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/materialsproject/pymatgen/commit/c231cbd3d5147ee920a37b6ee9dd236b376bcf5a",
+    "file_path": "pymatgen/symmetry/settings.py",
+    "commit_message": "Update `JonesFaithfulTransformation` to use sympy\n\nSigned-off-by: Matthew Horton <mkhorton@users.noreply.github.com>",
+    "code_before_len": 33,
+    "code_after_len": 41
+  },
+  {
+    "item_id": "6e68fb86",
+    "project_name": "octoprint",
+    "cve_ids": [
+      "CVE-2022-2822"
+    ],
+    "cwe_ids": [
+      "CWE-307"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/octoprint/octoprint/commit/82c892ba40b3741d1b7711d949e56af64f5bc2de",
+    "file_path": "src/octoprint/server/__init__.py",
+    "commit_message": "🔒️ Rate limit failed login attempts\n\nShould reduce likelihood of brute force attacks\non unsecure networks if users decide to deploy/make\nOctoPrint accessible there against all advice to\nthe contrary.",
+    "code_before_len": 95,
+    "code_after_len": 104
+  },
+  {
+    "item_id": "6fed39f6",
+    "project_name": "yt-dlp",
+    "cve_ids": [
+      "CVE-2025-54072"
+    ],
+    "cwe_ids": [
+      "CWE-78"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/yt-dlp/yt-dlp/commit/959ac99e98c3215437e573c22d64be42d361e863",
+    "file_path": "yt_dlp/postprocessor/exec.py",
+    "commit_message": "Fix `--exec` placeholder expansion on Windows\n\nSee https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-45hg-7f49-5h56 for more details\n\nAuthored by: Grub4K",
+    "code_before_len": 12,
+    "code_after_len": 12
+  },
+  {
+    "item_id": "713bbf1f",
+    "project_name": "web2py",
+    "cve_ids": [
+      "CVE-2023-45158"
+    ],
+    "cwe_ids": [
+      "CWE-78"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/web2py/web2py/commit/936e2260b0c34c44e2f3674a893e96d2a7fad0a3",
+    "file_path": "gluon/messageboxhandler.py",
+    "commit_message": "fixed vulnerability JVN#80476432",
+    "code_before_len": 12,
+    "code_after_len": 4
+  },
+  {
+    "item_id": "73794b9d",
+    "project_name": "tensorflow",
+    "cve_ids": [
+      "CVE-2022-35966"
+    ],
+    "cwe_ids": [
+      "CWE-20"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/tensorflow/tensorflow/commit/7cdf9d4d2083b739ec81cfdace546b0c99f50622",
+    "file_path": "tensorflow/python/kernel_tests/quantization_ops/quantization_ops_test.py",
+    "commit_message": "Fix QuantizedAvgPool invalid rank issue.\n\nPassing in an invalid rank in eager mode led to a runtime crash.\nUpdated the runtime error to match the one generated by the\nshape function for better consistency.\n\nPiperOrigin-RevId: 462419362",
+    "code_before_len": 15,
+    "code_after_len": 28
+  },
+  {
+    "item_id": "754852b3",
+    "project_name": "Mobile-Security-Framework-MobSF",
+    "cve_ids": [
+      "CVE-2024-54000"
+    ],
+    "cwe_ids": [
+      "CWE-918"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/MobSF/Mobile-Security-Framework-MobSF/commit/f22c584aa7d43527970c9da61eb678953cfc0a8e",
+    "file_path": "mobsf/StaticAnalyzer/views/android/manifest_analysis.py",
+    "commit_message": "Fixes GHSA-m435-9v6r-v5f6",
+    "code_before_len": 28,
+    "code_after_len": 31
+  },
+  {
+    "item_id": "75c21415",
+    "project_name": "pyload",
+    "cve_ids": [
+      "CVE-2024-21644"
+    ],
+    "cwe_ids": [
+      "CWE-284"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/pyload/pyload/commit/bb22063a875ffeca357aaf6e2edcd09705688c40",
+    "file_path": "src/pyload/webui/app/blueprints/app_blueprint.py",
+    "commit_message": "fix GHSA-mqpq-2p68-46fv security advisory",
+    "code_before_len": 17,
+    "code_after_len": 17
+  },
+  {
+    "item_id": "7b3646c3",
+    "project_name": "ganga",
+    "cve_ids": [
+      "CVE-2022-31507"
+    ],
+    "cwe_ids": [
+      "CWE-22"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/ganga-devs/ganga/commit/730e7aba192407d35eb37dd7938d49071124be8c",
+    "file_path": "ganga/GangaGUI/gui/routes.py",
+    "commit_message": "# Absolute Path Traversal due to incorrect use of `send_file` call (#2025)\n\nA path traversal attack (also known as directory traversal) aims to access files and directories that are stored outside the web root folder. By manipulating variables that reference files with “dot-dot-slash (../)” sequences and its variations or by using absolute file paths, it may be possible to access arbitrary files and directories stored on file system including application source code or configuration and critical system files. This attack is also known as “dot-dot-slash”, “directory traversal”, “directory climbing” and “backtracking”.\r\n\r\n## Common Weakness Enumeration category\r\nCWE - 36\r\n\r\n## Root Cause Analysis\r\n\r\nThe `os.path.join` call is unsafe for use with untrusted input. When the `os.path.join` call encounters an absolute path, it ignores all the parameters it has encountered till that point and starts working with the new absolute path.  Please see the example below.\r\n```\r\n>>> import os.path\r\n>>> static = \"path/to/mySafeStaticDir\"\r\n>>> malicious = \"/../../../../../etc/passwd\"\r\n>>> os.path.join(t,malicious)\r\n'/../../../../../etc/passwd'\r\n```\r\nSince the \"malicious\" parameter represents an absolute path, the result of `os.path.join` ignores the static directory completely. Hence, untrusted input is passed via the `os.path.join` call to `flask.send_file` can lead to path traversal attacks.\r\n\r\nIn this case, the problems occurs due to the following code :\r\nhttps://github.com/ganga-devs/ganga/blob/0c0f9e33b36ee7ead0855f1464f8d4efad26bdbc/ganga/GangaGUI/gui/routes.py#L671\r\n\r\nHere, the `path` parameter is attacker controlled. This parameter passes through the unsafe `os.path.join` call making the effective directory and filename passed to the `send_file` call attacker controlled. This leads to a path traversal attack.\r\n\r\n## Proof of Concept\r\n\r\nThe bug can be verified using a proof of concept similar to the one shown below.\r\n\r\n```\r\ncurl --path-as-is 'http://<domain>/job/<int:job_id>/browse///../../../../etc/passwd\"'\r\n```\r\n## Remediation\r\n\r\nThis can be fixed by preventing flow of untrusted data to the vulnerable `send_file` function. In case the application logic necessiates this behaviour, one can either use the `werkzeug.utils.safe_join` to join untrusted paths or replace `flask.send_file` calls with `flask.send_from_directory` calls.\r\n\r\n## Common Vulnerability Scoring System Vector\r\n\r\nThe attack can be carried over the network. A complex non-standard configuration or a specialized condition is not required for the attack to be successfully conducted. There is no user interaction required for successful execution. The attack can affect components outside the scope of the target module. The attack can be used to gain access to confidential files like passwords, login credentials and other secrets. It cannot be directly used to affect a change on a system resource. Hence has limited to no impact on integrity. Using this attack vector a attacker may make multiple requests for accessing huge files such as a database. This can lead to a partial system denial service. However, the impact on availability is quite low in this case. Taking this account an appropriate CVSS v3.1 vector would be\r\n\r\n(AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:L)[https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:L&version=3.1]\r\n\r\nThis gives it a base score of 9.3/10 and a severity rating of critical.\r\n\r\n## References\r\n* [OWASP Path Traversal](https://owasp.org/www-community/attacks/Path_Traversal)\r\n* github/securitylab#669\r\n\r\n### This bug was found using *[CodeQL by Github](https://codeql.github.com/)*\r\n\r\nCo-authored-by: Porcupiney Hairs <porucpiney.hairs@protonmail.com>",
+    "code_before_len": 51,
+    "code_after_len": 51
+  },
+  {
+    "item_id": "7be615b2",
+    "project_name": "kohya_ss",
+    "cve_ids": [
+      "CVE-2024-32024"
+    ],
+    "cwe_ids": [
+      "CWE-22"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/bmaltais/kohya_ss/commit/25bb1303fff21cb5bae17236d53504e85c1866df",
+    "file_path": "kohya_gui/common_gui.py",
+    "commit_message": "Restrict extensions pre_postfix can use to improve security (#2259)",
+    "code_before_len": 59,
+    "code_after_len": 63
+  },
+  {
+    "item_id": "7c167feb",
+    "project_name": "kiwi",
+    "cve_ids": [
+      "CVE-2022-4105"
+    ],
+    "cwe_ids": [
+      "CWE-79"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/kiwitcms/kiwi/commit/a2b169ffdef1d7c1755bade8138578423b35011b",
+    "file_path": "tcms/core/history.py",
+    "commit_message": "Clean HTML input when generating history diff\n\nhelps us prevent XSS attacks",
+    "code_before_len": 22,
+    "code_after_len": 29
+  },
+  {
+    "item_id": "7fbe4838",
+    "project_name": "pdm",
+    "cve_ids": [
+      "CVE-2023-45805"
+    ],
+    "cwe_ids": [
+      "CWE-20"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/pdm-project/pdm/commit/6853e2642dfa281d4a9958fbc6c95b7e32d84831",
+    "file_path": "src/pdm/models/repositories.py",
+    "commit_message": "Merge pull request from GHSA-j44v-mmf2-xvm9\n\nSigned-off-by: Frost Ming <me@frostming.com>",
+    "code_before_len": 24,
+    "code_after_len": 29
+  },
+  {
+    "item_id": "83b7fdcf",
+    "project_name": "open-webui",
+    "cve_ids": [
+      "CVE-2025-46571"
+    ],
+    "cwe_ids": [
+      "CWE-79"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/open-webui/open-webui/commit/ef2aeb7c0eb976bac759e59ac359c94a5b8dc7e0",
+    "file_path": "backend/open_webui/routers/files.py",
+    "commit_message": "fix: only allow admin uploaded html to be rendered as html",
+    "code_before_len": 39,
+    "code_after_len": 47
+  },
+  {
+    "item_id": "8670411d",
+    "project_name": "quart",
+    "cve_ids": [
+      "CVE-2024-49767"
+    ],
+    "cwe_ids": [
+      "CWE-400",
+      "CWE-770"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/pallets/quart/commit/5e78c4169b8eb66b91ead3e62d44721b9e1644ee",
+    "file_path": "src/quart/formparser.py",
+    "commit_message": "apply max_form_memory_size another level up in the parser",
+    "code_before_len": 20,
+    "code_after_len": 59
+  },
+  {
+    "item_id": "8678968f",
+    "project_name": "pdfminer.six",
+    "cve_ids": [
+      "CVE-2025-64512"
+    ],
+    "cwe_ids": [
+      "CWE-502"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/pdfminer/pdfminer.six/commit/b808ee05dd7f0c8ea8ec34bdf394d40e63501086",
+    "file_path": "pdfminer/cmapdb.py",
+    "commit_message": "Fix: arbitary code execution when loading pickle font files\n\nFixes https://github.com/pdfminer/pdfminer.six/security/advisories/GHSA-wf5f-4jwr-ppcp\n\nFixes https://github.com/pdfminer/pdfminer.six/security/advisories/GHSA-f83h-ghpp-7wcc",
+    "code_before_len": 17,
+    "code_after_len": 23
+  },
+  {
+    "item_id": "87529501",
+    "project_name": "recipes",
+    "cve_ids": [
+      "CVE-2025-23211"
+    ],
+    "cwe_ids": [
+      "CWE-1336",
+      "CWE-94"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/TandoorRecipes/recipes/commit/e6087d5129cc9d0c24278948872377e66c2a2c20",
+    "file_path": "cookbook/helper/template_helper.py",
+    "commit_message": "use Sandbox Environment to render templates",
+    "code_before_len": 46,
+    "code_after_len": 48
+  },
+  {
+    "item_id": "8adb9061",
+    "project_name": "fickling",
+    "cve_ids": [
+      "CVE-2025-67747"
+    ],
+    "cwe_ids": [
+      "CWE-184",
+      "CWE-502"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/trailofbits/fickling/commit/4e34561301bda1450268d1d7b0b2b151de33b913",
+    "file_path": "fickling/fickle.py",
+    "commit_message": "Add marshal and types to unsafe modules\n\nSee https://github.com/trailofbits/fickling/security/advisories/GHSA-565g-hwwr-4pp3.",
+    "code_before_len": 17,
+    "code_after_len": 19
+  },
+  {
+    "item_id": "8c57d15f",
+    "project_name": "octoprint",
+    "cve_ids": [
+      "CVE-2022-2930"
+    ],
+    "cwe_ids": [
+      "CWE-620"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/octoprint/octoprint/commit/1453076ee3e47fcab2dc73664ec2d61d3ef7fc4f",
+    "file_path": "src/octoprint/server/api/access.py",
+    "commit_message": "🔒️ Require the current password for changing it\n\nAdmins may still change existing user account passwords without\nhaving to enter the current one, however the regular user oriented\npassword change dialog has been adjusted to require entry of the\ncurrent password. The API has been locked down accordingly and\nthe password change endpoint has seen a small change due to that,\nplease refer to the updated documentation.",
+    "code_before_len": 28,
+    "code_after_len": 38
+  },
+  {
+    "item_id": "8d15590f",
+    "project_name": "binderhub",
+    "cve_ids": [
+      "CVE-2021-39159"
+    ],
+    "cwe_ids": [
+      "CWE-78",
+      "CWE-94"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/jupyterhub/binderhub/commit/195caac172690456dcdc8cc7a6ca50e05abf8182",
+    "file_path": "binderhub/repoproviders.py",
+    "commit_message": "Explicitly separate git-ls-remote options from positional arguments",
+    "code_before_len": 2,
+    "code_after_len": 23
+  },
+  {
+    "item_id": "8d5ac5ae",
+    "project_name": "openmptcprouter-vps-admin",
+    "cve_ids": [
+      "CVE-2021-31245"
+    ],
+    "cwe_ids": [
+      "CWE-287"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/Ysurac/openmptcprouter-vps-admin/commit/a01cbc8c3d3b8bb7720bf3ff234671b4c0e1859c",
+    "file_path": "omr-admin.py",
+    "commit_message": "Fix timing attacks potential vulnerability",
+    "code_before_len": 5,
+    "code_after_len": 5
+  },
+  {
+    "item_id": "8e50b867",
+    "project_name": "copyparty",
+    "cve_ids": [
+      "CVE-2023-37474"
+    ],
+    "cwe_ids": [
+      "CWE-22"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/9001/copyparty/commit/043e3c7dd683113e2b1c15cacb9c8e68f76513ff",
+    "file_path": "copyparty/httpcli.py",
+    "commit_message": "fix traversal vulnerability GHSA-pxfv-7rr3-2qjg:\nthe /.cpr endpoint allowed full access to server filesystem,\nunless mitigated by prisonparty",
+    "code_before_len": 114,
+    "code_after_len": 121
+  },
+  {
+    "item_id": "8e9ae6c4",
+    "project_name": "lms",
+    "cve_ids": [
+      "CVE-2025-62778"
+    ],
+    "cwe_ids": [
+      "CWE-425"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/frappe/lms/commit/8749e21744547ae32f729bde05c854113e126750",
+    "file_path": "lms/lms/doctype/course_chapter/course_chapter.py",
+    "commit_message": "fix: only users with moderator and instructor role should have access to quiz form",
+    "code_before_len": 3,
+    "code_after_len": 4
+  },
+  {
+    "item_id": "95115f47",
+    "project_name": "galaxy",
+    "cve_ids": [
+      "CVE-2022-23470"
+    ],
+    "cwe_ids": [
+      "CWE-22"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/galaxyproject/galaxy/commit/e5e6bda4f014f807ca77ee0cf6af777a55918346",
+    "file_path": "lib/galaxy/web/framework/middleware/static.py",
+    "commit_message": "Contain directory traversal for static files to host static root.",
+    "code_before_len": 44,
+    "code_after_len": 48
+  },
+  {
+    "item_id": "966c6ef1",
+    "project_name": "calibre-web",
+    "cve_ids": [
+      "CVE-2022-0273"
+    ],
+    "cwe_ids": [
+      "CWE-284",
+      "CWE-863"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/janeczku/calibre-web/commit/0c0313f375bed7b035c8c0482bbb09599e16bfcf",
+    "file_path": "cps/shelf.py",
+    "commit_message": "Prevent creating a public shelf without permission",
+    "code_before_len": 47,
+    "code_after_len": 47
+  },
+  {
+    "item_id": "9c2f5562",
+    "project_name": "ParlAI",
+    "cve_ids": [
+      "CVE-2021-39207"
+    ],
+    "cwe_ids": [
+      "CWE-502"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/facebookresearch/ParlAI/commit/4374fa2aba383db6526ab36e939eb1cf8ef99879",
+    "file_path": "parlai/crowdsourcing/tasks/model_chat/model_chat_blueprint.py",
+    "commit_message": "Update model_chat_blueprint.py (#3429)",
+    "code_before_len": 4,
+    "code_after_len": 9
+  },
+  {
+    "item_id": "a4d29a63",
+    "project_name": "anything-llm",
+    "cve_ids": [
+      "CVE-2023-5832"
+    ],
+    "cwe_ids": [
+      "CWE-20"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/mintplex-labs/anything-llm/commit/18798c5b640018aaee924e0afd941705d88df92e",
+    "file_path": "collector/api.py",
+    "commit_message": "prevent deletion of documents not in hotdir via director traversal (#258)\n\nresolves #257",
+    "code_before_len": 6,
+    "code_after_len": 6
+  },
+  {
+    "item_id": "a5989d14",
+    "project_name": "Flask-AppBuilder",
+    "cve_ids": [
+      "CVE-2021-29621"
+    ],
+    "cwe_ids": [
+      "CWE-203"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/dpgaspar/Flask-AppBuilder/commit/780bd0e8fbf2d36ada52edb769477e0a4edae580",
+    "file_path": "flask_appbuilder/security/manager.py",
+    "commit_message": "fix: auth balance (#1634)",
+    "code_before_len": 24,
+    "code_after_len": 30
+  },
+  {
+    "item_id": "a922f662",
+    "project_name": "neuron",
+    "cve_ids": [
+      "CVE-2024-10965"
+    ],
+    "cwe_ids": [
+      "CWE-200",
+      "CWE-284"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/fengzeroz/neuron/commit/c9ce39747e0372aaa2157b2b56174914a12c06d8",
+    "file_path": "tests/ft/http_api/test_http_api.py",
+    "commit_message": "#2281: check plugin schema exist",
+    "code_before_len": 10,
+    "code_after_len": 9
+  },
+  {
+    "item_id": "aa9144ae",
+    "project_name": "keylime",
+    "cve_ids": [
+      "CVE-2022-23948"
+    ],
+    "cwe_ids": [
+      "CWE-200"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/keylime/keylime/commit/1a4f31a6368d651222683c9debe7d6832db6f607",
+    "file_path": "keylime/secure_mount.py",
+    "commit_message": "secure_mount: use /proc/self/mountinfo\n\nThe function `check_mounted()` is parsing the output of the `mount`\ncommand.  This command can have an unknown number of spaces, that can\nbreak the parsing logic (and produces security issues)\n\nThis commit take the mount information data from `/proc/self/mountinfo`,\nthat is more friendly parsed as it will escape the spaces.\n\nSigned-off-by: Alberto Planas <aplanas@suse.com>",
+    "code_before_len": 25,
+    "code_after_len": 41
+  },
+  {
+    "item_id": "ab67c389",
+    "project_name": "ParlAI",
+    "cve_ids": [
+      "CVE-2021-39207"
+    ],
+    "cwe_ids": [
+      "CWE-502"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/facebookresearch/ParlAI/commit/507d066ef432ea27d3e201da08009872a2f37725",
+    "file_path": "parlai/chat_service/utils/config.py",
+    "commit_message": "RCE Fixed (#3402)\n\nCo-authored-by: Anon-Artist <61599526+Anon-Artist@users.noreply.github.com>\r\nCo-authored-by: Jamie Slome <jamie@418sec.com>",
+    "code_before_len": 47,
+    "code_after_len": 47
+  },
+  {
+    "item_id": "ad9c9cd4",
+    "project_name": "calibre-web",
+    "cve_ids": [
+      "CVE-2021-3987"
+    ],
+    "cwe_ids": [
+      "CWE-284",
+      "CWE-862"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/janeczku/calibre-web/commit/bcdc97641447965af486964537f3821f47b28874",
+    "file_path": "cps/shelf.py",
+    "commit_message": "Added missing check for creating public shelfs",
+    "code_before_len": 3,
+    "code_after_len": 7
+  },
+  {
+    "item_id": "af00c050",
+    "project_name": "vllm",
+    "cve_ids": [
+      "CVE-2025-47277"
+    ],
+    "cwe_ids": [
+      "CWE-502"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/vllm-project/vllm/commit/0d6e187e88874c39cda7409cf673f9e6546893e7",
+    "file_path": "vllm/distributed/utils.py",
+    "commit_message": "Use custom address for listening socket (#15988)\n\nSigned-off-by: Jens Glaser <glaserj@ornl.gov>",
+    "code_before_len": 36,
+    "code_after_len": 51
+  },
+  {
+    "item_id": "b12e328f",
+    "project_name": "docassemble",
+    "cve_ids": [
+      "CVE-2024-27292"
+    ],
+    "cwe_ids": [
+      "CWE-706"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/jhpyle/docassemble/commit/97f77dc486a26a22ba804765bfd7058aabd600c9",
+    "file_path": "docassemble_base/docassemble/base/functions.py",
+    "commit_message": "updated filename_invalid function",
+    "code_before_len": 8,
+    "code_after_len": 8
+  },
+  {
+    "item_id": "b2044909",
+    "project_name": "vllm",
+    "cve_ids": [
+      "CVE-2025-30202"
+    ],
+    "cwe_ids": [
+      "CWE-770"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/vllm-project/vllm/commit/a0304dc504c85f421d38ef47c64f83046a13641c",
+    "file_path": "vllm/distributed/device_communicators/shm_broadcast.py",
+    "commit_message": "[Security] Don't bind tcp zmq socket to all interfaces (#17197)\n\nSigned-off-by: Russell Bryant <rbryant@redhat.com>",
+    "code_before_len": 94,
+    "code_after_len": 81
+  },
+  {
+    "item_id": "b2079dad",
+    "project_name": "transformers",
+    "cve_ids": [
+      "CVE-2025-3933"
+    ],
+    "cwe_ids": [
+      "CWE-1333"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/huggingface/transformers/commit/ebbe9b12dd75b69f92100d684c47f923ee262a93",
+    "file_path": "src/transformers/models/donut/processing_donut.py",
+    "commit_message": "Fix donut backtracking (#37788)\n\n* Fix donut backtracking\n\n* make fixup\n\n* Trigger tests\n\n* Remove old line\n\n* Update code\n\n* Fix reversed slice",
+    "code_before_len": 53,
+    "code_after_len": 57
+  },
+  {
+    "item_id": "b256eb15",
+    "project_name": "invenio-drafts-resources",
+    "cve_ids": [
+      "CVE-2021-43781"
+    ],
+    "cwe_ids": [
+      "CWE-862",
+      "CWE-863"
+    ],
+    "years": [
+      2021
+    ],
+    "commit_url": "https://github.com/inveniosoftware/invenio-drafts-resources/commit/039b0cff1ad4b952000f4d8c3a93f347108b6626",
+    "file_path": "invenio_drafts_resources/services/records/service.py",
+    "commit_message": "security: fix missing permission check of publish\n\n* Invenio-Drafts-Resources does not properly check permissions when a\n  record is published. The vulnerability is exploitable in a default\n  installation of InvenioRDM. An authenticated a user is able via REST\n  API calls to publish draft records of other users if they know the\n  record identifier and the draft validates (e.g. all require fields\n  filled out). An attacker is not able to modify the data in the record,\n  and thus e.g. cannot change a record from restricted to public.",
+    "code_before_len": 37,
+    "code_after_len": 36
+  },
+  {
+    "item_id": "b35811c3",
+    "project_name": "kenny2automate",
+    "cve_ids": [
+      "CVE-2023-22452"
+    ],
+    "cwe_ids": [
+      "CWE-20"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/Kenny2github/kenny2automate/commit/a947d7ce408687b587c7e6dfd6026f7c4ee31ac2",
+    "file_path": "kenny2automate/server/__init__.py",
+    "commit_message": "SECURITY: Prevent changing other servers' settings",
+    "code_before_len": 43,
+    "code_after_len": 46
+  },
+  {
+    "item_id": "b6d52172",
+    "project_name": "Calendarinho",
+    "cve_ids": [
+      "CVE-2023-49281"
+    ],
+    "cwe_ids": [
+      "CWE-601"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/Cainor/Calendarinho/commit/15b2393efd69101727d27a4e710880ce46e84d70",
+    "file_path": "CalendarinhoApp/authentication.py",
+    "commit_message": "Full Fix for Open Redirect Issue #1",
+    "code_before_len": 28,
+    "code_after_len": 27
+  },
+  {
+    "item_id": "b886d117",
+    "project_name": "sydent",
+    "cve_ids": [
+      "CVE-2023-38686"
+    ],
+    "cwe_ids": [
+      "CWE-295"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/matrix-org/sydent/commit/1cd748307c6b168b66154e6c4db715d4b9551261",
+    "file_path": "sydent/util/emailutils.py",
+    "commit_message": "Explicitly create an SSL context when emailing (#574)",
+    "code_before_len": 93,
+    "code_after_len": 96
+  },
+  {
+    "item_id": "babe7119",
+    "project_name": "spotipy",
+    "cve_ids": [
+      "CVE-2025-27154"
+    ],
+    "cwe_ids": [
+      "CWE-276"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/spotipy-dev/spotipy/commit/1ca453f6ef87a2a9e9876f52b6cb38d13532ccf2",
+    "file_path": "spotipy/cache_handler.py",
+    "commit_message": "Merge commit from fork\n\n* security: set 600 permissions on auth token cache file\n\nhttps://github.com/spotipy-dev/spotipy/security/advisories/GHSA-pwhh-q4h6-w599\n\n* Update spotipy/cache_handler.py\n\nCo-authored-by: Niko <github@dieserniko.link>\n\n* add newline back in\n\n---------\n\nCo-authored-by: Niko <github@dieserniko.link>",
+    "code_before_len": 5,
+    "code_after_len": 10
+  },
+  {
+    "item_id": "c0261fa4",
+    "project_name": "transformers",
+    "cve_ids": [
+      "CVE-2025-2099"
+    ],
+    "cwe_ids": [
+      "CWE-1333"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/huggingface/transformers/commit/8cb522b4190bd556ce51be04942720650b1a3e57",
+    "file_path": "src/transformers/testing_utils.py",
+    "commit_message": "Cleanup the regex used for doc preprocessing (#36648)\n\n* Cleanup the regex used for doc preprocessing\n\n* Run tests",
+    "code_before_len": 27,
+    "code_after_len": 27
+  },
+  {
+    "item_id": "c1e78bce",
+    "project_name": "omero-web",
+    "cve_ids": [
+      "CVE-2025-54791"
+    ],
+    "cwe_ids": [
+      "CWE-209"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/ome/omero-web/commit/8aa2789e8f759c73f1517abe9a0abd44e86644ad",
+    "file_path": "omeroweb/webadmin/views.py",
+    "commit_message": "Security vulnerability fix",
+    "code_before_len": 50,
+    "code_after_len": 49
+  },
+  {
+    "item_id": "c29af17b",
+    "project_name": "authentik",
+    "cve_ids": [
+      "CVE-2023-48228"
+    ],
+    "cwe_ids": [
+      "CWE-287"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/goauthentik/authentik/commit/b88e39411c12e3f9e04125a7887f12354f760a14",
+    "file_path": "authentik/providers/oauth2/views/token.py",
+    "commit_message": "security: fix CVE-2023-48228 (#7666)\n\nSigned-off-by: Jens Langhammer <jens@goauthentik.io>",
+    "code_before_len": 68,
+    "code_after_len": 71
+  },
+  {
+    "item_id": "c9c8c36c",
+    "project_name": "transformers",
+    "cve_ids": [
+      "CVE-2024-3568"
+    ],
+    "cwe_ids": [
+      "CWE-502"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/huggingface/transformers/commit/693667b8ac8138b83f8adb6522ddaf42fa07c125",
+    "file_path": "src/transformers/modeling_tf_utils.py",
+    "commit_message": "Remove dead TF loading code (#28926)\n\nRemove dead code",
+    "code_before_len": 48,
+    "code_after_len": 47
+  },
+  {
+    "item_id": "cbe8607b",
+    "project_name": "chuanhuchatgpt",
+    "cve_ids": [
+      "CVE-2024-7962"
+    ],
+    "cwe_ids": [
+      "CWE-22",
+      "CWE-29"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/gaizhenbiao/chuanhuchatgpt/commit/2836fd1db3efcd5ede63c0e7fbbdf677730dbb51",
+    "file_path": "modules/utils.py",
+    "commit_message": "bugfix: Added additional checks when loading template",
+    "code_before_len": 21,
+    "code_after_len": 25
+  },
+  {
+    "item_id": "cd33186d",
+    "project_name": "mindsdb",
+    "cve_ids": [
+      "CVE-2023-38699"
+    ],
+    "cwe_ids": [
+      "CWE-311"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/mindsdb/mindsdb/commit/083afcf6567cf51aa7d89ea892fd97689919053b",
+    "file_path": "mindsdb/integrations/handlers/dremio_handler/dremio_handler.py",
+    "commit_message": "Update dremio_handler.py",
+    "code_before_len": 19,
+    "code_after_len": 19
+  },
+  {
+    "item_id": "d09de727",
+    "project_name": "transformers",
+    "cve_ids": [
+      "CVE-2023-2800"
+    ],
+    "cwe_ids": [
+      "CWE-377"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/huggingface/transformers/commit/80ca92470938bbcc348e2d9cf4734c7c25cb1c43",
+    "file_path": "src/transformers/utils/hub.py",
+    "commit_message": "Use `mkstemp` to replace deprecated `mktemp` (#23372)\n\n* Use `mkstemp` to replace deprecated `mktemp`\r\n\r\nThe `tempfile.mktemp` function is [deprecated](https://docs.python.org/3/library/tempfile.html#tempfile.mktemp) due to [security issues](https://cwe.mitre.org/data/definitions/377.html).\r\n\r\n* Update src/transformers/utils/hub.py\r\n\r\nCo-authored-by: amyeroberts <22614925+amyeroberts@users.noreply.github.com>\r\n\r\n---------\r\n\r\nCo-authored-by: amyeroberts <22614925+amyeroberts@users.noreply.github.com>",
+    "code_before_len": 24,
+    "code_after_len": 24
+  },
+  {
+    "item_id": "d29b94d5",
+    "project_name": "collective.task",
+    "cve_ids": [
+      "CVE-2022-4527"
+    ],
+    "cwe_ids": [
+      "CWE-79"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/collective/collective.task/commit/1aac7f83fa2c2b41d59ba02748912953461f3fac",
+    "file_path": "src/collective/task/browser/table.py",
+    "commit_message": "Escaped some column rendering to avoid xss",
+    "code_before_len": 7,
+    "code_after_len": 7
+  },
+  {
+    "item_id": "d2b7d775",
+    "project_name": "piccolo",
+    "cve_ids": [
+      "CVE-2023-41885"
+    ],
+    "cwe_ids": [
+      "CWE-203",
+      "CWE-204"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/piccolo-orm/piccolo/commit/edcfe3568382922ba3e3b65896e6e7272f972261",
+    "file_path": "piccolo/apps/user/tables.py",
+    "commit_message": "Merge pull request from GHSA-h7cm-mrvq-wcfr\n\nCo-authored-by: skelmis <ethan@koldfusion.xyz>",
+    "code_before_len": 47,
+    "code_after_len": 50
+  },
+  {
+    "item_id": "d873de7f",
+    "project_name": "octoprint",
+    "cve_ids": [
+      "CVE-2022-1430"
+    ],
+    "cwe_ids": [
+      "CWE-79"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/octoprint/octoprint/commit/8087528e4a7ddd15c7d95ff662deb5ef7de90045",
+    "file_path": "src/octoprint/server/views.py",
+    "commit_message": "🔒️ Sanitize and validate login redirect\n\nFixes an XSS and an open redirect issue.",
+    "code_before_len": 44,
+    "code_after_len": 53
+  },
+  {
+    "item_id": "e5222224",
+    "project_name": "sabnzbd",
+    "cve_ids": [
+      "CVE-2023-34237"
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "years": [
+      2023
+    ],
+    "commit_url": "https://github.com/sabnzbd/sabnzbd/commit/e3a722664819d1c7c8fab97144cc299b1c18b429",
+    "file_path": "sabnzbd/notifier.py",
+    "commit_message": "Move Notification Script Parameters to environment variable\n\nFixes #2549",
+    "code_before_len": 33,
+    "code_after_len": 33
+  },
+  {
+    "item_id": "e5dfeaaa",
+    "project_name": "openedx-translations",
+    "cve_ids": [
+      "CVE-2024-43782"
+    ],
+    "cwe_ids": [
+      "CWE-74"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/openedx/openedx-translations/commit/b2444340e8702c7955310331c1db5fd85b25b92b",
+    "file_path": "scripts/validate_translation_files.py",
+    "commit_message": "Merge commit from fork\n\nCo-authored-by: Omar Al-Ithawi <i@omardo.com>",
+    "code_before_len": 20,
+    "code_after_len": 45
+  },
+  {
+    "item_id": "e6872b1d",
+    "project_name": "pytorch-lightning",
+    "cve_ids": [
+      "CVE-2022-0845"
+    ],
+    "cwe_ids": [
+      "CWE-94"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/pytorchlightning/pytorch-lightning/commit/8b7a12c52e52a06408e9231647839ddb4665e8ae",
+    "file_path": "pytorch_lightning/utilities/argparse.py",
+    "commit_message": "Replace `eval()` with `ast.literal_eval()` for security (#12212)\n\nCo-authored-by: Carlos Mocholi <carlossmocholi@gmail.com>",
+    "code_before_len": 28,
+    "code_after_len": 28
+  },
+  {
+    "item_id": "e6aacb53",
+    "project_name": "collective.contact.widget",
+    "cve_ids": [
+      "CVE-2022-4638"
+    ],
+    "cwe_ids": [
+      "CWE-707",
+      "CWE-79"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/collective/collective.contact.widget/commit/5da36305ca7ed433782be8901c47387406fcda12",
+    "file_path": "src/collective/contact/widget/widgets.py",
+    "commit_message": "Escaped term-contact viewlet title special chars to avoid xss",
+    "code_before_len": 7,
+    "code_after_len": 7
+  },
+  {
+    "item_id": "e7fbb94a",
+    "project_name": "plotai",
+    "cve_ids": [
+      "CVE-2025-1497"
+    ],
+    "cwe_ids": [
+      "CWE-77",
+      "CWE-94"
+    ],
+    "years": [
+      2025
+    ],
+    "commit_url": "https://github.com/mljar/plotai/commit/bdcfb13484f0b85703a4c1ddfd71cb21840e7fde",
+    "file_path": "plotai/code/executor.py",
+    "commit_message": "comment out exec() method because of securith issues",
+    "code_before_len": 11,
+    "code_after_len": 16
+  },
+  {
+    "item_id": "ea79e307",
+    "project_name": "cyberpanel",
+    "cve_ids": [
+      "CVE-2024-54679"
+    ],
+    "cwe_ids": [
+      "CWE-862"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/usmannasir/cyberpanel/commit/6778ad1eaae41f72365da8fd021f9a60369600dc",
+    "file_path": "databases/views.py",
+    "commit_message": "restart mysql",
+    "code_before_len": 20,
+    "code_after_len": 21
+  },
+  {
+    "item_id": "eae18dec",
+    "project_name": "MEGABOT",
+    "cve_ids": [
+      "CVE-2024-43404"
+    ],
+    "cwe_ids": [
+      "CWE-94",
+      "CWE-95"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/NicPWNs/MEGABOT/commit/71e79e5581ea36313700385b112d863053fb7ed6",
+    "file_path": "commands/math.py",
+    "commit_message": "fix: remove eval() code execution vulnerability",
+    "code_before_len": 10,
+    "code_after_len": 30
+  },
+  {
+    "item_id": "eb4fa4d8",
+    "project_name": "chuanhuchatgpt",
+    "cve_ids": [
+      "CVE-2024-5982"
+    ],
+    "cwe_ids": [
+      "CWE-22"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/gaizhenbiao/chuanhuchatgpt/commit/952fc8c3cbacead858311747cddd4bedcb4721d7",
+    "file_path": "modules/models/base_model.py",
+    "commit_message": "bugfix: Added checking when loading history files",
+    "code_before_len": 111,
+    "code_after_len": 116
+  },
+  {
+    "item_id": "ee76e0c9",
+    "project_name": "octoprint",
+    "cve_ids": [
+      "CVE-2022-3068"
+    ],
+    "cwe_ids": [
+      "CWE-269"
+    ],
+    "years": [
+      2022
+    ],
+    "commit_url": "https://github.com/octoprint/octoprint/commit/ef95ef1c101b79394f134e8fce000e6bae046571",
+    "file_path": "src/octoprint/plugins/pluginmanager/__init__.py",
+    "commit_message": "🔒️ Fix a wrong permission role\n\nA wrong role assigned to PluginManager LIST permission as\nintroduced in 1.8.0 causes a privilege escalation,\nallowing read-only and user group the same rights as\nthe MANAGE permission:\n\n- enabling/disabling plugins\n- uninstalling plugins\n- listing installed plugins incl. their details\n- retrieving plugin notices\n- deleting orphaned plugin settings",
+    "code_before_len": 30,
+    "code_after_len": 30
+  },
+  {
+    "item_id": "fffb4fce",
+    "project_name": "transformers",
+    "cve_ids": [
+      "CVE-2024-12720"
+    ],
+    "cwe_ids": [
+      "CWE-1333"
+    ],
+    "years": [
+      2024
+    ],
+    "commit_url": "https://github.com/huggingface/transformers/commit/deac971c469bcbb182c2e52da0b82fb3bf54cccf",
+    "file_path": "src/transformers/models/nougat/tokenization_nougat_fast.py",
+    "commit_message": "🚨🚨🚨 Limit backtracking in Nougat regexp (#35264)\n\n* Limit backtracking in regexp\r\n\r\n* Update\r\n\r\n* [run-slow] nougat\r\n\r\n* Update",
+    "code_before_len": 94,
+    "code_after_len": 94
+  }
+]

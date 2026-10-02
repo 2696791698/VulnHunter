@@ -1,4 +1,15 @@
-import type { AuditMode, AuditStatus, CheckState, Source } from './types'
+import type {
+  AuditAssessment,
+  AuditMode,
+  AuditStatus,
+  CheckState,
+  EvalMetric,
+  EvalPrediction,
+  EvalRunStatus,
+  EvalSampleStatus,
+  EvalSampleType,
+  Source,
+} from './types'
 
 /**
  * Shown wherever the backend reported nothing. The UI never guesses a value or
@@ -9,6 +20,53 @@ export const NO_DATA = '没有数据'
 /** For any optional string that came off the wire. */
 export function orNoData(value: string | null | undefined): string {
   return value === null || value === undefined || value === '' ? NO_DATA : value
+}
+
+function parseAuditAssessment(value: string | AuditAssessment | null | undefined): AuditAssessment | null {
+  if (!value)
+    return null
+
+  try {
+    const parsed: unknown = typeof value === 'string' ? JSON.parse(value) : value
+    if (!parsed || typeof parsed !== 'object')
+      return null
+
+    const assessment = parsed as Partial<AuditAssessment>
+    if (assessment.verdict !== 0 && assessment.verdict !== 1)
+      return null
+    if (assessment.verdict === 0 && assessment.reproduction_report !== null)
+      return null
+    if (assessment.verdict === 1 && (!assessment.reproduction_report || typeof assessment.reproduction_report !== 'object'))
+      return null
+    return assessment as AuditAssessment
+  }
+  catch {
+    return null
+  }
+}
+
+/** Compact label for the audit task list; preserves the first line of old results. */
+export function auditResultPreview(value: string | AuditAssessment | null | undefined): string {
+  const assessment = parseAuditAssessment(value)
+  if (assessment)
+    return assessment.verdict === 1 ? '1 · 有漏洞' : '0 · 无漏洞'
+  return typeof value === 'string' ? value.split(/\r?\n/, 1)[0] || NO_DATA : NO_DATA
+}
+
+/** Readable JSON for the audit detail panel; old free-form results pass through. */
+export function formatAuditResult(value: string | AuditAssessment | null | undefined): string {
+  const assessment = parseAuditAssessment(value)
+  if (assessment)
+    return JSON.stringify(assessment, null, 2)
+  return orNoData(typeof value === 'string' ? value : value ? JSON.stringify(value, null, 2) : null)
+}
+
+/** Expanded report for vulnerable evaluation samples; null for all other results. */
+export function formatReproductionReport(value: string | AuditAssessment | null | undefined): string | null {
+  const assessment = parseAuditAssessment(value)
+  return assessment?.verdict === 1 && assessment.reproduction_report
+    ? JSON.stringify(assessment.reproduction_report, null, 2)
+    : null
 }
 
 export function formatLatency(ms: number | null): string {
@@ -121,6 +179,7 @@ export const AUDIT_STATUS_LABELS: Record<AuditStatus, string> = {
   running: '审查中',
   done: '已完成',
   failed: '失败',
+  cancelled: '已停止',
 }
 
 /** Vocabulary for what an audit covers. */
@@ -137,4 +196,75 @@ export function elapsedLabel(from: string | null, to: string | null): string {
   if (!from)
     return NO_DATA
   return formatDuration(Date.parse(to ?? new Date().toISOString()) - Date.parse(from))
+}
+
+/* -------------------------------------------------------------------------- */
+/* Benchmark evaluation                                                        */
+/* -------------------------------------------------------------------------- */
+
+/** Vocabulary for the evaluation run lifecycle. `interrupted` remains for
+ * older bridge responses; current restarts restore unfinished runs as paused. */
+export const EVAL_RUN_STATUS_LABELS: Record<EvalRunStatus, string> = {
+  queued: '排队中',
+  running: '测评中',
+  paused: '已暂停',
+  done: '已完成',
+  interrupted: '已中断',
+}
+
+/** Same lifecycle, one sample down. */
+export const EVAL_SAMPLE_STATUS_LABELS: Record<EvalSampleStatus, string> = {
+  queued: '排队中',
+  cloning: '拉取中',
+  running: '测评中',
+  done: '已完成',
+  failed: '失败',
+  cancelled: '已取消',
+}
+
+/** Which side of a pair a sample audits. */
+export const EVAL_SAMPLE_TYPE_LABELS: Record<EvalSampleType, string> = {
+  vul: '漏洞版本',
+  sec: '修复版本',
+}
+
+/** What the dataset labels a sample, and what the agent said about it. */
+export const EVAL_LABEL_TEXT: Record<EvalPrediction, string> = {
+  vulnerable: '有漏洞',
+  'non-vulnerable': '无漏洞',
+}
+
+/**
+ * The headline metrics. Keys come from the bridge, which computes the numbers;
+ * the wording is interface vocabulary, so it lives here with the other labels.
+ */
+export const EVAL_METRIC_LABELS: Record<string, string> = {
+  recall: '召回率',
+  fpr: '误报率',
+  precision: '精确率',
+  f1: 'F1',
+  accuracy: '准确率',
+  pairCorrectness: 'Pair-Correctness',
+  youdenJ: "Youden's J",
+}
+
+/** Metrics where a bigger number is better, for colouring them. */
+export const EVAL_METRIC_HIGHER_IS_BETTER: Record<string, boolean> = {
+  fpr: false,
+}
+
+/** `50.00%` — or 「没有数据」 when the ratio is over an empty denominator. */
+export function formatPercent(value: number | null | undefined): string {
+  if (value === null || value === undefined)
+    return NO_DATA
+  return `${(value * 100).toFixed(2)}%`
+}
+
+/** `50.00% (2/4)`, so the counts behind a ratio are never hidden by it. */
+export function formatMetric(metric: EvalMetric | undefined): string {
+  if (!metric || metric.value === null)
+    return NO_DATA
+  if (metric.numerator === null || metric.denominator === null)
+    return formatPercent(metric.value)
+  return `${formatPercent(metric.value)} (${metric.numerator}/${metric.denominator})`
 }

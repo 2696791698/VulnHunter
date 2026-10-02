@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="24.7.17">
+  <diagram name="VulnHunter Figure Studio Pro" id="vulnhunter-studio-pro-figure1">
+    <mxGraphModel dx="1400" dy="680" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="680" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="仓库快照 + 目标函数" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#20272B;strokeWidth=2;fontColor=#20272B;fontSize=24;fontStyle=1;fontFamily=SimHei;" vertex="1" parent="1">
+          <mxGeometry x="50" y="80" width="330" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="结构化报告" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#20272B;strokeWidth=2;fontColor=#20272B;fontSize=24;fontStyle=1;fontFamily=SimHei;" vertex="1" parent="1">
+          <mxGeometry x="50" y="385" width="330" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="主审计代理&lt;br&gt;仓库探索 · 漏洞假设&lt;br&gt;&lt;br&gt;按需程序分析&lt;br&gt;CodeQL · Semgrep · CodeBadger" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#20272B;strokeWidth=2;fontColor=#20272B;fontSize=24;fontStyle=1;fontFamily=SimHei;" vertex="1" parent="1">
+          <mxGeometry x="520" y="60" width="360" height="550" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="" style="rounded=1;fillColor=#287D73;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="540" y="63" width="320" height="7" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="执行代理&lt;br&gt;任务容器" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#20272B;strokeWidth=2;fontColor=#20272B;fontSize=24;fontStyle=1;fontFamily=SimHei;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="80" width="330" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="" style="rounded=1;fillColor=#B77A35;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="83" width="290" height="7" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="事实黑板" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFFFFF;strokeColor=#20272B;strokeWidth=2;fontColor=#20272B;fontSize=24;fontStyle=1;fontFamily=SimHei;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="385" width="330" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#20272B;strokeWidth=2;endArrow=block;dashed=0;fontColor=#20272B;fontSize=16;exitY=0.5;entryY=0.236;" edge="1" parent="1" source="2" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="验证计划" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#20272B;strokeWidth=2;endArrow=block;dashed=0;fontColor=#20272B;fontSize=16;exitY=0.236;entryY=0.5;" edge="1" parent="1" source="4" target="6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="事实事件" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#20272B;strokeWidth=2;endArrow=block;dashed=0;fontColor=#20272B;fontSize=16;exitY=1;entryY=0;" edge="1" parent="1" source="6" target="8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="回读事实" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#20272B;strokeWidth=2;endArrow=block;dashed=1;fontColor=#20272B;fontSize=16;exitY=0.523;entryY=0.8;" edge="1" parent="1" source="8" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="结论" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#20272B;strokeWidth=2;endArrow=block;dashed=0;fontColor=#20272B;fontSize=16;exitY=0.8;entryY=0.523;" edge="1" parent="1" source="4" target="3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

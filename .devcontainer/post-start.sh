@@ -17,6 +17,8 @@ DOCKER_MCP_LOG="/tmp/docker-mcp.log"
 
 # 桥接服务和面板是项目自己的常驻进程, 要用项目 venv 的解释器/依赖
 VENV_PYTHON="${UV_PROJECT_ENVIRONMENT:-/home/vscode/.venv}/bin/python"
+# CodeBadger 的 uv run 会同步自身依赖, 不能复用主项目的 UV_PROJECT_ENVIRONMENT。
+CODEBADGER_VENV="${CODEBADGER_PROJECT_ENVIRONMENT:-$HOME/.venvs/codebadger}"
 # docker-mcp 是独立的 uv 项目, 环境在 $HOME 下 (见 README), 不在仓库里
 DOCKER_MCP_PYTHON="$HOME/.venvs/docker-mcp/bin/python"
 
@@ -48,7 +50,7 @@ if curl -sf --max-time 3 http://127.0.0.1:4242/health >/dev/null 2>&1; then
     echo "    已在运行, 跳过"
 else
     # setsid 让进程脱离当前会话, 否则 devcontainer CLI 结束命令时可能把它一起带走
-    ( cd "$WORKSPACE/codebadger" && setsid nohup uv run main.py \
+    ( cd "$WORKSPACE/codebadger" && UV_PROJECT_ENVIRONMENT="$CODEBADGER_VENV" setsid nohup uv run --locked main.py \
         > "$CODEBADGER_LOG" 2>&1 < /dev/null & )
     # 给它几秒钟起来, 顺便让日志里的早期报错直接显示出来
     for _ in $(seq 1 15); do

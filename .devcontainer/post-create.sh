@@ -20,13 +20,9 @@ if ! docker info >/dev/null 2>&1; then
     exit 1
 fi
 
-echo "==> 同步 Python 依赖 (uv sync)"
+echo "==> 同步 Python 依赖及桥接服务依赖 (uv sync)"
+# bridge 是默认依赖组, 后续 uv sync / uv run 也会保留 fastapi 和 uvicorn。
 uv sync
-
-echo "==> 安装桥接服务依赖 (web/server/requirements.txt)"
-# fastapi/uvicorn 刻意不在项目 pyproject 里 (桥接是可选组件), 单独装进同一个 venv
-uv pip install --python "${UV_PROJECT_ENVIRONMENT:-/home/vscode/.venv}/bin/python" \
-    -r web/server/requirements.txt
 
 echo "==> 准备 docker-mcp 的独立环境"
 # docker-mcp 是独立的 uv 项目, 环境放在 $HOME 下而不是仓库里 (与 README 一致)
@@ -44,6 +40,8 @@ if [ ! -d ./codebadger ] && [ -f ./codebadger.zip ]; then
     unzip -q ./codebadger.zip
 fi
 if [ -d ./codebadger ] && [ -f ./codebadger/docker-compose.yml ]; then
+    # devcontainer 的 UV_PROJECT_ENVIRONMENT 指向主项目环境, 子项目必须单独覆盖。
+    ( cd ./codebadger && UV_PROJECT_ENVIRONMENT="${CODEBADGER_PROJECT_ENVIRONMENT:-$HOME/.venvs/codebadger}" uv sync --locked )
     # codebadger 的 .env 默认 DOCKER_HOST=unix:///var/run/docker.sock,
     # 在 DinD 环境下该 socket 指向容器内的 dockerd, 无需修改
     ( cd ./codebadger && docker compose up -d )

@@ -1,5 +1,6 @@
 export type SpanKind = 'chain' | 'model' | 'tool'
-export type SpanStatus = 'running' | 'ok' | 'error'
+export type SpanStatus = 'running' | 'ok' | 'error' | 'interrupted'
+export type TraceStatus = SpanStatus | 'cancelled'
 
 export interface SpanUsage {
   inputTokens?: number | null
@@ -30,6 +31,10 @@ export interface Span {
   inputs: unknown
   outputs: unknown
   error: string | null
+  /** True when this span only carries a descendant's exception upward: the
+   * failure belongs to the span below it, and this one merely reports it again
+   * on the way out. False for spans that never errored. */
+  propagated: boolean
   model: string | null
   usage: SpanUsage | null
   tags: string[]
@@ -45,14 +50,20 @@ export interface TraceSummary {
   name: string
   startedAt: string
   endedAt: string | null
-  status: SpanStatus
+  status: TraceStatus
+  canStop: boolean
+  stopRequested: boolean
   spanCount: number
+  /** Distinct failures. An exception crossing several nested spans is still one:
+   * the bridge counts a span only when no ancestor carries the same error. */
   errorCount: number
   usage: SpanUsage | null
   /** Incremented on every accepted event, so the dashboard can tell whether a
    * trace changed without refetching it to find out. */
   revision?: number
   sizeBytes?: number
+  /** The surviving legacy events did not include the root span. */
+  partial?: boolean
 }
 
 export interface Trace extends TraceSummary {
@@ -69,8 +80,10 @@ export const SPAN_KIND_LABELS: Record<SpanKind, string> = {
   tool: '工具调用',
 }
 
-export const SPAN_STATUS_LABELS: Record<SpanStatus, string> = {
+export const SPAN_STATUS_LABELS: Record<TraceStatus, string> = {
   running: '运行中',
   ok: '成功',
   error: '失败',
+  interrupted: '已中断',
+  cancelled: '已停止',
 }

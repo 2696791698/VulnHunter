@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import asyncio
 import importlib.util
+import json
 import os
 import subprocess
 import sys
@@ -45,11 +46,12 @@ class FakeAuditModule:
     """Stands in for audit_agent so no container or model call happens."""
 
     FunctionTarget = audit_agent.FunctionTarget
+    parse_audit_result = staticmethod(audit_agent.parse_audit_result)
 
     def __init__(self):
         self.PROJECT_ROOT = ""
 
-    def run(self, target=None):
+    def run(self, target=None, **kwargs):
         captured.append(target)
         # main.py assigns this on the real module; mirror it so the rendered
         # prompt shows the paths the agent would actually be given.
@@ -58,7 +60,7 @@ class FakeAuditModule:
             print("--- rendered function target ---")
             print(audit_agent.render_function_target(target))
             print("--- end ---")
-        return "non-vulnerable"
+        return json.dumps({"verdict": 0, "reproduction_report": None})
 
 
 main._audit_module = FakeAuditModule()

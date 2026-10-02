@@ -8,6 +8,7 @@ import {
   GitBranchIcon,
   LoaderIcon,
   PlayIcon,
+  XCircleIcon,
 } from '@lucide/vue'
 import { computed, reactive, ref } from 'vue'
 import AuditTaskSheet from '@/components/dashboard/AuditTaskSheet.vue'
@@ -33,9 +34,9 @@ import {
   AUDIT_MODE_LABELS,
   AUDIT_STATUS_LABELS,
   NO_DATA,
+  auditResultPreview,
   elapsedLabel,
   formatRelative,
-  orNoData,
 } from '@/lib/format'
 
 const { tasks, loading, submit } = useAuditTasks()
@@ -110,6 +111,7 @@ const STATUS_TONE = {
   running: 'text-muted-foreground animate-spin',
   done: 'text-status-good',
   failed: 'text-status-critical',
+  cancelled: 'text-muted-foreground',
 } as const
 
 const STATUS_ICON = {
@@ -118,6 +120,7 @@ const STATUS_ICON = {
   running: LoaderIcon,
   done: CircleCheckIcon,
   failed: CircleAlertIcon,
+  cancelled: XCircleIcon,
 } as const
 </script>
 
@@ -135,7 +138,7 @@ const STATUS_ICON = {
     <Card>
       <CardHeader>
         <CardTitle>新建审查</CardTitle>
-        <CardDescription>一次只跑一个任务，提交后会排队；进度和结论在下方列表里更新。</CardDescription>
+        <CardDescription>任务会并发运行，超过并发数的任务自动排队；进度和结论在下方列表里更新。</CardDescription>
       </CardHeader>
       <CardContent>
         <form @submit.prevent="onSubmit">
@@ -297,7 +300,7 @@ const STATUS_ICON = {
                 {{ task.error }}
               </ItemDescription>
               <ItemDescription v-else-if="task.verdict" class="line-clamp-1 text-xs">
-                {{ orNoData(task.verdict.split('\n')[0]) }}
+                {{ auditResultPreview(task.verdict) }}
               </ItemDescription>
               <!-- 进行中的任务还没有结论，状态徽标已经说明了，这行先不占位。 -->
               <ItemDescription v-else-if="task.status === 'done'" class="text-xs">

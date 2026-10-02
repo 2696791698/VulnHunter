@@ -25,10 +25,13 @@
 
 ### codebadger
 
+CodeBadger 使用独立虚拟环境，避免它的 `uv sync` / `uv run` 清除主项目依赖。
+以下命令在 `codebadger` 目录执行，容器启动脚本也使用相同的环境路径。
+
 #### 1. 安装 Python 环境
 
 ```bash
-uv sync
+UV_PROJECT_ENVIRONMENT="${CODEBADGER_PROJECT_ENVIRONMENT:-$HOME/.venvs/codebadger}" uv sync --locked
 ```
 
 #### 2. 启动 Docker 服务（Joern）
@@ -40,7 +43,7 @@ docker compose up -d
 #### 3. 启动 MCP 服务
 
 ```bash
-uv run main.py
+UV_PROJECT_ENVIRONMENT="${CODEBADGER_PROJECT_ENVIRONMENT:-$HOME/.venvs/codebadger}" uv run --locked main.py
 ```
 
 #### 4. 关闭 MCP 服务
@@ -461,6 +464,32 @@ uv run benchmark_base.py
 
 ```bash
 uv run generate metrics.py
+```
+
+### 3. 数据集测评（面板）
+
+上面的脚本跑的是 `dataset/` 里预先检出的 PyVul 样例。面板的「数据集测评」页跑的是另一份数据集
+—— DREA 论文的 **RepoPairBench 100**（100 组 2021–2025 年的 Python 漏洞修复对），放在
+`benchmark/drea/` 里随代码一起走，上游仓库在运行时按 `repo_url` 现拉：
+
+```text
+benchmark/drea/repopairbench_100.jsonl            # 100 组漏洞修复对
+benchmark/drea/repopairbench_100_manifest.json    # 同一批的补充信息（修复 commit message 等）
+```
+
+在页面里筛出或勾选出要测评的范围，选好「漏洞版本 / 修复版本 / 两者」，就能开一次测评；页面显示
+进度、召回率 / 误报率 / F1 / Pair-Correctness / Youden's J，以及每个样例的判定和它对不对。
+测评详情中可手动暂停和继续；服务或电脑重启后，未完成的测评保持暂停，需手动点击「继续测评」。
+
+数据集里的「一项」是一组漏洞修复对，真正跑的是一个**样例**，也就是项的一个版本：`vul` 检出修复
+commit 的父提交并送进 `code_before`，`sec` 检出修复 commit 本身并送进 `code_after`；给 agent 的东西
+和函数检测完全一样（整个检出目录 + 这一个函数的路径与源码）。判定走结构化标记而不是自由文本，
+指标口径与 DREA 的评测脚本对齐 —— 细节见 [web/README.md](web/README.md#数据集测评)。
+
+样例和手动审查共用同一条队列，串行执行。离线回归测试（不联网、不起容器、不调模型）：
+
+```bash
+/home/vscode/.venv/bin/python scripts/verify_evaluation.py
 ```
 
 # 说明

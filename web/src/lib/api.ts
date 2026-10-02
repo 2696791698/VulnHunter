@@ -1,5 +1,21 @@
 import type { Span, Trace, TraceSummary } from './traces'
-import type { AuditSubmission, AuditTask, BridgeInfo, EnvironmentReading, TokenUsage } from './types'
+import type {
+  AuditSubmission,
+  AuditTask,
+  BridgeInfo,
+  ConcurrencyConfiguration,
+  EnvironmentReading,
+  EvalDatasetDescriptor,
+  EvalDatasetItems,
+  EvalFilters,
+  EvalRun,
+  EvalRunDetail,
+  EvalScope,
+  EvalScopeSummary,
+  ModelConfiguration,
+  SaveModelConfiguration,
+  TokenUsage,
+} from './types'
 
 /**
  * Base URL of the optional Python bridge in `server/`. It is proxied by Vite in
@@ -114,6 +130,39 @@ export async function bridgeStartCommand(): Promise<string> {
   }
 }
 
+/** Requests cancellation of a bridge-owned Agent run. */
+export function stopAgentTrace(id: string): Promise<{ stopRequested: boolean }> {
+  return request<{ stopRequested: boolean }>(`/agent/traces/${encodeURIComponent(id)}/stop`, { method: 'POST' })
+}
+
+/** Reads the active model settings without ever returning the API key. */
+export function fetchModelConfiguration(): Promise<ModelConfiguration> {
+  return request<ModelConfiguration>('/model/config')
+}
+
+/** Persists the active model settings for new audit and evaluation tasks. */
+export function saveModelConfiguration(payload: SaveModelConfiguration): Promise<ModelConfiguration> {
+  return request<ModelConfiguration>('/model/config', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+}
+
+/** Reads the active limit shared by audit and evaluation workers. */
+export function fetchConcurrencyConfiguration(): Promise<ConcurrencyConfiguration> {
+  return request<ConcurrencyConfiguration>('/settings/concurrency')
+}
+
+/** Applies and persists the shared audit/evaluation worker limit. */
+export function saveConcurrencyConfiguration(maxConcurrency: number): Promise<ConcurrencyConfiguration> {
+  return request<ConcurrencyConfiguration>('/settings/concurrency', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ maxConcurrency }),
+  })
+}
+
 /** Audit tasks, newest first. */
 export function fetchAuditTasks(): Promise<{ tasks: AuditTask[] }> {
   return request<{ tasks: AuditTask[] }>('/audit/tasks')
@@ -132,4 +181,88 @@ export function createAuditTask(payload: AuditSubmission): Promise<AuditTask> {
 export function fetchTokenUsage(interval?: string): Promise<TokenUsage> {
   const query = interval ? `?interval=${encodeURIComponent(interval)}` : ''
   return request<TokenUsage>(`/agent/usage${query}`)
+}
+
+/* -------------------------------------------------------------------------- */
+/* Benchmark evaluation                                                        */
+/* -------------------------------------------------------------------------- */
+
+function postJson<T>(path: string, payload: unknown, timeoutMs = PROBE_TIMEOUT_MS): Promise<T> {
+  return request<T>(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    timeoutMs,
+  })
+}
+
+/** The benchmark datasets this bridge can evaluate. */
+export function fetchEvalDatasets(): Promise<{ datasets: EvalDatasetDescriptor[] }> {
+  return request<{ datasets: EvalDatasetDescriptor[] }>('/eval/datasets')
+}
+
+/**
+ * The pairs in a dataset, filtered by the bridge.
+ *
+ * Projects and CWEs repeat the parameter rather than joining on a comma: a
+ * project name is arbitrary text, and a name containing a comma would otherwise
+ * split into two filters.
+ */
+export function fetchEvalDatasetItems(datasetId: string, filters: EvalFilters = {}): Promise<EvalDatasetItems> {
+  const query = new URLSearchParams()
+  for (const project of filters.projects ?? []) {
+    if (project)
+      query.append('project', project)
+  }
+  for (const cwe of filters.cweIds ?? []) {
+    if (cwe)
+      query.append('cwe', cwe)
+  }
+  if (filters.search?.trim())
+    query.set('search', filters.search.trim())
+
+  const suffix = query.size ? `?${query}` : ''
+  return request<EvalDatasetItems>(`/eval/datasets/${encodeURIComponent(datasetId)}/items${suffix}`)
+}
+
+/** Resolves a scope without starting anything. Same code path as creating a run. */
+export function previewEvalScope(datasetId: string, scope: EvalScope): Promise<EvalScopeSummary> {
+  return postJson<EvalScopeSummary>('/eval/scope', { datasetId, scope })
+}
+
+/** Queues a run and returns it; nothing is cloned until a worker picks it up. */
+export function createEvalRun(datasetId: string, scope: EvalScope): Promise<EvalRun> {
+  return postJson<EvalRun>('/eval/runs', { datasetId, scope })
+}
+
+/** Every run, newest first, with its progress and metrics. */
+export function fetchEvalRuns(): Promise<{ runs: EvalRun[] }> {
+  return request<{ runs: EvalRun[] }>('/eval/runs')
+}
+
+/** One run with all its samples. Polled while the detail sheet is open. */
+export function fetchEvalRun(runId: string): Promise<EvalRunDetail> {
+  return request<EvalRunDetail>(`/eval/runs/${encodeURIComponent(runId)}`)
+}
+
+export function cancelEvalRun(runId: string): Promise<{ cancelled: number, run: EvalRun }> {
+  return postJson<{ cancelled: number, run: EvalRun }>(`/eval/runs/${encodeURIComponent(runId)}/cancel`, {})
+}
+
+export function pauseEvalRun(runId: string): Promise<{ run: EvalRun }> {
+  return postJson<{ run: EvalRun }>(`/eval/runs/${encodeURIComponent(runId)}/pause`, {})
+}
+
+export function resumeEvalRun(runId: string): Promise<{ queued: number, run: EvalRun }> {
+  return postJson<{ queued: number, run: EvalRun }>(`/eval/runs/${encodeURIComponent(runId)}/resume`, {}, 30_000)
+}
+
+export function retryEvalRun(runId: string, cancelledOnly = false): Promise<{ retried: number, run: EvalRun }> {
+  // Re-journaling many samples can exceed the short bridge probe timeout.
+  const action = cancelledOnly ? 'retry-cancelled' : 'retry'
+  return postJson<{ retried: number, run: EvalRun }>(`/eval/runs/${encodeURIComponent(runId)}/${action}`, {}, 30_000)
+}
+
+export function deleteEvalRun(runId: string): Promise<{ removed: string }> {
+  return request<{ removed: string }>(`/eval/runs/${encodeURIComponent(runId)}`, { method: 'DELETE' })
 }

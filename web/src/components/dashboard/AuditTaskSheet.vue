@@ -7,6 +7,7 @@ import {
   GitBranchIcon,
   LoaderIcon,
   TriangleAlertIcon,
+  XCircleIcon,
 } from '@lucide/vue'
 import { computed } from 'vue'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -22,7 +23,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { AUDIT_MODE_LABELS, AUDIT_STATUS_LABELS, NO_DATA, elapsedLabel, formatDateTime, orNoData } from '@/lib/format'
+import { AUDIT_MODE_LABELS, AUDIT_STATUS_LABELS, NO_DATA, elapsedLabel, formatAuditResult, formatDateTime, orNoData } from '@/lib/format'
 
 const props = defineProps<{
   task: AuditTask | null
@@ -42,6 +43,7 @@ const TONE = {
   running: 'text-muted-foreground animate-spin',
   done: 'text-status-good',
   failed: 'text-status-critical',
+  cancelled: 'text-muted-foreground',
 } as const
 
 const STATUS_ICON = {
@@ -50,6 +52,7 @@ const STATUS_ICON = {
   running: LoaderIcon,
   done: CircleCheckIcon,
   failed: CircleAlertIcon,
+  cancelled: XCircleIcon,
 } as const
 </script>
 
@@ -112,7 +115,7 @@ const STATUS_ICON = {
               检出目录
             </dt>
             <dd class="truncate font-mono text-xs">
-              {{ orNoData(task.checkout) }}
+              {{ task.checkout || (task.endedAt ? '已清理' : orNoData(task.checkout)) }}
             </dd>
           </dl>
 
@@ -138,7 +141,7 @@ const STATUS_ICON = {
               审查结论
             </h3>
             <ScrollArea class="bg-muted min-h-0 flex-1 rounded-lg">
-              <pre class="p-3 font-mono text-xs leading-relaxed break-words whitespace-pre-wrap">{{ orNoData(task.verdict) }}</pre>
+              <pre class="p-3 font-mono text-xs leading-relaxed break-words whitespace-pre-wrap">{{ formatAuditResult(task.verdict) }}</pre>
             </ScrollArea>
             <p v-if="!task.verdict && task.status !== 'failed'" class="text-muted-foreground text-xs">
               {{ NO_DATA }} —— 任务还没跑完。

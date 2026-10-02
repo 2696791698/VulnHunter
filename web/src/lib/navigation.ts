@@ -1,7 +1,9 @@
 import type { Component } from 'vue'
 import {
+  BoxesIcon,
   BotIcon,
   FileSearchIcon,
+  FlaskConicalIcon,
   LayoutDashboardIcon,
   ListChecksIcon,
 } from '@lucide/vue'
@@ -38,11 +40,25 @@ export const NAV_SECTIONS: NavSection[] = [
     icon: FileSearchIcon,
   },
   {
+    id: 'eval',
+    path: '/eval',
+    title: '数据集测评',
+    description: '在漏洞数据集上批量测评',
+    icon: FlaskConicalIcon,
+  },
+  {
     id: 'agent',
     path: '/agent',
     title: 'Agent 监控',
     description: '追踪 Agent 运行情况',
     icon: BotIcon,
+  },
+  {
+    id: 'models',
+    path: '/setting',
+    title: '配置',
+    description: '模型与任务并行参数',
+    icon: BoxesIcon,
   },
 ]
 

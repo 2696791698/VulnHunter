@@ -2,7 +2,8 @@
 import type { Span, SpanKind, Trace } from '@/lib/traces'
 import type { Component } from 'vue'
 import { BlocksIcon, CircleAlertIcon, SparkleIcon, WrenchIcon } from '@lucide/vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { Badge } from '@/components/ui/badge'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { formatDuration } from '@/lib/format'
@@ -98,6 +99,69 @@ const rows = computed<Row[]>(() => {
 
   return out
 })
+
+const list = ref<HTMLElement | null>(null)
+
+/** A span the exception was raised in, as opposed to one it merely crossed. */
+function isFailure(span: Span): boolean {
+  return span.status === 'error' && !span.propagated
+}
+
+/** The failing rows, in the order the tree draws them. */
+const failureIds = computed(() =>
+  rows.value.filter(row => isFailure(row.span)).map(row => row.span.id),
+)
+
+/** Which failure the header's "上一处 / 下一处" buttons are on.
+ *
+ * The span id, not a position, because the trace object is replaced on every
+ * poll and an index would silently reset under whoever is stepping through. */
+const currentFailureId = ref<string | null>(null)
+
+/** Published for the header, which is where those buttons live. */
+const failureNav = computed(() => {
+  const ids = failureIds.value
+  const at = currentFailureId.value === null ? -1 : ids.indexOf(currentFailureId.value)
+  return { count: ids.length, position: at < 0 ? 1 : at + 1 }
+})
+
+/** The first line of an error is where the cause is stated; the rest is stack. */
+function errorLine(error: string | null): string {
+  const line = (error ?? '').split('\n', 1)[0]?.trim() ?? ''
+  return line.length > 160 ? `${line.slice(0, 160)}…` : line
+}
+
+function scrollToSpan(spanId: string) {
+  list.value
+    ?.querySelector(`[data-span-failure="${CSS.escape(spanId)}"]`)
+    ?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+}
+
+/** Steps to the next (or previous) failure and wraps at both ends.
+ *
+ * A trace can fail in more than one place, and a tree of hundreds of rows hides
+ * all of them, so this walks the list instead of always landing on the first.
+ * Before one has been located, either button goes to the first failure. */
+function stepFailure(delta: number) {
+  const ids = failureIds.value
+  if (ids.length === 0)
+    return
+
+  const at = currentFailureId.value === null ? -1 : ids.indexOf(currentFailureId.value)
+  const next = at < 0 ? 0 : (at + delta + ids.length) % ids.length
+  const target = ids[next]
+  if (target === undefined)
+    return
+
+  currentFailureId.value = target
+  scrollToSpan(target)
+}
+
+defineExpose({
+  failureNav,
+  previousFailure: () => stepFailure(-1),
+  nextFailure: () => stepFailure(1),
+})
 </script>
 
 <template>
@@ -111,13 +175,14 @@ const rows = computed<Row[]>(() => {
     </EmptyHeader>
   </Empty>
 
-  <div v-else class="flex flex-col">
+  <div v-else ref="list" class="flex flex-col">
     <Tooltip v-for="row in rows" :key="row.span.id">
       <TooltipTrigger as-child>
         <button
           type="button"
           class="hover:bg-muted/60 focus-visible:ring-ring/50 grid w-full grid-cols-[minmax(8rem,14rem)_1fr_5rem] items-center gap-3 rounded-md px-2 py-1 text-left outline-none focus-visible:ring-3"
           :class="row.span.id === selectedSpanId && 'bg-muted'"
+          :data-span-failure="isFailure(row.span) ? row.span.id : undefined"
           @click="emit('select', row.span)"
         >
           <span
@@ -125,8 +190,22 @@ const rows = computed<Row[]>(() => {
             :style="{ paddingLeft: `${row.depth * 12}px` }"
           >
             <component :is="KIND_ICON[row.span.kind]" class="size-3.5 shrink-0" :class="KIND_COLOR[row.span.kind]" />
-            <span class="truncate text-xs">{{ row.span.name }}</span>
-            <CircleAlertIcon v-if="row.span.status === 'error'" class="text-status-critical size-3 shrink-0" />
+            <span
+              class="truncate text-xs"
+              :class="isFailure(row.span) && 'text-status-critical font-medium'"
+            >{{ row.span.name }}</span>
+            <template v-if="isFailure(row.span)">
+              <!-- Only the span the exception was raised in is marked. The spans
+                   it passed through on the way out reported the error too, but
+                   flagging them as well buries the one row worth looking at. -->
+              <CircleAlertIcon class="text-status-critical size-3 shrink-0" />
+              <Badge variant="destructive" class="h-4 shrink-0 px-1.5 text-[10px]">
+                失败
+              </Badge>
+            </template>
+            <Badge v-else-if="row.span.status === 'interrupted'" variant="outline" class="h-4 shrink-0 px-1.5 text-[10px]">
+              中断
+            </Badge>
           </span>
 
           <span class="relative block h-2.5 w-full">
@@ -144,6 +223,12 @@ const rows = computed<Row[]>(() => {
       </TooltipTrigger>
       <TooltipContent side="top">
         {{ SPAN_KIND_LABELS[row.span.kind] }} · {{ row.span.name }} · {{ formatDuration(row.durationMs) }}
+        <template v-if="isFailure(row.span)">
+          <br>失败：{{ errorLine(row.span.error) }}
+        </template>
+        <template v-else-if="row.span.status === 'interrupted'">
+          <br>未收到结束事件；耗时截至最后一条记录
+        </template>
       </TooltipContent>
     </Tooltip>
   </div>

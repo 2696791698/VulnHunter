@@ -1,5 +1,5 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { clearTraces as clearRemoteTraces, fetchSpan, fetchTrace, fetchTraces } from '@/lib/api'
+import { BridgeError, clearTraces as clearRemoteTraces, fetchSpan, fetchTrace, fetchTraces, stopAgentTrace } from '@/lib/api'
 import type { Span, Trace, TraceSummary } from '@/lib/traces'
 
 const POLL_INTERVAL_MS = 4000
@@ -15,6 +15,7 @@ const spanLoading = ref(false)
 const source = ref<TraceSource>('unavailable')
 const loading = ref(true)
 const autoRefresh = ref(true)
+const stoppingId = ref<string | null>(null)
 
 let timer: ReturnType<typeof setInterval> | null = null
 /** The revision of the trace currently in `detail`, so the poll can skip a
@@ -110,7 +111,8 @@ export function useAgentTraces() {
       selectedId.value = next
 
       // Skip the tree entirely when nothing was appended to it.
-      if (revisionOf(next) !== detailRevision)
+      const current = list.find(trace => trace.id === next)!
+      if (revisionOf(next) !== detailRevision || current.status !== detail.value?.status || current.stopRequested !== detail.value?.stopRequested)
         await loadDetail(next)
 
       // A span that is still running has not sent its outputs yet, so it is the
@@ -148,6 +150,23 @@ export function useAgentTraces() {
     source.value = 'live'
   }
 
+  async function stop(id: string): Promise<string | null> {
+    if (stoppingId.value)
+      return null
+    stoppingId.value = id
+    try {
+      await stopAgentTrace(id)
+      await refresh()
+      return null
+    }
+    catch (error) {
+      return error instanceof BridgeError ? error.message : '停止请求失败，请确认桥接服务正在运行。'
+    }
+    finally {
+      stoppingId.value = null
+    }
+  }
+
   function toggleAutoRefresh() {
     autoRefresh.value = !autoRefresh.value
   }
@@ -175,11 +194,13 @@ export function useAgentTraces() {
     source,
     loading,
     autoRefresh,
+    stoppingId,
     hasTraces,
     select,
     openSpan,
     refresh,
     clear,
+    stop,
     toggleAutoRefresh,
   }
 }

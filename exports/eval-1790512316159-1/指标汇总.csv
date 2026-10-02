@@ -1,0 +1,25 @@
+﻿测评编号,数据集,指标,数值,单位,分子,分母,计算说明
+eval-1790512316159-1,RepoPairBench 100,召回率,89,%,89,100,TP/(TP+FN)
+eval-1790512316159-1,RepoPairBench 100,误报率,49,%,49,100,FP/(FP+TN)
+eval-1790512316159-1,RepoPairBench 100,精确率,64.49,%,89,138,TP/(TP+FP)
+eval-1790512316159-1,RepoPairBench 100,F1,74.79,%,178,238,2TP/(2TP+FP+FN)
+eval-1790512316159-1,RepoPairBench 100,准确率,70,%,140,200,(TP+TN)/(TP+FP+TN+FN)
+eval-1790512316159-1,RepoPairBench 100,Pair-Correctness,43,%,43,100,漏洞版本与修复版本均判断正确的配对数/完整配对数
+eval-1790512316159-1,RepoPairBench 100,Youden's J,40,%,,,召回率-误报率
+eval-1790512316159-1,RepoPairBench 100,样例总数,200,个,,,
+eval-1790512316159-1,RepoPairBench 100,已完成样例数,200,个,,,
+eval-1790512316159-1,RepoPairBench 100,指标覆盖样例数,200,个,,,
+eval-1790512316159-1,RepoPairBench 100,指标覆盖率,100,%,200,200,指标覆盖样例数/样例总数
+eval-1790512316159-1,RepoPairBench 100,未解析样例数,0,个,,,
+eval-1790512316159-1,RepoPairBench 100,失败样例数,0,个,,,
+eval-1790512316159-1,RepoPairBench 100,取消样例数,0,个,,,
+eval-1790512316159-1,RepoPairBench 100,未完成样例数,0,个,,,
+eval-1790512316159-1,RepoPairBench 100,TP,89,个,,,漏洞版本判定有漏洞
+eval-1790512316159-1,RepoPairBench 100,FP,49,个,,,修复版本判定有漏洞
+eval-1790512316159-1,RepoPairBench 100,TN,51,个,,,修复版本判定无漏洞
+eval-1790512316159-1,RepoPairBench 100,FN,11,个,,,漏洞版本判定无漏洞
+eval-1790512316159-1,RepoPairBench 100,完整配对数,100,对,,,
+eval-1790512316159-1,RepoPairBench 100,配对全对,43,对,,,
+eval-1790512316159-1,RepoPairBench 100,配对双判有漏洞,46,对,,,
+eval-1790512316159-1,RepoPairBench 100,配对双判无漏洞,8,对,,,
+eval-1790512316159-1,RepoPairBench 100,配对判反,3,对,,,

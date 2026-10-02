@@ -23,10 +23,11 @@ npm run dev
 > 启动。** 宿主机的 Python 没有 `deepagents` 等项目依赖，用它会直接 `ModuleNotFoundError`；
 > `.env` 里 `MODEL_NAME` / `OPENAI_API_KEY` 等也要在容器环境里才生效。
 
-容器内先补一个依赖（桥接服务自己需要，不在项目依赖里）：
+容器内在仓库根目录同步依赖；默认的 `bridge` 依赖组包含 FastAPI 和 Uvicorn，
+后续运行 `uv sync` 或 `uv run` 也会保留它们：
 
 ```bash
-uv pip install --python /home/vscode/.venv/bin/python fastapi
+uv sync
 ```
 
 然后在**仓库根目录**启动桥接服务（`/workspaces/VulnHunter`），这样 `check_environment.py`
@@ -156,24 +157,199 @@ npm install && npm run dev -- --host 0.0.0.0
 `mode` 是函数检测上线后才有的字段；更早的任务在 `_public_task()` 里一律读作 `project`，旧记录
 不需要迁移。
 
-几个由 `audit_agent.run()` 的现状决定的设计：
+几个运行设计：
 
-- **一次只跑一个。** `run()` 起的是固定名字的 `anaconda-container`，而且读模块级全局的
-  `PROJECT_ROOT`，所以任务由**单个工作线程**按队列串行处理。
+- **任务可并发运行。** 审计与测评共用有界 worker 池，默认同时运行 2 个任务。在「配置」页可以把
+  最大并行数量实时调整为 1 到 16；调高时立即补充 worker，调低时不打断正在运行的任务，后续派发按新上限执行。
+  也可通过 `AUDIT_MAX_CONCURRENCY` 环境变量设置。提高数量会同时增加 Docker、模型 API 和克隆仓库的资源占用。
+- **每个任务有独立运行上下文。** 项目根路径、Docker 容器名和输出文件按任务隔离，不会因其他 worker
+  改写模块级 `PROJECT_ROOT` 或抢用固定容器名。
+- **Joern 服务按任务占用和释放。** 在 VulnHunter 中，`AUDIT_MAX_CONCURRENCY` 同时控制审计 worker
+  和 CodeBadger 的 `MAX_ACTIVE_JOERN_SERVERS`；配置页调整会立即同步到两个运行中的服务。调低时
+  已在使用的 JVM 等任务结束后退出；CPG 文件留在磁盘以便下次重新加载。
 - **必须在工作线程里跑。** `run()` 内部调用 `asyncio.run()`，不能在请求的事件循环里嵌套调用。
 - **检出目录放在容器原生路径**（默认 `/home/vscode/audits/<task-id>`，`AUDIT_ROOT` 可改）。
   项目目录是 Windows bind mount，`git` 往那里写 pack 文件会 `fsync` 失败。检出本身可以用
-  url + commit 重新克隆，放在临时存储里没有代价；任务记录才需要持久化。
+  url + commit 重新克隆，放在临时存储里没有代价；任务结束（成功、失败或取消）时会清理容器内挂载目录及宿主检出目录，任务记录和结论仍保留。
 - **地址和 ref 都做白名单校验**（`URL_PATTERN` / `REF_PATTERN`），并且用 argv 数组调 git
   （从不过 shell）。以 `-` 开头的 ref 会被拒绝，避免被当成 git 参数。
 
 任务状态变化会立刻追加到 `audit_tasks.jsonl`（同样已 gitignore、同样在超限时轮转），
 所以重启服务后列表还在；上次进程被杀时停在「进行中」的任务，回放时会标成失败并说明原因。
 
+## 数据集测评
+
+「数据集测评」页在数据集上批量跑函数级审查：选定一个范围，把每个样例交给 agent 审查一次，
+再拿 agent 的判定和数据集里的标注比对，边跑边出指标。
+
+### 数据集从哪来
+
+数据集文件在仓库根目录的 `benchmark/`，随代码一起走（只有元数据，不含上游仓库）：
+
+```text
+benchmark/drea/repopairbench_100.jsonl            # 100 组漏洞修复对
+benchmark/drea/repopairbench_100_manifest.json    # 同一批的补充信息（修复 commit message 等）
+```
+
+`drea` 这一份是 DREA 论文（*DREA: Decoupled Reasoning and Exploration Agents for
+Repository-Level Vulnerability Detection*，Internetware '26）公开产出的 **RepoPairBench 100**：
+100 组 2021–2025 年的 Python 漏洞修复对，覆盖 48 个 CWE，每组给出修复 commit、漏洞版本函数
+和修复版本函数。上游仓库不 vendor，运行时从 `repo_url` 现拉 —— 和函数检测走的是同一条检出流程。
+
+数据集在 `evaluation.py` 的 `DATASET_SPECS` 里注册；再加一份就是把它的 JSONL（和可选的
+manifest）放进 `benchmark/<id>/` 再登记一行。`EVAL_DATASET_ROOT` 可以改根目录（验证脚本就靠它
+把数据集指向临时目录）。
+
+### 一样本是「项 × 版本」
+
+数据集里的「一项」是一组漏洞修复对；真正跑的是一个**样例**，也就是项的一个版本：
+
+| 版本 | 检出 | 送进 agent 的函数 | 标注 |
+| --- | --- | --- | --- |
+| `vul` 漏洞版本 | 修复 commit 的**父提交**（`<commit>^`） | `code_before` | 有漏洞 |
+| `sec` 修复版本 | 修复 commit 本身 | `code_after` | 无漏洞 |
+
+检出逻辑与内容在 `evaluation.sample_input()`，检出和审查本身复用 `main.py` 里那套 `_clone` +
+`audit_agent.run()`。给 agent 的东西和函数检测完全一样：整个检出目录 + 这一个函数的路径与源码。
+
+> 父提交是用 git 的 `<commit>^` 表示的，而桥接对 ref 的校验（`REF_PATTERN`）默认不接受 `^`。
+> 这里没有放宽那个白名单，而是在 `evaluation.REF_PATTERN` 里单独校验：ref 来自数据集文件而不是
+> 调用方，字符集收紧到 `[0-9A-Za-z._/-]` 加一个可选的结尾 `^`。它一样是 argv 数组进去的，不过 shell。
+
+### 范围怎么解析
+
+范围（scope）有两部分，`evaluation.resolve_items()` 按这个优先级解析：
+
+- **勾选的行**（`itemIds`）优先。这是页面在读者手动勾过之后发的东西；此时再套用筛选条件会把
+  读者挑中的行悄悄丢掉。
+- **筛选条件**（`projects` / `cweIds` / `search`）用于「筛出一批」的情形。`search` 是大小写不敏感
+  的子串匹配，打在 id、项目名、文件路径、仓库地址、CVE 和 CWE 上。
+
+**范围没有上限，也不截断**：测多少个由读者决定，后端不会替他把范围砍掉一截（截出来的前缀只代表
+数据集里的一段，指标看着像数据集级的结论，其实不是）。页面也不劝：样例数就摆在「开始测评」旁边，
+一个样例 = 一次完整审查，要不要付这个代价是读者自己的判断。
+
+**筛选在后端做，不在页面做。** `GET /api/eval/datasets/{id}/items` 收 `project` / `cwe` / `search`
+并返回匹配的行，用的是解析范围时的同一个谓词，所以「全选这些行」不可能选到跑不出来的东西。
+facets（项目 / CWE 的选项和计数）则是在**整个数据集**上算的 —— 选项会随着使用而消失的选择器没法学。
+
+页面每次编辑范围都会 `POST /api/eval/scope` 让后端解析一遍，把「N 个样例」显示出来；创建用的是
+同一段代码，所以预览的数字就是会创建的数字。范围解析为空**不是错误**：预览要能显示「0 个样例」，
+真正的失败只发生在拿着空范围去创建测评的时候。
+
+### 判定从哪来
+
+`audit_agent.py` 和 `base_agent.py` 都在审计结束后调用 Pydantic 结构化输出，返回如下 JSON：
+
+```json
+{
+  "verdict": 0,
+  "reproduction_report": null
+}
+```
+
+`verdict` 为整数 `0` 表示无漏洞，`1` 表示有漏洞。判定为 `1` 时必须带复现报告，包含受影响位置、前提、复现步骤、预期影响、已观察到的影响、验证状态和证据；判定为 `0` 时报告为 `null`。评测从这个字段取值，不再从自由文本或 XML 标签中猜测。无效结构化结果会记为未命中；Agent 或模型调用失败则单独记为失败。
+
+评测内部的文本标签使用 `vulnerable` 和 `non-vulnerable`。旧 journal 中的 `benign` 只作为读取兼容项，加载时会归一化为 `non-vulnerable`，新结果不会再写入旧标签。
+
+### 指标
+
+`evaluation.compute_metrics()`，口径跟 DREA 的 `code/process/eval/match.py` 对齐，数字可以和论文里
+的比：
+
+| 指标 | 定义 |
+| --- | --- |
+| 召回率 / 误报率 / 精确率 / F1 / 准确率 | 在单个实例上算 |
+| Pair-Correctness | 一个 (漏洞, 修复) 对的两个成员**都**判对才算对 |
+| 配对双判有漏洞 / 双判无漏洞 / 判反 | DREA 报的三个辅助分解 |
+| Youden's J | 召回率 − 误报率 |
+
+样例有三种结局，记账方式**故意不同**：
+
+| 结局 | 计入指标吗 | 为什么 |
+| --- | --- | --- |
+| 给出了判定 | 是，进混淆矩阵 | 这就是要测的东西 |
+| 跑了，但回答里没有判定标记 | 是，按**未命中**计 | agent 没按约定输出，是它自己的失败 |
+| **没跑成**（拉取失败、服务重启、被取消） | **否**，单独计成 `failed` / `cancelled` | 它**没有测到模型** |
+
+第三种必须排除，否则一个刚开就被取消的测评会显示「召回率 0% / 误报率 100%」—— 那是在替一次根本
+没测过的运行给模型下结论。代价是排除失败会**高估**表面覆盖率，所以 `counted`（进矩阵的个数）和
+`excluded` 都随接口下发，页面上写明「指标覆盖 N / M 个样例」，并把没跑成的样例单列一行。
+
+其余口径：
+
+- 只在**已经跑完**的样例上算：一个还在飞的测评报的是它已完成那部分的数字，而不是一个会在读者眼皮
+  底下动的数字。
+- **配对只在两个成员都给出了判定时才计入**（否则 `total` 和三个分解的分母会对不上）；被判反、判错
+  的配对照常计入，它们正是要看的。
+- `value` 在分母为 0 时是 `null` 而不是 0 —— 「一个都没有」和「不知道」在这里是两件事，和 token 卡上
+  缓存命中率的处理一致。
+
+### 怎么跑
+
+样例和手动审查**共用同一条队列和有界 worker 池**，可以并发执行。默认并发数为 2，可在「配置」页
+实时调整为 1 到 16，也可通过 `AUDIT_MAX_CONCURRENCY` 设置；调高时立即增加 worker，调低时等正在执行的样例结束后按新上限继续派发。
+每个任务使用独立的检出目录、容器名和结果文件。测评样例和手动审计任务在容器清理后都会删除对应克隆目录，判定仍保存在任务记录中；
+`.results/` 下的回答和诊断文件保留供排查。每个样例都要拉一次仓库再跑一次完整审查，所以一批全量仍可能需要几小时。
+
+任务记录实时追加到 `eval_runs.jsonl`（已 gitignore、超 `EVAL_JOURNAL_MAX_MB` 时轮转），启动时回放。
+回放时，上一轮仍在排队或运行的测评会变成 `paused`，不会自动执行。排队样例保持待运行；
+正在拉取或审查的样例标成失败并写明服务重启。已经判定过的样例保留结论。
+
+### 断点续测
+
+全量 200 个样例可能需要几小时。手动点击「暂停测评」后，不再启动新样例；已经开始的样例会完成。
+服务或电脑重启后，未完成的测评默认保持暂停。点击「继续测评」才把待运行样例重新排队，
+并重跑因重启而中断的样例；已有结论不变。
+
+- **已经判定过的样例不会因继续测评重跑**：进度从记录里重建，不从零开始。
+- 继续测评不会自动恢复已取消或普通失败的样例。失败或未解析样例可用「重试无结论的」；
+  已取消样例可用「重跑已取消」，沿用原测评和样例 ID，重跑结果直接计入原批次统计。
+- 重启时正在跑的样例由用户点击继续后重跑；断电时拉了一半的检出目录会在下次拉取时删掉重建，
+  `_clone()` 每次都从干净目录开始。
+
+**断电最多丢一条记录**：记录一行一条，写完 `flush` 再 `fsync`（项目目录所在的文件系统接受
+fsync —— 用 `os.fsync` 探过；万一哪天挂到不接受的存储上，就退化成只 flush）。回放本来就跳过
+最后那半截 JSON，但半截行没有换行符的话，**下一条记录会黏在它后面一起丢**，所以启动时先给这种
+尾巴补一个换行（`_heal_journal_tail()`）再开始写。丢掉的只会是「某样例刚从 `queued` 变成
+`cloning`」这类中间状态，样例本身没有判定，续测时会重跑。
+
+期刊里**不存函数代码**：函数体留在数据集里按 item id 查，否则 200 个样例每条状态变更都把
+`code_before` / `code_after` 重写一遍。
+
+### 接口
+
+| 方法 | 路径 | 作用 |
+| --- | --- | --- |
+| GET | `/api/eval/datasets` | 可测评的数据集，含类型选项（`typeOptions`） |
+| GET | `/api/eval/datasets/{id}/items` | 数据集里的项（可筛选）+ facets |
+| POST | `/api/eval/scope` | 解析一个范围，不创建任何东西 |
+| POST | `/api/eval/runs` | 解析范围并排队 |
+| GET | `/api/eval/runs` | 全部测评，带进度与指标 |
+| GET | `/api/eval/runs/{id}` | 一次测评 + 全部样例 |
+| POST | `/api/eval/runs/{id}/pause` | 暂停新样例启动，已经开始的样例继续完成 |
+| POST | `/api/eval/runs/{id}/resume` | 手动继续暂停的测评，排入待运行和因重启中断的样例 |
+| POST | `/api/eval/runs/{id}/cancel` | 丢掉还没开始的样例，在跑的那个不动 |
+| POST | `/api/eval/runs/{id}/retry` | 把没有判定的样例重新排队 |
+| POST | `/api/eval/runs/{id}/retry-cancelled` | 显式重跑已取消样例，结果计入原批次统计 |
+| DELETE | `/api/eval/runs/{id}` | 移除这次测评及其期刊记录 |
+
+离线回归测试（不联网、不起容器、不调模型）：
+
+```bash
+/home/vscode/.venv/bin/python scripts/verify_evaluation.py
+```
+
+它在临时目录里造一个两提交的 git 仓库和一份一项目的数据集，用一个桩替掉 audit agent，检查父提交
+检出的是修复前的代码、判定标记的解析、指标口径、取消/重试/回放。
+
 ## Agent 监控
 
 「Agent 监控」区块按 LangSmith 的方式展示一次 agent 运行的 span 树：每个模型调用、工具调用
 和子 agent 的耗时、输入输出、模型名与 token 用量，用瀑布图对齐在同一条时间轴上。
+
+选中由桥接服务启动且正在运行的审查或测评轨迹时，详情顶部会出现「停止运行」。点击后会取消对应的
+Agent，并清理该次运行的容器；任务完成收尾后显示「已停止」。外部上报的轨迹没有停止按钮。
 
 它的数据**不来自 LangSmith**，而是 agent 侧直接上报的。仓库根目录的 `agent_tracing.py` 是一个
 LangChain 回调处理器，把 span 事件批量 POST 给桥接服务；`audit_agent.py` 里已经接好了：
@@ -219,8 +395,11 @@ agent 和桥接服务跑在同一个容器里，所以 `agent_tracing.py` 默认
 | `AGENT_TRACE_QUEUE_MAX` | `8192` | 待发队列上限，满了丢弃并计数（`put_nowait`，绝不阻塞 agent） |
 | `AGENT_TRACE_RUNS_MAX` | `50000` | run id 簿记上限（父子推导用） |
 | `AGENT_TRACE_MAX_MB` | `384` | 桥接内存里 span 的总预算（仅服务端） |
-| `AGENT_TRACE_JOURNAL_MAX_MB` | `512` | 日志轮转阈值（仅服务端） |
-| `AGENT_TRACE_REPLAY_MB` | `128` | 启动时回放的日志尾部上限（仅服务端） |
+| `AGENT_TRACE_ARCHIVE` | `<AGENT_TRACE_JOURNAL 的目录>/<文件名去后缀>.archive` | 持久轨迹归档目录（仅服务端） |
+| `AGENT_TRACE_JOURNAL` | `<仓库根>/agent_traces.jsonl` | 旧版日志位置，仅用于首次迁移 |
+| `AUDIT_TASK_JOURNAL_MAX_MB` | `512` | 审查任务日志轮转阈值（仅服务端） |
+| `EVAL_DATASET_ROOT` | `<仓库根>/benchmark` | 数据集目录（仅服务端） |
+| `EVAL_JOURNAL_MAX_MB` | `64` | 测评记录日志的轮转阈值（仅服务端） |
 | `BRIDGE_PORT` | `8901` | 桥接服务端口，三处共用 |
 
 > 默认端口本来是 8787，但它在不少 Windows 机器上落在系统保留的端口区间里（`netsh int ipv4
@@ -229,26 +408,26 @@ agent 和桥接服务跑在同一个容器里，所以 `agent_tracing.py` 默认
 
 ### 落盘
 
-**两类数据都实时写盘，重启服务不会丢**，启动时各自回放进内存：
+轨迹事件先写入持久归档，再向 agent 确认接收。测评和审查任务仍使用各自的日志：
 
 | 数据 | 内存里的上限 | 日志 | 变量 |
 | --- | --- | --- | --- |
-| agent span 事件（轨迹 / token 用量） | 384 MB 或 50 条轨迹，先到先算 | `agent_traces.jsonl` | `AGENT_TRACE_JOURNAL` |
+| agent span 事件（轨迹 / token 用量） | 缓存限 384 MB 或 50 条，不限制历史 | `agent_traces.archive/` | `AGENT_TRACE_ARCHIVE` |
 | 审查任务记录 | 最近 50 条任务 | `audit_tasks.jsonl` | `AUDIT_TASK_JOURNAL` |
+| 数据集测评记录 | 最近 40 次测评及其样例 | `eval_runs.jsonl` | `EVAL_RUN_JOURNAL` |
 
-载荷现在整份保留，所以 span 存储按**字节**而不是条数设上限（`AGENT_TRACE_MAX_MB`，默认
-384 MB）：超预算时整条轨迹从旧到新淘汰；万一单次审计本身就超预算，就释放这条轨迹里最旧 span
-的载荷而保留 span 本身——树形和耗时不受影响，被释放的载荷会在详情里写明原因。token 用量另外
-存一份极小的每模型调用记录，不受淘汰影响；否则内存一收紧，概览的趋势图就会跟着断掉。
+每条轨迹的事件写到独立 JSONL 文件，轻量索引保存列表摘要。列表不受内存缓存上限影响；打开一条
+已从内存淘汰的轨迹时，桥接服务才从其文件重建 span 树和载荷。`AGENT_TRACE_MAX_MB` 只控制内存
+缓存；单条轨迹超过缓存预算时仍可从归档读回完整载荷。每模型调用的 token 记录单独追加在归档中，
+重启后也能恢复趋势。
 
 环境检测不在这里：它只有当前这一次读数，留在桥接进程的内存里，没有日志，也没有
 `ENV_RUN_JOURNAL` 可配。
 
-写入方式是追加一行 JSON，然后 `write` + `flush`；日志超过 `AGENT_TRACE_JOURNAL_MAX_MB`（默认
-512 MB）时轮转到 `.jsonl.1`（覆盖上一份）。轮转在**写入时**判断，不只在启动阶段——一次审计
-就能让文件涨几十 MB。启动时只回放日志尾部（`AGENT_TRACE_REPLAY_MB`，默认 128 MB），超出的
-部分本来也会被内存预算淘汰，读进来再扔掉没有意义。日志落在项目目录下（已 gitignore）
-—— 那是容器重建后唯一还在的地方。
+首次启动新版桥接服务时，会把现存的 `agent_traces.jsonl.1`、`agent_traces.jsonl` 以及同目录下
+`agent_traces.jsonl.saved-*.jsonl` 快照导入归档；重复记录会去重。旧版轮转已覆盖的事件无法恢复。
+之后新事件不再写入会覆盖旧文件的轮转日志。归档在项目目录下并已 gitignore；删除轨迹会同时
+删除归档、旧日志和这些迁移快照。归档随测评增长，需要保留相应的磁盘空间。
 
 > 用的是 `flush`，**不是 `fsync`** —— 项目目录是 Windows bind mount，`fsync` 在那里会失败
 > （`git clone` 就是栽在这）。所以字节会立刻交给操作系统，进程崩溃不丢，但机器断电可能丢最后
@@ -266,6 +445,7 @@ agent 和桥接服务跑在同一个容器里，所以 `agent_tracing.py` 默认
 | `/overview` | 概览 | Token 用量（总计 + 四项分解）与按小时的使用趋势（各系列独立绘制） |
 | `/env-check` | 环境检查 | 「重新检测」按钮 + 检测概览（统计格 + 耗时构成条）+ 每项一张卡片，点开抽屉看原始输出 |
 | `/audit` | 漏洞审查 | 切换项目检测 / 函数检测后发起审查任务；任务列表显示拉取/审查状态与结论 |
+| `/eval` | 数据集测评 | 选范围（筛选或勾选）→ 批量测评 → 进度、指标与每个样例的判定 |
 | `/agent` | Agent 监控 | 运行轨迹列表 + span 瀑布图 |
 
 根路径 `/` 重定向到 `/overview`，未知路径也回落到概览。侧边栏「依赖项」里的每一项都指向
@@ -279,6 +459,7 @@ web/
 │   ├── pages/                      # 每个功能一页
 │   │   ├── OverviewPage.vue
 │   │   ├── AuditPage.vue           # 漏洞审查
+│   │   ├── EvalPage.vue            # 数据集测评
 │   │   ├── ChecksPage.vue          # 环境检查
 │   │   └── AgentPage.vue
 │   ├── router/index.ts             # 路由表，页面对应的 chunk 懒加载
@@ -286,12 +467,14 @@ web/
 │   │   ├── ui/                     # shadcn-vue 组件（由 CLI 生成；Textarea 照同一形状手写）
 │   │   ├── dashboard/              # 页面骨架，照 shadcn 的 dashboard-01 排版
 │   │   │   ├── AppSidebar.vue          # 侧边栏：品牌、导航、依赖项、页脚状态
-│   │   │   ├── NavMain.vue             # 主操作 + 五个页面的导航
+│   │   │   ├── NavMain.vue             # 主操作 + 六个页面的导航
 │   │   │   ├── NavChecks.vue           # 各依赖及其实时状态
 │   │   │   ├── NavSecondary.vue        # 主题切换、复制桥接命令
 │   │   │   ├── NavStatus.vue           # 侧边栏页脚：数据源与最近检测
 │   │   │   ├── SiteHeader.vue          # 顶栏：折叠按钮、面包屑、数据源
 │   │   │   ├── AuditTaskSheet.vue      # 审查任务的完整结论（审查页用）
+│   │   │   ├── EvalScopePicker.vue     # 数据集、筛选与勾选、范围预览（测评页用）
+│   │   │   ├── EvalRunSheet.vue        # 一次测评的全部指标与每个样例的判定
 │   │   │   ├── OverviewStatsCard.vue   # 统计格 + 耗时构成条（环境检查页用）
 │   │   │   ├── TraceWaterfall.vue      # span 树的瀑布图（监控页用）
 │   │   │   └── SpanDetailsSheet.vue    # 单个 span 的输入输出详情
@@ -302,15 +485,18 @@ web/
 │   │   ├── useEnvironment.ts       # 数据加载、重新检测、清空
 │   │   ├── useAgentTraces.ts       # 轨迹列表、选中与轮询
 │   │   ├── useAuditTasks.ts        # 审查任务的提交与轮询
+│   │   ├── useEvaluation.ts        # 数据集、范围预览、测评列表与轮询
 │   │   └── useTheme.ts             # 明暗主题
 │   ├── lib/
 │   │   ├── traces.ts               # span / 轨迹类型，以及 kind/status 的中文对照
 │   │   ├── check-icons.ts          # 后端给的图标名 → lucide 组件
-│   │   ├── navigation.ts           # 五个页面的路由 / 标题 / 图标
+│   │   ├── navigation.ts           # 六个页面的路由 / 标题 / 图标
 │   │   ├── api.ts                  # 桥接服务客户端
 │   │   └── types.ts / format.ts    # 接口类型、格式化、状态文案
 │   └── assets/index.css            # 主题 token（含状态色、图表色、轨迹色）
-└── server/main.py                  # 可选的 FastAPI 桥接服务
+└── server/
+    ├── main.py                     # 可选的 FastAPI 桥接服务
+    └── evaluation.py               # 数据集、范围解析、判定与指标（纯逻辑，不碰 git / docker / 模型）
 ```
 
 ## 设计约定

@@ -1,5 +1,6 @@
 from pathlib import Path
 import base_agent
+from audit_result import parse_audit_result
 import pandas as pd
 import os
 
@@ -20,8 +21,7 @@ def main():
     for sample_name, variant_name in iter_variant_paths(dataset_root):
         base_agent.PROJECT_ROOT = os.path.abspath(f"./dataset/{sample_name}/{variant_name}")
         result = base_agent.run()
-        result = result.strip().lower()
-        label = 0 if "non-vulnerable" in result else 1
+        label = parse_audit_result(result).verdict
         print(f"{sample_name}-{variant_name} -> label={label}")
         rows.append({
             "Project": f"{sample_name}-{variant_name}",

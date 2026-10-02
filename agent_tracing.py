@@ -133,6 +133,7 @@ def _jsonable(value: Any, depth: int = 0, seen: set[int] | None = None) -> Any:
             "tool_calls",
             "invalid_tool_calls",
             "tool_call_id",
+            "status",
             "artifact",
             "usage_metadata",
             "response_metadata",
@@ -453,8 +454,11 @@ class BridgeTracer(BaseCallbackHandler):
         })
 
     def _end(self, run_id: UUID, outputs: Any = None, usage: Any = None) -> None:
+        with self._lock:
+            trace_id = self._roots.get(run_id, run_id)
         event: dict[str, Any] = {
             "type": "span.end",
+            "traceId": str(trace_id),
             "spanId": str(run_id),
             "endedAt": _now(),
         }
@@ -470,8 +474,11 @@ class BridgeTracer(BaseCallbackHandler):
         # its parent has finished still needs the mapping to find its root.
 
     def _error(self, run_id: UUID, error: BaseException) -> None:
+        with self._lock:
+            trace_id = self._roots.get(run_id, run_id)
         self._emit({
             "type": "span.error",
+            "traceId": str(trace_id),
             "spanId": str(run_id),
             "endedAt": _now(),
             "error": f"{type(error).__name__}: {error}",

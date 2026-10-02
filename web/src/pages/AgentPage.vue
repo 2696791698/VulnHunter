@@ -2,16 +2,22 @@
 import type { SpanKind, TraceSummary } from '@/lib/traces'
 import {
   BlocksIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
   CircleAlertIcon,
   CircleCheckIcon,
   LoaderIcon,
   RefreshCwIcon,
   SparkleIcon,
+  SquareIcon,
   Trash2Icon,
+  TriangleAlertIcon,
   WaypointsIcon,
   WrenchIcon,
+  XCircleIcon,
 } from '@lucide/vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { toast } from 'vue-sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -41,11 +47,13 @@ const {
   source,
   loading,
   autoRefresh,
+  stoppingId,
   hasTraces,
   select,
   openSpan,
   refresh,
   clear,
+  stop,
   toggleAutoRefresh,
 } = useAgentTraces()
 
@@ -60,14 +68,22 @@ const KINDS: { kind: SpanKind, icon: object, color: string }[] = [
 const STATUS_TONE = {
   ok: 'text-status-good',
   error: 'text-status-critical',
-  running: 'text-muted-foreground animate-pulse',
+  interrupted: 'text-muted-foreground',
+  running: 'text-muted-foreground animate-spin',
+  cancelled: 'text-muted-foreground',
 } as const
 
 const STATUS_ICON = {
   ok: CircleCheckIcon,
   error: CircleAlertIcon,
+  interrupted: TriangleAlertIcon,
   running: LoaderIcon,
+  cancelled: XCircleIcon,
 } as const
+
+/** The tree can be hundreds of rows long, so a failure that is merely marked is
+ * still a failure the reader has to hunt for. */
+const waterfall = ref<InstanceType<typeof TraceWaterfall> | null>(null)
 
 const spanSheetOpen = computed({
   get: () => selectedSpan.value !== null,
@@ -79,13 +95,23 @@ const spanSheetOpen = computed({
 
 function traceDuration(trace: TraceSummary): number {
   const from = Date.parse(trace.startedAt)
-  const to = trace.endedAt ? Date.parse(trace.endedAt) : Date.now()
+  const to = trace.endedAt ? Date.parse(trace.endedAt) : (trace.status === 'running' ? Date.now() : from)
   return to - from
 }
 
 const sourceLabel = computed(() =>
-  source.value === 'live' ? `${traces.value.length} 条轨迹` : '未连接',
+  source.value === 'live' ? `${traces.value.length} 条已保存轨迹` : '未连接',
 )
+
+async function stopSelected() {
+  if (!detail.value)
+    return
+  const error = await stop(detail.value.id)
+  if (error)
+    toast.error('停止失败', { description: error })
+  else
+    toast.success('已请求停止 Agent', { description: '任务结束后状态会自动更新。' })
+}
 </script>
 
 <template>
@@ -97,6 +123,9 @@ const sourceLabel = computed(() =>
       <p class="text-muted-foreground text-sm">
         逐层展开一次 agent 运行的 span 树：模型调用、工具调用与子 agent 各自的耗时、输入输出和 token 用量。
         点任意一行查看细节。
+      </p>
+      <p class="text-muted-foreground text-xs">
+        测评样本与轨迹不一定一一对应；旧版日志轮转前已丢失的事件无法从测评结果还原。
       </p>
     </div>
 
@@ -197,6 +226,7 @@ const sourceLabel = computed(() =>
                     :class="STATUS_TONE[trace.status]"
                   />
                   <span class="truncate text-sm font-medium">{{ trace.name }}</span>
+                  <Badge v-if="trace.partial" variant="outline" class="shrink-0 text-[10px]">部分记录</Badge>
                   <span class="text-muted-foreground ml-auto shrink-0 font-mono text-xs tabular-nums">
                     {{ formatDuration(traceDuration(trace)) }}
                   </span>
@@ -238,10 +268,62 @@ const sourceLabel = computed(() =>
             </template>
           </CardDescription>
           <CardAction>
-            <Badge v-if="detail" variant="outline">
-              <component :is="STATUS_ICON[detail.status]" :class="STATUS_TONE[detail.status]" />
-              {{ SPAN_STATUS_LABELS[detail.status] }}
-            </Badge>
+            <div class="flex items-center gap-2">
+              <Button
+                v-if="detail?.canStop || detail?.stopRequested"
+                variant="destructive"
+                size="sm"
+                :disabled="Boolean(stoppingId) || detail.stopRequested"
+                @click="stopSelected"
+              >
+                <SquareIcon data-icon="inline-start" />
+                {{ detail.stopRequested ? '停止中' : '停止运行' }}
+              </Button>
+              <!-- A trace can fail in more than one place, so the buttons walk
+                   the failures instead of all pointing at the first one. -->
+              <div v-if="detail?.errorCount" class="flex items-center gap-0.5">
+                <Tooltip>
+                  <TooltipTrigger as-child>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      aria-label="上一处失败"
+                      @click="waterfall?.previousFailure()"
+                    >
+                      <ChevronUpIcon />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    上一处失败
+                  </TooltipContent>
+                </Tooltip>
+
+                <span class="text-muted-foreground font-mono text-xs tabular-nums" aria-live="polite">
+                  {{ waterfall?.failureNav.position }}/{{ waterfall?.failureNav.count }}
+                </span>
+
+                <Tooltip>
+                  <TooltipTrigger as-child>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      aria-label="下一处失败"
+                      @click="waterfall?.nextFailure()"
+                    >
+                      <ChevronDownIcon />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    下一处失败
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+
+              <Badge v-if="detail" variant="outline">
+                <component :is="STATUS_ICON[detail.status]" :class="STATUS_TONE[detail.status]" />
+                {{ SPAN_STATUS_LABELS[detail.status] }}
+              </Badge>
+            </div>
           </CardAction>
         </CardHeader>
 
@@ -260,6 +342,7 @@ const sourceLabel = computed(() =>
 
           <ScrollArea v-else class="max-h-[70vh] min-h-0 flex-1 xl:max-h-none">
             <TraceWaterfall
+              ref="waterfall"
               :trace="detail"
               :selected-span-id="selectedSpan?.id ?? null"
               @select="openSpan"
