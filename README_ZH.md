@@ -4,7 +4,7 @@
 
 # 架构图
 
-![Architecture Diagram](./Architecture%20Diagram.svg)
+![Architecture Diagram](./Architecture%20Diagram.drawio.svg)
 
 # 基础环境
 

@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img">
+  <title>VulnHunter 系统总体架构</title>
+  <desc>主审计 Agent 按需调用静态工具，委派 executor 在 Docker 容器中验证，通过追加式黑板回注事实，随后整理结构化结果。</desc>
+  <defs>
+    <marker id="arrow_1B2A4A" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M 0 0 L 8 4 L 0 8 Z" fill="#1B2A4A" />
+    </marker>
+    <marker id="arrow_C9A84C" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M 0 0 L 8 4 L 0 8 Z" fill="#C9A84C" />
+    </marker>
+    <marker id="arrow_4A5568" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M 0 0 L 8 4 L 0 8 Z" fill="#4A5568" />
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1920" height="1080" rx="0" fill="#F7F8FA" stroke="none" stroke-width="1.5" />
+  <rect x="0" y="0" width="1920" height="120" rx="0" fill="#1B2A4A" stroke="none" stroke-width="1.5" />
+  <rect x="0" y="120" width="1920" height="6" rx="0" fill="#C9A84C" stroke="none" stroke-width="1.5" />
+  <text x="70" y="50.0" fill="#FFFFFF" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="30" font-weight="700" text-anchor="start" dominant-baseline="central">VulnHunter 分析与利用架构</text>
+  <text x="70" y="92.0" fill="#DCE4F1" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">上下文输入 → 静态分析 → 攻击规划 → 动态验证 → PoC 与漏洞报告</text>
+  <text x="1850" y="65.5" fill="#DCE4F1" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="14" font-weight="400" text-anchor="end" dominant-baseline="central">ANALYSIS &amp; EXPLOITATION</text>
+  <rect x="65" y="165" width="460" height="605" rx="10" fill="#FFFFFF" stroke="#D6DEE8" stroke-width="1.5" />
+  <text x="90" y="201.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="24" font-weight="700" text-anchor="start" dominant-baseline="central">上下文输入与 LLM</text>
+  <rect x="95" y="255" width="220" height="100" rx="10" fill="#FFFFFF" stroke="#D6DEE8" stroke-width="1.5" />
+  <text x="117" y="287.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="22" font-weight="700" text-anchor="start" dominant-baseline="central">审计提示词</text>
+  <text x="117" y="321.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">Prompt</text>
+  <rect x="350" y="255" width="145" height="110" rx="10" fill="#FFFFFF" stroke="#D6DEE8" stroke-width="1.5" />
+  <text x="372" y="287.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="central">项目目录树</text>
+  <text x="372" y="322.0" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="14" font-weight="400" text-anchor="start" dominant-baseline="central">Directory Tree</text>
+  <rect x="95" y="550" width="220" height="130" rx="10" fill="#FFFFFF" stroke="#D6DEE8" stroke-width="1.5" />
+  <text x="117" y="582.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="22" font-weight="700" text-anchor="start" dominant-baseline="central">代码仓库</text>
+  <text x="117" y="616.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">Codebase</text>
+  <text x="117" y="644.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">源代码与项目依赖</text>
+  <rect x="350" y="465" width="145" height="115" rx="10" fill="#EEF2F8" stroke="#A7B9D3" stroke-width="1.5" />
+  <text x="372" y="497.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="28" font-weight="700" text-anchor="start" dominant-baseline="central">LLM</text>
+  <text x="372" y="531.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">推理与决策</text>
+  <rect x="560" y="165" width="950" height="200" rx="10" fill="#FFFFFF" stroke="#D6DEE8" stroke-width="1.5" />
+  <text x="585" y="198.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="24" font-weight="700" text-anchor="start" dominant-baseline="central">静态分析工具集</text>
+  <rect x="595" y="220" width="260" height="80" rx="10" fill="#FFFFFF" stroke="#D6DEE8" stroke-width="1.5" />
+  <text x="617" y="252.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="22" font-weight="700" text-anchor="start" dominant-baseline="central">Joern</text>
+  <text x="617" y="286.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">CPG · CodeBadger 接入</text>
+  <rect x="905" y="220" width="250" height="80" rx="10" fill="#FFFFFF" stroke="#D6DEE8" stroke-width="1.5" />
+  <text x="927" y="252.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="22" font-weight="700" text-anchor="start" dominant-baseline="central">Semgrep</text>
+  <text x="927" y="286.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">规则扫描</text>
+  <rect x="1205" y="220" width="275" height="80" rx="10" fill="#FFFFFF" stroke="#D6DEE8" stroke-width="1.5" />
+  <text x="1227" y="252.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="22" font-weight="700" text-anchor="start" dominant-baseline="central">CodeQL</text>
+  <text x="1227" y="286.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">查询与数据流分析</text>
+  <rect x="595" y="320" width="885" height="40" rx="10" fill="#1B2A4A" stroke="none" stroke-width="1.5" />
+  <text x="1037.5" y="340.0" fill="#FFFFFF" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="central">静态分析工具（Static Analysis Tools）</text>
+  <rect x="560" y="390" width="950" height="380" rx="10" fill="#EEF2F8" stroke="#A7B9D3" stroke-width="1.8" />
+  <text x="860" y="421.5" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="24" font-weight="700" text-anchor="start" dominant-baseline="central">分析与利用闭环</text>
+  <text x="860" y="451.0" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="14" font-weight="400" text-anchor="start" dominant-baseline="central">Analysis &amp; Exploitation Loop</text>
+  <rect x="595" y="470" width="260" height="110" rx="10" fill="#FFFFFF" stroke="#D6DEE8" stroke-width="1.5" />
+  <text x="617" y="502.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="24" font-weight="700" text-anchor="start" dominant-baseline="central">静态分析</text>
+  <text x="617" y="536.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">Static Analysis</text>
+  <text x="617" y="564.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">代码线索与风险路径</text>
+  <rect x="905" y="470" width="250" height="110" rx="10" fill="#FFFFFF" stroke="#D6DEE8" stroke-width="1.5" />
+  <text x="927" y="502.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="24" font-weight="700" text-anchor="start" dominant-baseline="central">攻击规划</text>
+  <text x="927" y="536.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">Attack Planning</text>
+  <text x="927" y="564.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">构造可行的验证方案</text>
+  <rect x="1215" y="470" width="265" height="110" rx="10" fill="#FFFFFF" stroke="#D6DEE8" stroke-width="1.5" />
+  <text x="1237" y="502.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="24" font-weight="700" text-anchor="start" dominant-baseline="central">动态验证</text>
+  <text x="1237" y="536.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">Dynamic Verification</text>
+  <text x="1237" y="564.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">执行验证并观察安全影响</text>
+  <rect x="595" y="625" width="885" height="115" rx="10" fill="#FFF9EB" stroke="#C9A84C" stroke-width="1.5" />
+  <text x="900" y="649.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="central">状态管理 State Management</text>
+  <text x="615" y="703.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">事实与证据</text>
+  <rect x="850" y="682" width="410" height="45" rx="10" fill="#FFFFFF" stroke="#C9A84C" stroke-width="1.5" />
+  <text x="1055.0" y="704.5" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="central">黑板 Blackboard</text>
+  <rect x="1590" y="460" width="265" height="180" rx="10" fill="#FFF9EB" stroke="#C9A84C" stroke-width="1.5" />
+  <text x="1612" y="496.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="24" font-weight="700" text-anchor="start" dominant-baseline="central">PoC 生成</text>
+  <text x="1612" y="533.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="24" font-weight="700" text-anchor="start" dominant-baseline="central">漏洞报告</text>
+  <text x="1612" y="566.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="16" font-weight="400" text-anchor="start" dominant-baseline="central">PoC Generation &amp;</text>
+  <text x="1612" y="591.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="16" font-weight="400" text-anchor="start" dominant-baseline="central">Vulnerability Report</text>
+  <text x="1612" y="620.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">复现步骤 · 执行证据</text>
+  <rect x="365" y="875" width="250" height="110" rx="10" fill="#FFF9EB" stroke="#C9A84C" stroke-width="1.5" />
+  <text x="387" y="907.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="22" font-weight="700" text-anchor="start" dominant-baseline="central">Docker 容器</text>
+  <text x="387" y="941.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">Docker Container</text>
+  <text x="387" y="969.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">代码挂载与受控执行</text>
+  <rect x="700" y="835" width="250" height="85" rx="10" fill="#FFF9EB" stroke="#C9A84C" stroke-width="1.5" />
+  <text x="722" y="867.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="22" font-weight="700" text-anchor="start" dominant-baseline="central">交互式 Shell</text>
+  <text x="722" y="901.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">Interactive Shell</text>
+  <rect x="700" y="950" width="250" height="80" rx="10" fill="#FFF9EB" stroke="#C9A84C" stroke-width="1.5" />
+  <text x="722" y="982.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="22" font-weight="700" text-anchor="start" dominant-baseline="central">容器创建</text>
+  <text x="722" y="1016.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">Container Creation</text>
+  <rect x="1175" y="835" width="330" height="195" rx="10" fill="#FFF9EB" stroke="#C9A84C" stroke-width="1.5" />
+  <text x="1200" y="863.5" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="22" font-weight="700" text-anchor="start" dominant-baseline="central">子 Agent（Subagent）</text>
+  <rect x="1210" y="890" width="260" height="110" rx="10" fill="#FFFFFF" stroke="#C9A84C" stroke-width="1.5" />
+  <text x="1232" y="922.0" fill="#1B2A4A" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="24" font-weight="700" text-anchor="start" dominant-baseline="central">Executor</text>
+  <text x="1232" y="956.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">动态操作与执行证据</text>
+  <text x="1232" y="984.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">容器工具 · 追加黑板</text>
+  <polyline points="315,305 333,305 333,490 350,490" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <polyline points="417,365 417,465" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <text x="427" y="423.5" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="14" font-weight="400" text-anchor="start" dominant-baseline="central">目录结构</text>
+  <polyline points="315,615 333,615 333,545 350,545" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <polyline points="495,523 560,523" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <polyline points="725,300 725,320" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <polyline points="1030,300 1030,320" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <polyline points="1343,300 1343,320" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <polyline points="725,360 725,470" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <text x="747" y="407.0" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="14" font-weight="400" text-anchor="start" dominant-baseline="central">MCP Server</text>
+  <polyline points="1510,525 1590,525" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <polyline points="205,680 205,930 365,930" fill="none" stroke="#4A5568" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_4A5568)" stroke-dasharray="5 4" />
+  <text x="223" y="795.0" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="18" font-weight="400" text-anchor="start" dominant-baseline="central">Volume 挂载</text>
+  <polyline points="615,905 650,905 650,878 700,878" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <polyline points="615,955 650,955 650,990 700,990" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <polyline points="950,878 1000,878 1000,885 1175,885" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <polyline points="950,990 1000,990 1000,980 1175,980" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <text x="1020" y="934.0" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="14" font-weight="400" text-anchor="start" dominant-baseline="central">docker-mcp</text>
+  <polyline points="1345,835 1345,800 1545,800 1545,560 1480,560" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <text x="1562" y="730.0" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="14" font-weight="400" text-anchor="start" dominant-baseline="central">支撑动态验证</text>
+  <polyline points="855,525 905,525" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <polyline points="1155,525 1215,525" fill="none" stroke="#1B2A4A" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_1B2A4A)" />
+  <polyline points="1345,580 1345,705 1260,705" fill="none" stroke="#C9A84C" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_C9A84C)" />
+  <text x="1361" y="660.0" fill="#80661E" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="14" font-weight="400" text-anchor="start" dominant-baseline="central">追加验证事实</text>
+  <polyline points="850,705 790,705 790,580" fill="none" stroke="#C9A84C" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#arrow_C9A84C)" />
+  <text x="694" y="607.0" fill="#80661E" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="14" font-weight="400" text-anchor="start" dominant-baseline="central">事实反馈</text>
+  <rect x="80" y="1051" width="48" height="2" rx="0" fill="#1B2A4A" stroke="none" stroke-width="1.5" />
+  <text x="143" y="1052.0" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="14" font-weight="400" text-anchor="start" dominant-baseline="central">模块调用 / 数据流</text>
+  <rect x="390" y="1051" width="48" height="2" rx="0" fill="#C9A84C" stroke="none" stroke-width="1.5" />
+  <text x="453" y="1052.0" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="14" font-weight="400" text-anchor="start" dominant-baseline="central">状态与证据反馈</text>
+  <rect x="685" y="1051" width="12" height="2" rx="0" fill="#4A5568" stroke="none" stroke-width="1.5" />
+  <rect x="705" y="1051" width="12" height="2" rx="0" fill="#4A5568" stroke="none" stroke-width="1.5" />
+  <rect x="725" y="1051" width="12" height="2" rx="0" fill="#4A5568" stroke="none" stroke-width="1.5" />
+  <text x="753" y="1052.0" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="14" font-weight="400" text-anchor="start" dominant-baseline="central">Volume 挂载</text>
+  <text x="1855" y="1052.0" fill="#4A5568" font-family="Microsoft YaHei, 微软雅黑, sans-serif" font-size="14" font-weight="400" text-anchor="end" dominant-baseline="central">关系依据：用户提供的 Architecture Diagram.drawio</text>
+</svg>

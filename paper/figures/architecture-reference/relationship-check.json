@@ -1,0 +1,85 @@
+{
+  "reference": "C:\\Users\\h2696\\Desktop\\Architecture Diagram.drawio",
+  "preserved_relationships": 15,
+  "preserved_modules": 20,
+  "reference_relationships": [
+    [
+      "codebase",
+      "docker"
+    ],
+    [
+      "codebase",
+      "llm"
+    ],
+    [
+      "codeql",
+      "static_tools"
+    ],
+    [
+      "creation",
+      "subagent"
+    ],
+    [
+      "docker",
+      "creation"
+    ],
+    [
+      "docker",
+      "shell"
+    ],
+    [
+      "joern",
+      "static_tools"
+    ],
+    [
+      "llm",
+      "loop"
+    ],
+    [
+      "loop",
+      "output"
+    ],
+    [
+      "prompt",
+      "llm"
+    ],
+    [
+      "semgrep",
+      "static_tools"
+    ],
+    [
+      "shell",
+      "subagent"
+    ],
+    [
+      "static_tools",
+      "static_analysis"
+    ],
+    [
+      "subagent",
+      "dynamic"
+    ],
+    [
+      "tree",
+      "llm"
+    ]
+  ],
+  "explicit_loop_relationships": [
+    [
+      "attack_planning",
+      "dynamic"
+    ],
+    [
+      "blackboard",
+      "static_analysis"
+    ],
+    [
+      "dynamic",
+      "blackboard"
+    ],
+    [
+      "static_analysis",
+      "attack_planning"
+    ]
+  ]
+}
