@@ -10,6 +10,7 @@
 /.pyvul_cache
 /__pycache__
 /out.txt
+/paper
 
 # 本地起的 docker-manager / docker-mcp（第三方代码与访问令牌，不入库）
 /docker-mcp/
