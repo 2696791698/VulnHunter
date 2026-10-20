@@ -1,20 +1,64 @@
+# 本地配置与开发工具
 .env
-/tmp
-/.venv
-/out
-/dataset
+.env.*
+!.env.example
+!.env.*.example
+/.agents/
+/.claude/
+/.codex/
+/.vscode/
+/.idea/
+/skills-lock.json
+
+# Python 依赖、缓存与测试产物
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.coverage
+.coverage.*
+htmlcov/
+
+# 前端依赖与构建产物
+node_modules/
+dist/
+*.tsbuildinfo
+
+# 临时文件、日志与系统文件
+/tmp/
+/out/
+/out.txt
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+
+# 论文材料与本地审查记录
+/paper/
+/docs/**/代码审查.md
+
+# 本地提取的数据、评测导出与工具清单（保留 benchmark/ 中的项目数据集）
+/dataset/
+/.pyvul_cache/
+/exports/
 /manifest_vulnhunter.csv
 /manifest_base.csv
 /docker_tools_list.txt
 /analysis_tools_list.txt
-/.pyvul_cache
-/__pycache__
-/out.txt
-/paper
 
 # 本地起的 docker-manager / docker-mcp（第三方代码与访问令牌，不入库）
 /docker-mcp/
 /docker-manager/
+
+# 本地打包的 CodeQL MCP 安装包；开发容器通过 npm 安装
+/codeql-development-mcp-server-*.tgz
 
 # 桥接服务实时写入的日志（含运行细节与 token 用量，不入库）
 /agent_traces.jsonl*
